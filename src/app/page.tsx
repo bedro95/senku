@@ -6,7 +6,7 @@ import { Zap, ShieldCheck, TrendingUp, Download, Activity, MessageSquare, Send, 
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { toPng } from 'html-to-image';
 
-export default function WagmiGeminiProFix() {
+export default function WagmiGeminiEnglish() {
   const [address, setAddress] = useState('');
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
@@ -18,7 +18,7 @@ export default function WagmiGeminiProFix() {
   const [chatHistory, setChatHistory] = useState<{role: string, text: string}[]>([]);
   const [isTyping, setIsTyping] = useState(false);
 
-  // تحديث طريقة تعريف الـ API لضمان الاستقرار
+  // Configuration
   const API_KEY = "AIzaSyBLkZt6NrBn58Zc0-xO0cz-Ga_9TgK7Lng";
   const genAI = new GoogleGenerativeAI(API_KEY);
 
@@ -62,7 +62,7 @@ export default function WagmiGeminiProFix() {
       setData({
         sol: solAmount,
         tokens: tokenAccounts.value.length,
-        winRate: (72 + Math.random() * 20).toFixed(1),
+        winRate: (74 + Math.random() * 20).toFixed(1),
         status: solAmount >= 1000 ? "LEGENDARY WHALE" : solAmount >= 100 ? "ALPHA CHAD" : "RETAIL TRADER",
         address: address.slice(0, 4) + "..." + address.slice(-4)
       });
@@ -73,7 +73,6 @@ export default function WagmiGeminiProFix() {
     }
   };
 
-  // دالة الشات المحدثة
   const handleChat = async () => {
     if (!chatInput.trim()) return;
     const userMsg = chatInput;
@@ -84,9 +83,10 @@ export default function WagmiGeminiProFix() {
     try {
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
       const context = data 
-        ? `User Wallet: ${data.sol} SOL, Status: ${data.status}.` 
-        : "User is exploring Wagmi.";
-      const prompt = `You are the AI assistant for Wagmi Terminal, created by Bader Alkorgli. Context: ${context} User says: ${userMsg}. Keep response professional, helpful, and in Arabic.`;
+        ? `The user has a wallet with ${data.sol} SOL. Their status is ${data.status}.` 
+        : "The user is browsing Wagmi Solana Terminal.";
+      
+      const prompt = `You are a professional AI assistant for Wagmi, a Solana analytics tool developed by Bader Alkorgli. Context: ${context} Respond to the user's message in English: ${userMsg}`;
       
       const result = await model.generateContent(prompt);
       const response = await result.response;
@@ -94,8 +94,8 @@ export default function WagmiGeminiProFix() {
       
       setChatHistory(prev => [...prev, { role: 'bot', text: text }]);
     } catch (e: any) {
-      console.error("Gemini Error:", e);
-      setChatHistory(prev => [...prev, { role: 'bot', text: "عذراً يا غالي، يبدو أن هناك ضغط على السيرفر أو أن مفتاح الـ API يحتاج لمراجعة. حاول مرة أخرى بعد قليل." }]);
+      console.error("API Error:", e);
+      setChatHistory(prev => [...prev, { role: 'bot', text: "Service temporary unavailable. Please verify API key or connection." }]);
     } finally {
       setIsTyping(false);
     }
@@ -124,7 +124,7 @@ export default function WagmiGeminiProFix() {
           <h1 className="text-7xl md:text-9xl font-black tracking-tighter italic leading-none mb-4">WAGMI</h1>
           <div className="flex items-center justify-center gap-3 text-cyan-500">
             <Cpu size={14} />
-            <p className="text-[10px] font-mono tracking-[0.6em] font-black uppercase italic">Neural Terminal v22.1</p>
+            <p className="text-[10px] font-mono tracking-[0.6em] font-black uppercase italic">Neural Terminal v22.2</p>
           </div>
         </motion.div>
 
@@ -132,7 +132,7 @@ export default function WagmiGeminiProFix() {
         <div className="w-full space-y-4 mb-20 px-2">
           <input 
             className="w-full bg-white/5 border border-white/10 p-6 md:p-8 rounded-[2rem] text-center font-mono text-lg outline-none focus:border-cyan-500 transition-all shadow-inner"
-            placeholder="ENTER_WALLET_ADDRESS"
+            placeholder="ENTER_SOL_ADDRESS"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
           />
@@ -141,7 +141,7 @@ export default function WagmiGeminiProFix() {
             disabled={loading}
             className="w-full h-16 md:h-24 bg-white text-black rounded-[2rem] font-black text-xl uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-cyan-500 active:scale-95 transition-all shadow-xl"
           >
-            {loading ? "SCANNING..." : <>IDENTIFY WALLET <Zap size={20} fill="currentColor" /></>}
+            {loading ? "SCANNING..." : <>ANALYZE WALLET <Zap size={20} fill="currentColor" /></>}
           </button>
         </div>
 
@@ -163,7 +163,7 @@ export default function WagmiGeminiProFix() {
                     <h2 className="text-5xl md:text-8xl font-black italic text-white uppercase tracking-tighter leading-none">{data.status}</h2>
                   </div>
                   <div className="pt-8 border-t border-white/5">
-                    <p className="text-[9px] font-mono text-gray-600 uppercase mb-3 font-bold italic tracking-widest">Net Worth</p>
+                    <p className="text-[9px] font-mono text-gray-600 uppercase mb-3 font-bold italic tracking-widest">Balance Assessment</p>
                     <p className="text-6xl md:text-8xl font-black text-white tracking-tighter">
                         {data.sol.toFixed(2)} <span className="text-2xl md:text-3xl text-cyan-500 font-light italic">SOL</span>
                     </p>
@@ -174,7 +174,7 @@ export default function WagmiGeminiProFix() {
                 onClick={() => toPng(cardRef.current!).then(url => { const a=document.createElement('a'); a.download='WAGMI.png'; a.href=url; a.click(); })}
                 className="w-full h-16 bg-white/5 border border-white/10 rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-3 transition-all mb-20 shadow-lg"
               >
-                <Download size={20} /> Export Report
+                <Download size={20} /> Download Identity Card
               </button>
             </motion.div>
           )}
@@ -184,7 +184,7 @@ export default function WagmiGeminiProFix() {
         <div className="w-full bg-[#050505] border border-white/10 rounded-[2.5rem] p-10 text-left shadow-2xl mb-24 backdrop-blur-md">
            <div className="flex items-center gap-3 mb-8">
               <TrendingUp className="text-cyan-500 shrink-0" size={20} />
-              <h4 className="font-black uppercase tracking-widest text-[10px] italic">Market Intelligence</h4>
+              <h4 className="font-black uppercase tracking-widest text-[10px] italic">Market Feed</h4>
            </div>
            <div className="grid grid-cols-2 gap-4 md:gap-6 font-mono text-sm">
               {[
@@ -208,8 +208,8 @@ export default function WagmiGeminiProFix() {
           <div className="flex justify-center gap-10 opacity-20 text-[9px] font-black uppercase tracking-widest mb-8">
              <span>Solana</span> <span>Jupiter</span> <span>Helius</span>
           </div>
-          <p className="text-[11px] font-mono tracking-[0.5em] text-gray-600 font-bold uppercase italic">
-            Architected by <span className="text-white drop-shadow-md">Bader Alkorgli</span>
+          <p className="text-[11px] font-mono tracking-[0.5em] text-gray-600 font-bold uppercase italic text-center">
+            Developed by <span className="text-white drop-shadow-md">Bader Alkorgli</span>
           </p>
         </div>
 
@@ -236,13 +236,13 @@ export default function WagmiGeminiProFix() {
                 <div className="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center"><Bot size={18} className="text-black"/></div>
                 <div>
                   <h5 className="text-[10px] font-black uppercase tracking-widest">Wagmi Intelligence</h5>
-                  <p className="text-[8px] text-cyan-500 font-mono animate-pulse uppercase font-bold tracking-widest">Gemini 1.5 Pro</p>
+                  <p className="text-[8px] text-cyan-500 font-mono animate-pulse uppercase font-bold tracking-widest">Gemini 1.5 Active</p>
                 </div>
               </div>
 
               <div className="flex-1 overflow-y-auto p-5 space-y-4 scrollbar-hide text-[11px] font-mono leading-relaxed">
                 {chatHistory.length === 0 && (
-                  <p className="text-gray-600 text-center mt-20 italic uppercase tracking-widest">Ask Gemini about Solana...</p>
+                  <p className="text-gray-600 text-center mt-20 italic uppercase tracking-widest">Chat with AI in English...</p>
                 )}
                 {chatHistory.map((msg, i) => (
                   <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
@@ -251,18 +251,18 @@ export default function WagmiGeminiProFix() {
                     </div>
                   </div>
                 ))}
-                {isTyping && <div className="text-[9px] text-cyan-500 font-mono animate-bounce uppercase tracking-tighter">AI is thinking...</div>}
+                {isTyping && <div className="text-[9px] text-cyan-500 font-mono animate-bounce uppercase tracking-tighter">Gemini is thinking...</div>}
               </div>
 
               <div className="p-4 bg-black border-t border-white/5 flex gap-2">
                 <input 
-                  className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-[11px] outline-none focus:border-cyan-500 transition-all text-white placeholder:text-gray-700"
+                  className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-[11px] outline-none focus:border-cyan-500 transition-all text-white placeholder:text-gray-700 font-mono"
                   placeholder="Ask me anything..."
                   value={chatInput}
                   onChange={(e) => setChatInput(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleChat()}
                 />
-                <button onClick={handleChat} className="w-10 h-10 bg-white text-black rounded-xl flex items-center justify-center hover:bg-cyan-500 transition-all shadow-md active:scale-95"><Send size={16} /></button>
+                <button onClick={handleChat} className="w-10 h-10 bg-white text-black rounded-xl flex items-center justify-center hover:bg-cyan-500 transition-all shadow-md active:scale-95 shrink-0"><Send size={16} /></button>
               </div>
             </motion.div>
           )}

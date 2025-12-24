@@ -1,10 +1,10 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
 import { motion } from 'framer-motion';
 import { Search, Terminal, Zap, ShieldCheck } from 'lucide-react';
 
-export default function WagmiCyberpunk() {
+export default function WagmiCyberpunkFinal() {
   const [address, setAddress] = useState('');
   const [balance, setBalance] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
@@ -29,7 +29,7 @@ export default function WagmiCyberpunk() {
       
       {/* Cyberpunk Background - Digital Rain Effect */}
       <div className="absolute inset-0 z-0 opacity-20">
-        {[...Array(20)].map((_, i) => (
+        {[...Array(25)].map((_, i) => (
           <motion.div
             key={i}
             initial={{ y: -500, x: Math.random() * 1500 }}
@@ -46,20 +46,13 @@ export default function WagmiCyberpunk() {
         animate={{ opacity: 1, y: 0 }}
         className="relative z-10 bg-black/80 backdrop-blur-3xl p-10 rounded-none border-l-4 border-t-4 border-cyan-500 shadow-[20px_20px_0px_0px_rgba(6,182,212,0.1)] w-full max-w-md"
       >
-        {/* Cyberpunk Logo Section */}
+        {/* Logo Section - Clean WAGMI */}
         <div className="flex flex-col items-center mb-12">
-          <motion.div 
-            animate={{ scale: [1, 1.05, 1] }}
-            transition={{ repeat: Infinity, duration: 2 }}
-            className="w-20 h-20 bg-cyan-500 flex items-center justify-center mb-4 clip-path-polygon"
-            style={{ clipPath: 'polygon(20% 0%, 100% 0%, 80% 100%, 0% 100%)' }}
-          >
-            <span className="text-4xl font-black text-black -skew-x-12 italic">W</span>
-          </motion.div>
-          <h1 className="text-5xl font-black tracking-[0.2em] text-cyan-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]">
+          <h1 className="text-6xl font-black tracking-[0.25em] text-cyan-400 drop-shadow-[0_0_20px_rgba(34,211,238,0.6)] italic">
             WAGMI
           </h1>
-          <p className="text-[10px] text-purple-500 font-mono tracking-[0.5em] mt-2 uppercase">Neural Network Terminal</p>
+          <div className="h-1 w-24 bg-purple-600 mt-2 shadow-[0_0_10px_#7c3aed]"></div>
+          <p className="text-[10px] text-gray-500 font-mono tracking-[0.4em] mt-4 uppercase">Neural Network Terminal</p>
         </div>
 
         <div className="space-y-6">
@@ -69,7 +62,7 @@ export default function WagmiCyberpunk() {
               <input 
                 type="text"
                 placeholder="INPUT_WALLET_ADDRESS"
-                className="w-full bg-black border border-cyan-900/50 p-5 rounded-none outline-none focus:border-cyan-400 text-cyan-400 font-mono text-xs transition-all uppercase"
+                className="w-full bg-black border border-cyan-900/50 p-5 rounded-none outline-none focus:border-cyan-400 text-cyan-400 font-mono text-xs transition-all uppercase placeholder:opacity-30"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
               />
@@ -103,20 +96,18 @@ export default function WagmiCyberpunk() {
         </div>
       </motion.div>
 
-      {/* Footer Info */}
-      <div className="mt-12 flex flex-col items-center gap-4 opacity-40">
-        <div className="flex gap-8">
-           <ShieldCheck size={16} className="text-cyan-500" />
-           <Activity size={16} className="text-purple-500" />
+      {/* Footer Info with Signature */}
+      <div className="mt-12 flex flex-col items-center gap-4 opacity-60">
+        <div className="flex gap-8 mb-2">
+           <ShieldCheck size={18} className="text-cyan-500" />
+           <div className="w-[1px] h-4 bg-gray-800"></div>
+           <Zap size={18} className="text-purple-500" />
         </div>
-        <p className="text-[9px] font-mono tracking-widest text-gray-500 uppercase italic">Established 2025 // Project: WAGMI // System: Secure</p>
+        <p className="text-[11px] font-mono tracking-[0.3em] text-cyan-400 uppercase font-bold">
+          Powered by Bader Alkorgli
+        </p>
+        <p className="text-[8px] font-mono tracking-widest text-gray-600 uppercase italic">Established 2025 // System: Secure</p>
       </div>
     </div>
   );
 }
-
-const Activity = ({ size, className }: { size: number, className: string }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-  </svg>
-)

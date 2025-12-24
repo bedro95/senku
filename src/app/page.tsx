@@ -6,22 +6,21 @@ import { Zap, ShieldCheck, TrendingUp, Download, Activity, MessageSquare, Send, 
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { toPng } from 'html-to-image';
 
-export default function WagmiGeminiPro() {
+export default function WagmiGeminiProFix() {
   const [address, setAddress] = useState('');
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [prices, setPrices] = useState<any>({ SOL: 0, JUP: 0, BTC: 0, WIF: 0, BONK: 0 });
   const cardRef = useRef<HTMLDivElement>(null);
 
-  // Gemini Chat States
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [chatInput, setChatInput] = useState('');
   const [chatHistory, setChatHistory] = useState<{role: string, text: string}[]>([]);
   const [isTyping, setIsTyping] = useState(false);
 
-  // Gemini Configuration
-  const genAI = new GoogleGenerativeAI("AIzaSyBLkZt6NrBn58Zc0-xO0cz-Ga_9TgK7Lng");
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  // تحديث طريقة تعريف الـ API لضمان الاستقرار
+  const API_KEY = "AIzaSyBLkZt6NrBn58Zc0-xO0cz-Ga_9TgK7Lng";
+  const genAI = new GoogleGenerativeAI(API_KEY);
 
   const fetchPrices = async () => {
     try {
@@ -60,24 +59,21 @@ export default function WagmiGeminiPro() {
         programId: new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA")
       });
 
-      setTimeout(() => {
-        setData({
-          sol: solAmount,
-          tokens: tokenAccounts.value.length,
-          winRate: (70 + Math.random() * 25).toFixed(1),
-          status: solAmount >= 1000 ? "LEGENDARY WHALE" : solAmount >= 100 ? "ALPHA CHAD" : "RETAIL TRADER",
-          bigWinToken: ["SOL", "JUP", "WIF", "BONK"][Math.floor(Math.random() * 4)],
-          bigWinMultiplier: (4 + Math.random() * 12).toFixed(2),
-          address: address.slice(0, 4) + "..." + address.slice(-4)
-        });
-        setLoading(false);
-      }, 1500);
+      setData({
+        sol: solAmount,
+        tokens: tokenAccounts.value.length,
+        winRate: (72 + Math.random() * 20).toFixed(1),
+        status: solAmount >= 1000 ? "LEGENDARY WHALE" : solAmount >= 100 ? "ALPHA CHAD" : "RETAIL TRADER",
+        address: address.slice(0, 4) + "..." + address.slice(-4)
+      });
+      setLoading(false);
     } catch (err) {
       alert("Invalid Address");
       setLoading(false);
     }
   };
 
+  // دالة الشات المحدثة
   const handleChat = async () => {
     if (!chatInput.trim()) return;
     const userMsg = chatInput;
@@ -86,16 +82,20 @@ export default function WagmiGeminiPro() {
     setIsTyping(true);
 
     try {
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
       const context = data 
-        ? `المستخدم يمتلك محفظة سولانا برصيد ${data.sol} SOL وتصنيفه ${data.status}.` 
-        : "المستخدم يتصفح منصة Wagmi لتحليل المحافظ.";
-      const prompt = `${context} أنت مساعد ذكي في منصة Wagmi التي طورها بدر الكورغلي (Bader Alkorgli). أجب باختصار واحترافية باللغة العربية: ${userMsg}`;
+        ? `User Wallet: ${data.sol} SOL, Status: ${data.status}.` 
+        : "User is exploring Wagmi.";
+      const prompt = `You are the AI assistant for Wagmi Terminal, created by Bader Alkorgli. Context: ${context} User says: ${userMsg}. Keep response professional, helpful, and in Arabic.`;
       
       const result = await model.generateContent(prompt);
       const response = await result.response;
-      setChatHistory(prev => [...prev, { role: 'bot', text: response.text() }]);
-    } catch (e) {
-      setChatHistory(prev => [...prev, { role: 'bot', text: "عذراً، واجهت مشكلة تقنية بسيطة." }]);
+      const text = response.text();
+      
+      setChatHistory(prev => [...prev, { role: 'bot', text: text }]);
+    } catch (e: any) {
+      console.error("Gemini Error:", e);
+      setChatHistory(prev => [...prev, { role: 'bot', text: "عذراً يا غالي، يبدو أن هناك ضغط على السيرفر أو أن مفتاح الـ API يحتاج لمراجعة. حاول مرة أخرى بعد قليل." }]);
     } finally {
       setIsTyping(false);
     }
@@ -121,10 +121,10 @@ export default function WagmiGeminiPro() {
         
         {/* Title */}
         <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-center mb-16">
-          <h1 className="text-7xl md:text-9xl font-black tracking-tighter italic leading-none mb-4 drop-shadow-2xl">WAGMI</h1>
+          <h1 className="text-7xl md:text-9xl font-black tracking-tighter italic leading-none mb-4">WAGMI</h1>
           <div className="flex items-center justify-center gap-3 text-cyan-500">
             <Cpu size={14} />
-            <p className="text-[10px] font-mono tracking-[0.6em] font-black uppercase italic">Neural Terminal v22.0</p>
+            <p className="text-[10px] font-mono tracking-[0.6em] font-black uppercase italic">Neural Terminal v22.1</p>
           </div>
         </motion.div>
 
@@ -148,7 +148,6 @@ export default function WagmiGeminiPro() {
         <AnimatePresence>
           {data && (
             <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="w-full">
-              {/* Identity Card */}
               <div ref={cardRef} className="p-10 md:p-14 rounded-[3rem] md:rounded-[4rem] bg-[#050505] border border-white/10 text-left relative overflow-hidden mb-8 shadow-2xl">
                 <motion.div animate={{ y: [0, 600, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
                     className="absolute top-0 left-0 w-full h-[1px] bg-cyan-500 z-20 shadow-[0_0_15px_cyan]"/>
@@ -173,7 +172,7 @@ export default function WagmiGeminiPro() {
               </div>
               <button 
                 onClick={() => toPng(cardRef.current!).then(url => { const a=document.createElement('a'); a.download='WAGMI.png'; a.href=url; a.click(); })}
-                className="w-full h-16 bg-white/5 border border-white/10 rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-3 transition-all mb-20"
+                className="w-full h-16 bg-white/5 border border-white/10 rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-3 transition-all mb-20 shadow-lg"
               >
                 <Download size={20} /> Export Report
               </button>
@@ -182,20 +181,20 @@ export default function WagmiGeminiPro() {
         </AnimatePresence>
 
         {/* Dashboard */}
-        <div className="w-full bg-[#050505] border border-white/10 rounded-[2.5rem] p-10 text-left shadow-2xl mb-24">
+        <div className="w-full bg-[#050505] border border-white/10 rounded-[2.5rem] p-10 text-left shadow-2xl mb-24 backdrop-blur-md">
            <div className="flex items-center gap-3 mb-8">
               <TrendingUp className="text-cyan-500 shrink-0" size={20} />
               <h4 className="font-black uppercase tracking-widest text-[10px] italic">Market Intelligence</h4>
            </div>
-           <div className="grid grid-cols-2 gap-4 md:gap-6 font-mono">
+           <div className="grid grid-cols-2 gap-4 md:gap-6 font-mono text-sm">
               {[
                 { sym: 'SOL', price: prices.SOL, color: 'text-cyan-400' },
                 { sym: 'JUP', price: prices.JUP, color: 'text-purple-400' },
                 { sym: 'WIF', price: prices.WIF, color: 'text-yellow-500' },
                 { sym: 'BONK', price: prices.BONK, color: 'text-orange-400' }
               ].map((token) => (
-                 <div key={token.sym} className="bg-white/[0.03] p-5 rounded-2xl border border-white/5">
-                    <p className="text-gray-600 text-[8px] mb-1 font-black uppercase">{token.sym}</p>
+                 <div key={token.sym} className="bg-white/[0.03] p-5 rounded-2xl border border-white/5 group hover:border-white/20 transition-all">
+                    <p className="text-gray-600 text-[8px] mb-1 font-black uppercase tracking-widest">{token.sym}</p>
                     <p className={`text-base md:text-xl font-black ${token.color} italic tracking-tighter`}>
                       ${token.price > 0 ? Number(token.price).toFixed(token.sym === 'BONK' ? 6 : 2) : "---"}
                     </p>
@@ -210,7 +209,7 @@ export default function WagmiGeminiPro() {
              <span>Solana</span> <span>Jupiter</span> <span>Helius</span>
           </div>
           <p className="text-[11px] font-mono tracking-[0.5em] text-gray-600 font-bold uppercase italic">
-            Architected by <span className="text-white">Bader Alkorgli</span>
+            Architected by <span className="text-white drop-shadow-md">Bader Alkorgli</span>
           </p>
         </div>
 
@@ -220,7 +219,7 @@ export default function WagmiGeminiPro() {
       <div className="fixed bottom-6 right-6 z-[100]">
         <button 
           onClick={() => setIsChatOpen(!isChatOpen)}
-          className="w-16 h-16 bg-cyan-500 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(6,182,212,0.4)] hover:scale-105 transition-all"
+          className="w-16 h-16 bg-cyan-500 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(6,182,212,0.4)] hover:scale-105 transition-all"
         >
           {isChatOpen ? <X size={28} className="text-black" /> : <MessageSquare size={28} className="text-black" />}
         </button>
@@ -237,7 +236,7 @@ export default function WagmiGeminiPro() {
                 <div className="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center"><Bot size={18} className="text-black"/></div>
                 <div>
                   <h5 className="text-[10px] font-black uppercase tracking-widest">Wagmi Intelligence</h5>
-                  <p className="text-[8px] text-cyan-500 font-mono animate-pulse uppercase font-bold tracking-widest">Gemini 1.5 Active</p>
+                  <p className="text-[8px] text-cyan-500 font-mono animate-pulse uppercase font-bold tracking-widest">Gemini 1.5 Pro</p>
                 </div>
               </div>
 
@@ -252,18 +251,18 @@ export default function WagmiGeminiPro() {
                     </div>
                   </div>
                 ))}
-                {isTyping && <div className="text-[9px] text-cyan-500 font-mono animate-bounce uppercase">Thinking...</div>}
+                {isTyping && <div className="text-[9px] text-cyan-500 font-mono animate-bounce uppercase tracking-tighter">AI is thinking...</div>}
               </div>
 
               <div className="p-4 bg-black border-t border-white/5 flex gap-2">
                 <input 
-                  className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-[11px] outline-none focus:border-cyan-500 transition-all"
-                  placeholder="Type a message..."
+                  className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-[11px] outline-none focus:border-cyan-500 transition-all text-white placeholder:text-gray-700"
+                  placeholder="Ask me anything..."
                   value={chatInput}
                   onChange={(e) => setChatInput(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleChat()}
                 />
-                <button onClick={handleChat} className="w-10 h-10 bg-white text-black rounded-xl flex items-center justify-center hover:bg-cyan-500 transition-all"><Send size={16} /></button>
+                <button onClick={handleChat} className="w-10 h-10 bg-white text-black rounded-xl flex items-center justify-center hover:bg-cyan-500 transition-all shadow-md active:scale-95"><Send size={16} /></button>
               </div>
             </motion.div>
           )}

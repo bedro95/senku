@@ -2,17 +2,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Connection, PublicKey } from '@solana/web3.js';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Zap, Award, ShieldCheck, TrendingUp, Download, Activity, Cpu, Globe, BarChart3, LineChart } from 'lucide-react';
+import { Zap, ShieldCheck, TrendingUp, Download, Activity, Cpu, LineChart } from 'lucide-react';
 import { toPng } from 'html-to-image';
 
-export default function WagmiUltimateMasterpiece() {
+export default function WagmiMobileOptimized() {
   const [address, setAddress] = useState('');
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [prices, setPrices] = useState<any>({ SOL: 0, JUP: 0, BTC: 0, WIF: 0, BONK: 0 });
   const cardRef = useRef<HTMLDivElement>(null);
 
-  // جلب الأسعار بنظام هجين (Binance + Jupiter) لضمان العمل 100%
   const fetchPrices = async () => {
     try {
       const [binanceRes, jupRes] = await Promise.all([
@@ -21,7 +20,6 @@ export default function WagmiUltimateMasterpiece() {
       ]);
       const bData = await binanceRes.json();
       const jData = await jupRes.json();
-
       setPrices({
         SOL: bData.find((t: any) => t.symbol === "SOLUSDT")?.price || 0,
         BTC: bData.find((t: any) => t.symbol === "BTCUSDT")?.price || 0,
@@ -29,12 +27,12 @@ export default function WagmiUltimateMasterpiece() {
         WIF: jData.data?.WIF?.price || 0,
         BONK: jData.data?.BONK?.price || 0,
       });
-    } catch (e) { console.error("Price fetch error"); }
+    } catch (e) { console.error("Update prices failed"); }
   };
 
   useEffect(() => {
     fetchPrices();
-    const interval = setInterval(fetchPrices, 10000);
+    const interval = setInterval(fetchPrices, 15000);
     return () => clearInterval(interval);
   }, []);
 
@@ -55,143 +53,137 @@ export default function WagmiUltimateMasterpiece() {
         setData({
           sol: solAmount,
           tokens: tokenAccounts.value.length,
-          winRate: (75 + Math.random() * 23).toFixed(1),
+          winRate: (70 + Math.random() * 28).toFixed(1),
           status: solAmount >= 1000 ? "LEGENDARY WHALE" : solAmount >= 100 ? "ALPHA CHAD" : "RETAIL TRADER",
           bigWinToken: ["SOL", "JUP", "WIF", "BONK"][Math.floor(Math.random() * 4)],
-          bigWinMultiplier: (4 + Math.random() * 10).toFixed(2),
+          bigWinMultiplier: (3 + Math.random() * 15).toFixed(2),
           address: address.slice(0, 4) + "..." + address.slice(-4)
         });
         setLoading(false);
-      }, 1500);
+      }, 1800);
     } catch (err) {
-      alert("Invalid Address");
+      alert("Address Check Failed");
       setLoading(false);
     }
   };
 
   return (
-    <div className="relative min-h-screen bg-[#000] text-white flex flex-col font-sans overflow-x-hidden selection:bg-cyan-500/30">
+    <div className="relative min-h-screen bg-black text-white flex flex-col font-sans overflow-x-hidden selection:bg-cyan-500/30">
       
-      {/* 1. Cinematic Background Decor */}
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-cyan-500/10 rounded-full blur-[120px] animate-pulse" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-500/10 rounded-full blur-[120px] animate-pulse" />
+      {/* Dynamic Background */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-cyan-900/10 rounded-full blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-blue-900/10 rounded-full blur-[120px]" />
       </div>
 
-      {/* 2. Top Live Ticker */}
-      <div className="w-full bg-white/[0.02] border-b border-white/5 py-3 px-6 flex gap-10 items-center z-50 overflow-hidden backdrop-blur-md">
-        <div className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-ping"/><span className="text-[10px] font-mono font-black text-cyan-400 tracking-tighter uppercase">Market Pulse</span></div>
-        <div className="flex gap-12 text-[10px] font-mono font-bold uppercase tracking-widest">
-           <span className="flex gap-2">SOL <span className="text-cyan-400">${Number(prices.SOL).toFixed(2)}</span></span>
-           <span className="flex gap-2 text-gray-400 italic">BTC <span className="text-yellow-500">${Number(prices.BTC).toLocaleString()}</span></span>
-           <span className="flex gap-2">JUP <span className="text-purple-400">${Number(prices.JUP).toFixed(4)}</span></span>
+      {/* Top Ticker - Responsive Text */}
+      <div className="w-full bg-white/[0.03] border-b border-white/5 py-2.5 px-4 md:px-8 flex gap-4 md:gap-10 items-center z-50 backdrop-blur-md overflow-x-auto scrollbar-hide">
+        <div className="flex items-center gap-2 shrink-0">
+          <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"/>
+          <span className="text-[9px] font-mono font-black text-cyan-500 uppercase">Live</span>
+        </div>
+        <div className="flex gap-6 md:gap-12 text-[9px] font-mono font-bold whitespace-nowrap">
+           <span className="flex gap-1.5 uppercase">SOL <span className="text-cyan-400">${Number(prices.SOL).toFixed(2)}</span></span>
+           <span className="flex gap-1.5 uppercase opacity-60">BTC <span className="text-yellow-500">${Number(prices.BTC).toLocaleString()}</span></span>
+           <span className="flex gap-1.5 uppercase">JUP <span className="text-purple-400">${Number(prices.JUP).toFixed(4)}</span></span>
         </div>
       </div>
 
-      <div className="flex flex-col items-center py-20 px-6 relative z-10 w-full max-w-2xl mx-auto">
+      <div className="flex flex-col items-center py-12 md:py-24 px-5 relative z-10 w-full max-w-2xl mx-auto">
         
-        {/* Title Section */}
-        <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-center mb-16">
-          <h1 className="text-[10rem] font-black tracking-tighter italic leading-none mb-4 drop-shadow-[0_0_30px_rgba(255,255,255,0.1)]">WAGMI</h1>
-          <div className="flex items-center justify-center gap-4 text-cyan-500">
-            <Cpu size={14} className="animate-spin-slow" />
-            <p className="text-[10px] font-mono tracking-[0.8em] font-black uppercase italic">Neural Terminal Pro v20.0</p>
+        {/* Adaptive Hero Section */}
+        <motion.div initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-center mb-12 md:mb-20">
+          <h1 className="text-7xl md:text-[10rem] font-black tracking-tighter italic leading-none mb-4 drop-shadow-xl">WAGMI</h1>
+          <div className="flex items-center justify-center gap-3 text-cyan-500">
+            <Activity size={14} className="animate-pulse" />
+            <p className="text-[9px] md:text-[10px] font-mono tracking-[0.4em] font-black uppercase italic">Neural Terminal v21.0</p>
           </div>
         </motion.div>
 
-        {/* Input Interface */}
-        <div className="w-full space-y-4 mb-24 relative">
-          <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-[2.5rem] blur opacity-10 group-hover:opacity-30 transition"></div>
+        {/* Improved Input Area */}
+        <div className="w-full space-y-4 mb-16 md:mb-24 px-2">
           <input 
-            className="relative w-full bg-[#050505] border border-white/10 p-8 rounded-[2rem] text-center font-mono text-xl outline-none focus:border-cyan-500 shadow-2xl transition-all placeholder:text-gray-800"
-            placeholder="PASTE_SOLANA_ADDRESS"
+            className="w-full bg-[#080808] border border-white/10 p-5 md:p-8 rounded-2xl md:rounded-[2.5rem] text-center font-mono text-base md:text-xl outline-none focus:border-cyan-500 shadow-2xl transition-all"
+            placeholder="ENTER_SOL_ADDRESS"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
           />
           <button 
             onClick={analyzeWallet}
             disabled={loading}
-            className="w-full h-24 bg-white text-black rounded-[2rem] font-black text-2xl uppercase tracking-[0.2em] flex items-center justify-center gap-4 hover:bg-cyan-500 transition-all active:scale-[0.98] shadow-[0_0_50px_rgba(255,255,255,0.1)]"
+            className="w-full h-16 md:h-24 bg-white text-black rounded-2xl md:rounded-[2.5rem] font-black text-lg md:text-2xl uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-cyan-500 active:scale-95 transition-all shadow-xl"
           >
-            {loading ? "SCANNING BLOCKS..." : <>ANALYZE WALLET <Zap size={24} fill="currentColor" /></>}
+            {loading ? "PROCESSING..." : <>ANALYZE <Zap size={20} fill="currentColor" /></>}
           </button>
         </div>
 
         <AnimatePresence>
           {data && (
-            <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="w-full">
-              {/* The Masterpiece Card */}
-              <div ref={cardRef} className="p-12 rounded-[4rem] bg-[#050505] border-2 border-white/10 text-left relative overflow-hidden mb-10 shadow-[0_0_100px_rgba(0,0,0,1)]">
+            <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="w-full">
+              {/* Refined Identity Card */}
+              <div ref={cardRef} className="p-8 md:p-14 rounded-[2.5rem] md:rounded-[4rem] bg-[#050505] border border-white/10 text-left relative overflow-hidden mb-8 shadow-2xl mx-auto max-w-full">
                 
-                {/* Laser Scanner Effect */}
-                <motion.div animate={{ y: [0, 550, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                    className="absolute top-0 left-0 w-full h-[2px] bg-cyan-400 shadow-[0_0_20px_#22d3ee] z-20 opacity-50"/>
+                {/* Laser Pulse */}
+                <motion.div animate={{ y: [0, 600, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                    className="absolute top-0 left-0 w-full h-[1px] bg-cyan-500/50 shadow-[0_0_15px_cyan] z-20"/>
 
-                <div className="flex justify-between items-center mb-16 relative z-10">
-                   <div className="bg-white/5 px-5 py-2 rounded-full border border-white/10 text-[10px] font-mono text-cyan-400 font-bold italic tracking-tighter uppercase">ID: {data.address}</div>
-                   <ShieldCheck className="text-cyan-500" size={30} />
+                <div className="flex justify-between items-center mb-12 md:mb-20">
+                   <div className="bg-white/5 px-4 py-1.5 rounded-full border border-white/10 text-[8px] md:text-[10px] font-mono text-cyan-400 font-bold uppercase tracking-tighter italic">Verify: {data.address}</div>
+                   <ShieldCheck className="text-cyan-500 shrink-0" size={24} />
                 </div>
 
-                <div className="space-y-12 relative z-10">
-                  <div>
-                    <p className="text-[10px] font-mono text-gray-500 uppercase tracking-[0.4em] mb-2 font-bold italic">Portfolio Status</p>
-                    <h2 className="text-7xl font-black italic text-white uppercase tracking-tighter leading-tight drop-shadow-2xl">{data.status}</h2>
+                <div className="space-y-10 md:space-y-14">
+                  <div className="space-y-1">
+                    <p className="text-[9px] font-mono text-gray-600 uppercase tracking-widest font-bold italic">Identity Class</p>
+                    <h2 className="text-5xl md:text-8xl font-black italic text-white uppercase tracking-tighter leading-none">{data.status}</h2>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-6">
-                    <div className="bg-white/[0.03] border border-white/5 p-8 rounded-[2.5rem] backdrop-blur-xl">
-                      <p className="text-[9px] font-mono text-cyan-500 font-black uppercase mb-2 tracking-widest italic">Top Trade</p>
-                      <h3 className="text-3xl font-black text-white italic">{data.bigWinToken} <span className="text-cyan-400 ml-2">+{data.bigWinMultiplier}x</span></h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                    <div className="bg-white/5 border border-white/5 p-6 md:p-8 rounded-2xl md:rounded-[2.5rem] flex flex-col justify-center">
+                      <p className="text-[8px] font-mono text-cyan-500 font-black uppercase mb-2 italic">Max ROI</p>
+                      <h3 className="text-2xl md:text-3xl font-black text-white italic">{data.bigWinToken} <span className="text-cyan-400 ml-2">+{data.bigWinMultiplier}x</span></h3>
                     </div>
-                    <div className="bg-white/[0.03] border border-white/5 p-8 rounded-[2.5rem] backdrop-blur-xl">
-                      <p className="text-[9px] font-mono text-purple-500 font-black uppercase mb-2 tracking-widest italic">Win Rate</p>
-                      <h3 className="text-3xl font-black text-white italic">{data.winRate}%</h3>
+                    <div className="bg-white/5 border border-white/5 p-6 md:p-8 rounded-2xl md:rounded-[2.5rem] flex flex-col justify-center">
+                      <p className="text-[8px] font-mono text-purple-500 font-black uppercase mb-2 italic">Network Success</p>
+                      <h3 className="text-2xl md:text-3xl font-black text-white italic">{data.winRate}%</h3>
                     </div>
                   </div>
 
-                  <div className="pt-10 border-t border-white/5">
-                    <p className="text-[10px] font-mono text-gray-500 uppercase mb-3 font-bold tracking-[0.2em] italic">Net Worth Assessment</p>
-                    <p className="text-8xl font-black text-white tracking-tighter flex items-baseline gap-4">
-                        {data.sol.toLocaleString(undefined, { minimumFractionDigits: 2 })} <span className="text-3xl text-cyan-500 font-light italic">SOL</span>
+                  <div className="pt-8 md:pt-12 border-t border-white/5">
+                    <p className="text-[9px] font-mono text-gray-600 uppercase mb-3 font-bold italic tracking-widest">Liquid Net Worth</p>
+                    <p className="text-6xl md:text-8xl font-black text-white tracking-tighter flex items-baseline gap-3">
+                        {data.sol.toLocaleString(undefined, { minimumFractionDigits: 2 })} <span className="text-2xl md:text-3xl text-cyan-500 font-light italic">SOL</span>
                     </p>
                   </div>
-                </div>
-
-                <div className="mt-16 flex justify-between items-center opacity-20 font-mono text-[9px] tracking-[0.5em] font-bold uppercase italic">
-                   <span>SECURE_NODE_WAGMI</span>
-                   <span>© 2025 PROTOCOL</span>
                 </div>
               </div>
 
               <button 
-                onClick={() => toPng(cardRef.current!).then(url => { const a=document.createElement('a'); a.download='WAGMI_ID.png'; a.href=url; a.click(); })}
-                className="w-full h-20 bg-white/5 hover:bg-white hover:text-black border border-white/10 rounded-[2rem] font-black uppercase tracking-widest flex items-center justify-center gap-4 transition-all mb-20 shadow-xl"
+                onClick={() => toPng(cardRef.current!).then(url => { const a=document.createElement('a'); a.download='WAGMI_CARD.png'; a.href=url; a.click(); })}
+                className="w-full h-16 md:h-20 bg-white/5 border border-white/10 rounded-2xl md:rounded-[2rem] font-black uppercase tracking-widest flex items-center justify-center gap-3 transition-all mb-16 md:mb-24 hover:bg-white/10"
               >
-                <Download size={24} /> Export Identity Card
+                <Download size={20} /> Capture Intelligence
               </button>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* 3. Market Dashboard Section */}
-        <div className="w-full bg-white/[0.02] border border-white/10 rounded-[3rem] p-12 text-left backdrop-blur-3xl shadow-2xl">
-           <div className="flex items-center justify-between mb-10">
-              <div className="flex items-center gap-3">
-                <TrendingUp className="text-cyan-500" size={24} />
-                <h4 className="font-black uppercase tracking-[0.3em] text-[10px] italic">Market Intelligence</h4>
-              </div>
-              <div className="text-[9px] font-mono text-gray-600 animate-pulse uppercase">Updating_Live...</div>
+        {/* Dashboard Section - Responsive Grid */}
+        <div className="w-full bg-[#050505] border border-white/10 rounded-[2rem] md:rounded-[3rem] p-8 md:p-12 text-left shadow-2xl">
+           <div className="flex items-center gap-3 mb-8">
+              <TrendingUp className="text-cyan-500 shrink-0" size={20} />
+              <h4 className="font-black uppercase tracking-widest text-[9px] md:text-[10px] italic">Market Intelligence</h4>
            </div>
-           <div className="grid grid-cols-2 gap-6">
+           <div className="grid grid-cols-2 gap-4 md:gap-6 font-mono">
               {[
                 { sym: 'SOL', price: prices.SOL, color: 'text-cyan-400' },
                 { sym: 'JUP', price: prices.JUP, color: 'text-purple-400' },
                 { sym: 'WIF', price: prices.WIF, color: 'text-yellow-500' },
                 { sym: 'BONK', price: prices.BONK, color: 'text-orange-400' }
               ].map((token) => (
-                 <div key={token.sym} className="bg-black/60 p-6 rounded-[2rem] border border-white/5 hover:border-white/20 transition-all group">
-                    <p className="text-gray-500 text-[10px] mb-2 font-mono font-bold tracking-widest group-hover:text-white transition-colors uppercase">{token.sym}</p>
-                    <p className={`text-2xl font-black ${token.color} italic`}>
+                 <div key={token.sym} className="bg-white/[0.03] p-5 md:p-6 rounded-2xl border border-white/5">
+                    <p className="text-gray-600 text-[8px] md:text-[9px] mb-1 font-black uppercase">{token.sym}</p>
+                    <p className={`text-base md:text-xl font-black ${token.color} italic tracking-tighter`}>
                       {token.price > 0 ? `$${Number(token.price).toFixed(token.sym === 'BONK' ? 6 : 2)}` : "---"}
                     </p>
                  </div>
@@ -199,15 +191,13 @@ export default function WagmiUltimateMasterpiece() {
            </div>
         </div>
 
-        {/* 4. Footer & Partners (بطلبك يا بدر) */}
-        <div className="mt-32 w-full pt-12 border-t border-white/5 text-center">
-          <div className="flex flex-wrap justify-center gap-10 opacity-30 grayscale hover:grayscale-0 transition-all duration-500 mb-10">
-             <div className="text-[10px] font-black uppercase tracking-[0.3em]">Solana</div>
-             <div className="text-[10px] font-black uppercase tracking-[0.3em]">Jupiter</div>
-             <div className="text-[10px] font-black uppercase tracking-[0.3em]">Helius</div>
+        {/* Global Footer & Credits */}
+        <div className="mt-24 md:mt-32 w-full pt-10 border-t border-white/5 text-center">
+          <div className="flex justify-center gap-6 md:gap-10 opacity-20 text-[8px] md:text-[9px] font-black uppercase tracking-widest mb-8">
+             <span>Solana</span> <span>Jupiter</span> <span>Helius</span>
           </div>
-          <p className="text-[11px] font-mono tracking-[0.6em] text-gray-600 font-bold uppercase italic">
-            Architected by <span className="text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">Bader Alkorgli</span>
+          <p className="text-[10px] md:text-[11px] font-mono tracking-[0.5em] text-gray-600 font-bold uppercase italic">
+            Developed by <span className="text-white drop-shadow-md">Bader Alkorgli</span>
           </p>
         </div>
 

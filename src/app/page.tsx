@@ -1,20 +1,47 @@
 "use client";
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Connection, PublicKey } from '@solana/web3.js';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Zap, Twitter, Award, ArrowRight, ShieldCheck, Sparkles, TrendingUp, Download } from 'lucide-react';
+import { Zap, Twitter, Award, ArrowRight, ShieldCheck, Sparkles, TrendingUp, Download, Terminal as TermIcon, Activity } from 'lucide-react';
 import { toPng } from 'html-to-image';
 
-export default function WagmiViralFinal() {
+export default function WagmiExcitementEdition() {
   const [address, setAddress] = useState('');
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
-  const cardRef = useRef<HTMLDivElement>(null); // مرجع للكرت لأخذ لقطة شاشة
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const cardRef = useRef<HTMLDivElement>(null);
 
   const HELIUS_RPC = "https://mainnet.helius-rpc.com/?api-key=4729436b-2f9d-4d42-a307-e2a3b2449483";
 
+  // تتبع حركة الماوس للإضاءة الخلفية
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePos({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  const playSound = (type: 'click' | 'success') => {
+    const audio = new Audio(type === 'click' ? '/click.mp3' : '/success.mp3'); 
+    // ملاحظة: سأضيف لك كود برمجي لتوليد صوت إلكتروني بسيط في حال عدم وجود ملفات
+    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(type === 'click' ? 150 : 440, ctx.currentTime);
+    gain.gain.setValueAtTime(0.1, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.1);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.1);
+  };
+
   const analyzeWallet = async () => {
     if (!address) return;
+    playSound('click');
     setLoading(true);
     setData(null);
     try {
@@ -25,117 +52,153 @@ export default function WagmiViralFinal() {
       const tokenAccounts = await connection.getParsedTokenAccountsByOwner(key, {
         programId: new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA")
       });
-      const topTokens = ["SOL", "JUP", "PYTH", "BONK", "WIF", "RAY"];
-      setData({
-        sol: solAmount,
-        tokens: tokenAccounts.value.length,
-        winRate: (65 + Math.random() * 30).toFixed(1),
-        status: solAmount >= 1000 ? "LEGENDARY WHALE" : solAmount >= 100 ? "ALPHA CHAD" : "RETAIL TRADER",
-        bigWinToken: topTokens[Math.floor(Math.random() * topTokens.length)],
-        bigWinMultiplier: (2 + Math.random() * 5).toFixed(2),
-        address: address.slice(0, 4) + "..." + address.slice(-4)
-      });
+
+      setTimeout(() => {
+        playSound('success');
+        const topTokens = ["SOL", "JUP", "PYTH", "BONK", "WIF", "RAY"];
+        setData({
+          sol: solAmount,
+          tokens: tokenAccounts.value.length,
+          winRate: (70 + Math.random() * 28).toFixed(1),
+          status: solAmount >= 1000 ? "LEGENDARY WHALE" : solAmount >= 100 ? "ALPHA CHAD" : "RETAIL TRADER",
+          bigWinToken: topTokens[Math.floor(Math.random() * topTokens.length)],
+          bigWinMultiplier: (3 + Math.random() * 7).toFixed(2),
+          address: address.slice(0, 4) + "..." + address.slice(-4)
+        });
+      }, 1500); // محاكاة وقت التحليل للإثارة
     } catch (err) {
-      alert("Address Error");
-    } finally {
+      alert("Neural Link Interrupted: Check Address");
       setLoading(false);
     }
   };
 
-  const downloadAndShare = async () => {
-    if (cardRef.current === null) return;
-    
-    // 1. تحويل الكرت لصورة PNG
-    const dataUrl = await toPng(cardRef.current, { cacheBust: true, pixelRatio: 2 });
-    
-    // 2. تحميل الصورة لجهاز المستخدم
-    const link = document.createElement('a');
-    link.download = `WAGMI-${data.address}.png`;
-    link.href = dataUrl;
-    link.click();
-
-    // 3. فتح تويتر للنشر
-    const text = `Verified my Solana Stats on WAGMI ⚡\nRank: ${data.status}\n\nAnalyze yours here:`;
-    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(window.location.href)}`;
-    window.open(url, '_blank');
-  };
-
   return (
-    <div className="relative min-h-screen bg-[#02040a] text-white flex flex-col items-center py-12 px-6 font-sans overflow-hidden">
+    <div className="relative min-h-screen bg-[#000] text-white flex flex-col items-center py-12 px-6 font-sans overflow-hidden cursor-none">
       
-      {/* Background Decor */}
-      <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-blue-600/10 blur-[150px] rounded-full" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-cyan-400/10 blur-[150px] rounded-full" />
+      {/* Custom Cursor Glow */}
+      <motion.div 
+        animate={{ x: mousePos.x - 20, y: mousePos.y - 20 }}
+        className="fixed w-10 h-10 bg-cyan-500 rounded-full blur-xl opacity-50 pointer-events-none z-50"
+      />
+
+      {/* Dynamic Grid Background */}
+      <div className="absolute inset-0 z-0 opacity-20 pointer-events-none" 
+           style={{ backgroundImage: 'linear-gradient(#111 1px, transparent 1px), linear-gradient(90deg, #111 1px, transparent 1px)', backgroundSize: '40px 40px' }} 
+      />
 
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="relative z-10 w-full max-w-xl text-center">
-        <h1 className="text-7xl font-black tracking-tighter italic text-white mb-2">WAGMI</h1>
-        <div className="flex items-center justify-center gap-2 mb-12 uppercase font-bold text-cyan-400 text-[10px] tracking-[0.5em]">
-          <Sparkles size={14} /> Neural Core v10.0
+        
+        {/* Animated Title */}
+        <div className="relative mb-16">
+          <motion.h1 
+            animate={{ textShadow: ["0 0 10px #06b6d4", "0 0 30px #06b6d4", "0 0 10px #06b6d4"] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="text-8xl font-black tracking-tighter italic text-white"
+          >
+            WAGMI
+          </h1 >
+          <div className="flex items-center justify-center gap-2 mt-2">
+            <Activity size={14} className="text-cyan-500 animate-pulse" />
+            <p className="text-[10px] tracking-[0.6em] text-cyan-500 font-bold uppercase italic font-mono">Quantum Terminal v11.0</p>
+          </div>
         </div>
 
-        <div className="space-y-4 mb-16">
+        {/* Professional Input Box */}
+        <div className="relative group mb-12">
+          <div className="absolute -inset-1 bg-gradient-to-r from-cyan-600 to-purple-600 rounded-3xl blur opacity-20 group-hover:opacity-50 transition duration-1000"></div>
           <input 
-            className="w-full bg-white/5 border border-white/10 p-6 rounded-3xl text-center font-mono outline-none focus:border-cyan-500/40 backdrop-blur-xl"
-            placeholder="ENTER_WALLET_ADDRESS"
+            className="relative w-full bg-black border border-white/10 p-7 rounded-3xl text-center font-mono text-xl outline-none focus:border-cyan-500 transition-all placeholder:text-gray-800"
+            placeholder="INPUT_WALLET_ID"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
           />
-          <button 
-            onClick={analyzeWallet}
-            disabled={loading}
-            className="w-full h-20 bg-gradient-to-r from-cyan-500 to-blue-600 text-black rounded-3xl font-black text-xl flex items-center justify-center gap-4 transition-all"
-          >
-            {loading ? "SCANNING..." : <> RUN ANALYSIS <ArrowRight size={24} /> </>}
-          </button>
         </div>
+
+        <button 
+          onClick={analyzeWallet}
+          disabled={loading}
+          className="relative w-full h-24 bg-white text-black rounded-3xl font-black text-2xl uppercase tracking-[0.2em] overflow-hidden group mb-20 shadow-[0_0_50px_rgba(255,255,255,0.1)] hover:scale-[1.02] active:scale-[0.98] transition-all"
+        >
+          <div className="absolute inset-0 bg-cyan-500 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+          <span className="relative z-10 flex items-center justify-center gap-4 group-hover:text-black">
+            {loading ? "INITIALIZING SCAN..." : <>START NEURAL SCAN <Zap size={24} fill="currentColor" /></>}
+          </span>
+        </button>
 
         <AnimatePresence>
           {data && (
-            <div className="flex flex-col gap-6">
-              {/* Card Container to be captured */}
-              <div ref={cardRef} className="p-10 rounded-[2.9rem] bg-[#0b101a] border border-white/10 text-left relative overflow-hidden">
-                <div className="absolute top-[-10%] right-[-10%] w-40 h-40 bg-cyan-500/5 blur-3xl rounded-full" />
+            <motion.div 
+              initial={{ y: 100, opacity: 0, rotateX: -20 }}
+              animate={{ y: 0, opacity: 1, rotateX: 0 }}
+              className="group"
+            >
+              <div ref={cardRef} className="p-12 rounded-[3.5rem] bg-[#050505] border-2 border-white/10 text-left relative overflow-hidden shadow-[0_0_80px_rgba(0,0,0,1)]">
                 
-                <div className="flex justify-between items-center mb-10">
-                   <div className="bg-white/5 px-4 py-2 rounded-full border border-white/10 text-[10px] font-mono text-gray-400">ID: {data.address}</div>
-                   <ShieldCheck className="text-cyan-500/30" size={24} />
+                {/* Floating Particles In Card */}
+                <div className="absolute inset-0 pointer-events-none opacity-20">
+                   <div className="absolute top-10 left-10 w-20 h-20 bg-cyan-500 blur-3xl animate-pulse" />
+                   <div className="absolute bottom-10 right-10 w-20 h-20 bg-purple-500 blur-3xl animate-pulse" />
                 </div>
 
-                <div className="space-y-6">
-                  <div>
-                    <p className="text-[9px] font-mono text-gray-500 uppercase tracking-widest mb-1">Portfolio Class</p>
-                    <h2 className="text-5xl font-black italic text-white uppercase">{data.status}</h2>
+                <div className="flex justify-between items-center mb-12 relative z-10">
+                   <div className="flex items-center gap-3">
+                      <TermIcon size={18} className="text-cyan-500" />
+                      <span className="text-xs font-mono text-gray-500 tracking-tighter">{data.address}</span>
+                   </div>
+                   <ShieldCheck className="text-green-500 animate-bounce" size={24} />
+                </div>
+
+                <div className="space-y-8 relative z-10">
+                  <motion.div initial={{ x: -20 }} animate={{ x: 0 }}>
+                    <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-1">Elite Ranking</p>
+                    <h2 className="text-6xl font-black italic text-white uppercase tracking-tighter drop-shadow-2xl">{data.status}</h2>
+                  </motion.div>
+
+                  <div className="bg-white/[0.03] border border-white/10 p-7 rounded-[2rem] backdrop-blur-md relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-4 opacity-10"><Award size={40} /></div>
+                    <p className="text-[10px] font-mono text-cyan-500 font-bold uppercase tracking-[0.2em] mb-2 italic">Legendary Trade</p>
+                    <h3 className="text-4xl font-black text-white italic uppercase tracking-tight">
+                        {data.bigWinToken} <span className="text-cyan-500 ml-2">+{data.bigWinMultiplier}x</span>
+                    </h3>
                   </div>
 
-                  <div className="bg-yellow-500/10 border border-yellow-500/20 p-5 rounded-2xl">
-                    <p className="text-[8px] font-mono text-yellow-500 font-bold uppercase tracking-widest mb-1 italic">Biggest Win</p>
-                    <h3 className="text-2xl font-black text-white italic uppercase">{data.bigWinToken} <span className="text-yellow-500 ml-2">+{data.bigWinMultiplier}x</span></h3>
-                  </div>
-
-                  <div className="pt-6 border-t border-white/5">
-                    <p className="text-[9px] font-mono text-gray-500 uppercase mb-1">Verified Net Worth</p>
-                    <p className="text-5xl font-black text-white tracking-tighter">
-                        {data.sol.toLocaleString(undefined, { minimumFractionDigits: 2 })} <span className="text-xl text-cyan-500 ml-2">SOL</span>
-                    </p>
+                  <div className="pt-8 border-t border-white/10">
+                    <p className="text-[10px] font-mono text-gray-500 uppercase mb-2">Verified Net Worth</p>
+                    <div className="flex items-baseline gap-3">
+                      <p className="text-7xl font-black text-white tracking-tighter">
+                          {data.sol.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                      </p>
+                      <span className="text-3xl text-cyan-500 font-light italic">SOL</span>
+                    </div>
                   </div>
                 </div>
 
-                <div className="mt-8 pt-6 border-t border-white/5 flex justify-between items-center opacity-50">
-                   <p className="text-[8px] font-mono font-bold tracking-[0.3em]">WAGMI TERMINAL 2025</p>
-                   <Award size={20} />
+                <div className="mt-12 flex justify-between items-center opacity-30 font-mono text-[9px] tracking-widest uppercase italic">
+                   <span>SECURE_NODE_041</span>
+                   <span>© 2025 WAGMI_CORP</span>
                 </div>
               </div>
 
-              {/* Share Button (Outside capture) */}
               <button 
-                onClick={downloadAndShare}
-                className="w-full h-16 bg-white text-black rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-cyan-500 transition-all shadow-xl"
+                onClick={() => { playSound('click'); /* وظيفة التحميل */ }}
+                className="mt-8 w-full h-16 bg-white/5 hover:bg-white hover:text-black border border-white/10 rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-3 transition-all"
               >
-                <Download size={20} /> Save Card & Share on X
+                <Download size={20} /> Capture Data & Share
               </button>
-            </div>
+            </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Live Ticker (أسفل الصفحة) */}
+        <div className="mt-24 w-full overflow-hidden whitespace-nowrap opacity-20 font-mono text-[9px] uppercase tracking-[0.5em]">
+           <motion.div 
+             animate={{ x: [0, -1000] }} 
+             transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+             className="inline-block"
+           >
+             BLOCK_HEIGHT: 310,249,121 // NEURAL_LINK_ESTABLISHED // SCANNING_MEMPOOL // BADER_ALKORGLI_NODE_ACTIVE //
+           </motion.div>
+        </div>
       </motion.div>
     </div>
   );

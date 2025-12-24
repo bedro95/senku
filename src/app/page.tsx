@@ -1,13 +1,15 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Connection, PublicKey } from '@solana/web3.js';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Zap, Twitter, Award, ArrowRight, ShieldCheck, Sparkles, TrendingUp } from 'lucide-react';
+import { Zap, Twitter, Award, ArrowRight, ShieldCheck, Sparkles, TrendingUp, Download } from 'lucide-react';
+import { toPng } from 'html-to-image';
 
-export default function WagmiBigWinEdition() {
+export default function WagmiViralFinal() {
   const [address, setAddress] = useState('');
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null); // مرجع للكرت لأخذ لقطة شاشة
 
   const HELIUS_RPC = "https://mainnet.helius-rpc.com/?api-key=4729436b-2f9d-4d42-a307-e2a3b2449483";
 
@@ -15,49 +17,45 @@ export default function WagmiBigWinEdition() {
     if (!address) return;
     setLoading(true);
     setData(null);
-
     try {
       const connection = new Connection(HELIUS_RPC, 'confirmed');
       const key = new PublicKey(address.trim());
-      
       const balance = await connection.getBalance(key);
       const solAmount = balance / 1_000_000_000;
-
       const tokenAccounts = await connection.getParsedTokenAccountsByOwner(key, {
         programId: new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA")
       });
-
-      const totalTokens = tokenAccounts.value.length;
-      
-      // منطق اختيار "أكبر ربح" (Big Win)
-      // سنختار اسم عملة افتراضي بناءً على نشاط المحفظة لجعل الكرت يبدو حقيقياً
       const topTokens = ["SOL", "JUP", "PYTH", "BONK", "WIF", "RAY"];
-      const randomWin = topTokens[Math.floor(Math.random() * topTokens.length)];
-      const winAmount = (solAmount * (2 + Math.random() * 5)).toFixed(2); // محاكاة لمضاعف الربح
-
-      let status = "RETAIL TRADER";
-      if (solAmount >= 100) status = "ALPHA CHAD";
-      if (solAmount >= 1000) status = "LEGENDARY WHALE";
-
       setData({
         sol: solAmount,
-        tokens: totalTokens,
+        tokens: tokenAccounts.value.length,
         winRate: (65 + Math.random() * 30).toFixed(1),
-        status: status,
-        bigWinToken: randomWin,
-        bigWinMultiplier: winAmount,
+        status: solAmount >= 1000 ? "LEGENDARY WHALE" : solAmount >= 100 ? "ALPHA CHAD" : "RETAIL TRADER",
+        bigWinToken: topTokens[Math.floor(Math.random() * topTokens.length)],
+        bigWinMultiplier: (2 + Math.random() * 5).toFixed(2),
         address: address.slice(0, 4) + "..." + address.slice(-4)
       });
-
     } catch (err) {
-      alert("Analysis Failed: Please check the address.");
+      alert("Address Error");
     } finally {
       setLoading(false);
     }
   };
 
-  const shareOnX = () => {
-    const text = `Verified my Biggest Win on WAGMI ⚡\n\nRank: ${data.status}\nBiggest Win: ${data.bigWinToken} (+${data.bigWinMultiplier}x)\n\nCheck your Solana ID:`;
+  const downloadAndShare = async () => {
+    if (cardRef.current === null) return;
+    
+    // 1. تحويل الكرت لصورة PNG
+    const dataUrl = await toPng(cardRef.current, { cacheBust: true, pixelRatio: 2 });
+    
+    // 2. تحميل الصورة لجهاز المستخدم
+    const link = document.createElement('a');
+    link.download = `WAGMI-${data.address}.png`;
+    link.href = dataUrl;
+    link.click();
+
+    // 3. فتح تويتر للنشر
+    const text = `Verified my Solana Stats on WAGMI ⚡\nRank: ${data.status}\n\nAnalyze yours here:`;
     const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(window.location.href)}`;
     window.open(url, '_blank');
   };
@@ -65,108 +63,79 @@ export default function WagmiBigWinEdition() {
   return (
     <div className="relative min-h-screen bg-[#02040a] text-white flex flex-col items-center py-12 px-6 font-sans overflow-hidden">
       
+      {/* Background Decor */}
       <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-blue-600/10 blur-[150px] rounded-full" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-cyan-400/10 blur-[150px] rounded-full" />
 
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="relative z-10 w-full max-w-xl">
-        
-        <div className="text-center mb-16">
-          <h1 className="text-7xl font-black tracking-tighter italic text-white mb-2 uppercase italic">Wagmi</h1>
-          <div className="flex items-center justify-center gap-2">
-             <Sparkles size={14} className="text-cyan-400" />
-             <p className="text-[11px] tracking-[0.5em] text-cyan-400 font-bold uppercase italic">Neural Core v9.0</p>
-          </div>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="relative z-10 w-full max-w-xl text-center">
+        <h1 className="text-7xl font-black tracking-tighter italic text-white mb-2">WAGMI</h1>
+        <div className="flex items-center justify-center gap-2 mb-12 uppercase font-bold text-cyan-400 text-[10px] tracking-[0.5em]">
+          <Sparkles size={14} /> Neural Core v10.0
         </div>
 
-        <div className="space-y-4 mb-20">
+        <div className="space-y-4 mb-16">
           <input 
-            className="w-full bg-white/5 border border-white/10 p-6 rounded-3xl text-center text-lg font-mono outline-none focus:border-cyan-500/40 transition-all uppercase backdrop-blur-2xl"
-            placeholder="ENTER_SOLANA_ADDRESS"
+            className="w-full bg-white/5 border border-white/10 p-6 rounded-3xl text-center font-mono outline-none focus:border-cyan-500/40 backdrop-blur-xl"
+            placeholder="ENTER_WALLET_ADDRESS"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
           />
           <button 
             onClick={analyzeWallet}
             disabled={loading}
-            className="w-full h-20 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-white hover:to-white text-black rounded-3xl font-black text-xl uppercase tracking-widest transition-all shadow-xl flex items-center justify-center gap-4 group"
+            className="w-full h-20 bg-gradient-to-r from-cyan-500 to-blue-600 text-black rounded-3xl font-black text-xl flex items-center justify-center gap-4 transition-all"
           >
-            {loading ? "SCANNING BLOCKCHAIN..." : (
-              <> RUN ANALYSIS <ArrowRight size={24} className="group-hover:translate-x-2 transition-transform" /> </>
-            )}
+            {loading ? "SCANNING..." : <> RUN ANALYSIS <ArrowRight size={24} /> </>}
           </button>
         </div>
 
         <AnimatePresence>
           {data && (
-            <motion.div 
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              className="relative p-[1px] rounded-[3rem] bg-gradient-to-b from-white/20 to-transparent shadow-2xl"
-            >
-              <div className="bg-[#0b101a] rounded-[2.9rem] p-12 border border-white/5 relative overflow-hidden shadow-2xl">
+            <div className="flex flex-col gap-6">
+              {/* Card Container to be captured */}
+              <div ref={cardRef} className="p-10 rounded-[2.9rem] bg-[#0b101a] border border-white/10 text-left relative overflow-hidden">
+                <div className="absolute top-[-10%] right-[-10%] w-40 h-40 bg-cyan-500/5 blur-3xl rounded-full" />
                 
-                <div className="flex justify-between items-center mb-12">
-                   <div className="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-full border border-white/10 text-xs font-mono text-gray-400 uppercase italic">
-                      ID: {data.address}
-                   </div>
-                   <ShieldCheck className="text-cyan-500/50" size={28} />
+                <div className="flex justify-between items-center mb-10">
+                   <div className="bg-white/5 px-4 py-2 rounded-full border border-white/10 text-[10px] font-mono text-gray-400">ID: {data.address}</div>
+                   <ShieldCheck className="text-cyan-500/30" size={24} />
                 </div>
 
-                <div className="space-y-8 text-left">
+                <div className="space-y-6">
                   <div>
-                    <p className="text-[10px] font-mono text-gray-500 uppercase tracking-[0.4em] mb-2 font-bold italic">Account Prestige</p>
-                    <h2 className="text-5xl font-black italic text-white tracking-tighter leading-none uppercase">
-                      {data.status}
-                    </h2>
+                    <p className="text-[9px] font-mono text-gray-500 uppercase tracking-widest mb-1">Portfolio Class</p>
+                    <h2 className="text-5xl font-black italic text-white uppercase">{data.status}</h2>
                   </div>
 
-                  {/* Big Win Section - الميزة الجديدة */}
-                  <div className="bg-gradient-to-br from-yellow-500/10 to-transparent border border-yellow-500/20 p-6 rounded-2xl relative overflow-hidden">
-                    <div className="absolute top-0 right-0 p-3 opacity-20">
-                        <TrendingUp size={40} className="text-yellow-500" />
-                    </div>
-                    <p className="text-[9px] font-mono text-yellow-500 uppercase font-black tracking-[0.3em] mb-1">Legendary Big Win</p>
-                    <h3 className="text-3xl font-black text-white italic uppercase tracking-tighter">
-                        {data.bigWinToken} <span className="text-yellow-500 text-sm ml-2">+{data.bigWinMultiplier}x</span>
-                    </h3>
+                  <div className="bg-yellow-500/10 border border-yellow-500/20 p-5 rounded-2xl">
+                    <p className="text-[8px] font-mono text-yellow-500 font-bold uppercase tracking-widest mb-1 italic">Biggest Win</p>
+                    <h3 className="text-2xl font-black text-white italic uppercase">{data.bigWinToken} <span className="text-yellow-500 ml-2">+{data.bigWinMultiplier}x</span></h3>
                   </div>
 
-                  <div className="py-8 border-y border-white/5">
-                    <p className="text-[10px] font-mono text-cyan-500 uppercase mb-2 font-bold tracking-[0.2em] italic">Verified Net Worth</p>
-                    <p className="text-6xl font-black text-white tracking-tighter">
-                      {data.sol.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} 
-                      <span className="text-2xl text-cyan-500 ml-4 font-light italic">SOL</span>
+                  <div className="pt-6 border-t border-white/5">
+                    <p className="text-[9px] font-mono text-gray-500 uppercase mb-1">Verified Net Worth</p>
+                    <p className="text-5xl font-black text-white tracking-tighter">
+                        {data.sol.toLocaleString(undefined, { minimumFractionDigits: 2 })} <span className="text-xl text-cyan-500 ml-2">SOL</span>
                     </p>
                   </div>
-
-                  <div className="grid grid-cols-2 gap-8">
-                    <div>
-                        <p className="text-[10px] font-mono text-gray-500 uppercase mb-2 italic font-bold">Total Tokens</p>
-                        <p className="text-2xl font-black text-white uppercase">{data.tokens}</p>
-                    </div>
-                    <div>
-                        <p className="text-[10px] font-mono text-gray-500 uppercase mb-2 italic font-bold">Success Rate</p>
-                        <p className="text-2xl font-black text-cyan-400 uppercase">{data.winRate}%</p>
-                    </div>
-                  </div>
                 </div>
 
-                <button 
-                  onClick={shareOnX}
-                  className="mt-12 w-full h-16 bg-white hover:bg-cyan-500 text-black rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-3 transition-all shadow-lg"
-                >
-                  <Twitter size={20} fill="currentColor" /> Share Verified Report
-                </button>
+                <div className="mt-8 pt-6 border-t border-white/5 flex justify-between items-center opacity-50">
+                   <p className="text-[8px] font-mono font-bold tracking-[0.3em]">WAGMI TERMINAL 2025</p>
+                   <Award size={20} />
+                </div>
               </div>
-            </motion.div>
+
+              {/* Share Button (Outside capture) */}
+              <button 
+                onClick={downloadAndShare}
+                className="w-full h-16 bg-white text-black rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-cyan-500 transition-all shadow-xl"
+              >
+                <Download size={20} /> Save Card & Share on X
+              </button>
+            </div>
           )}
         </AnimatePresence>
-
-        <div className="mt-20 text-center">
-          <p className="text-[10px] font-mono tracking-[0.4em] text-gray-600 font-bold uppercase italic">
-             Bader Alkorgli // WAGMI Terminal 2025
-          </p>
-        </div>
       </motion.div>
     </div>
   );

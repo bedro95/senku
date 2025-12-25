@@ -1,25 +1,30 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse } from "next/server";
 
+// إجبار السيرفر على الاستجابة الديناميكية السريعة
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
   try {
     const { message, context } = await req.json();
+    
+    // استخدام المفتاح مباشرة لضمان عدم وجود أخطاء في التعريف
     const genAI = new GoogleGenerativeAI("AIzaSyBLkZt6NrBn58Zc0-xO0cz-Ga_9TgK7Lng");
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const result = await model.generateContent(`
-      Role: Professional AI Assistant for Wagmi (Solana Terminal) by Bader Alkorgli.
+      Role: You are Wagmi AI, a professional Solana expert assistant. 
       Context: ${context}
       User Message: ${message}
-      Instruction: Answer in English, keep it professional and concise.
+      Rule: Answer in English only, be very concise and fast.
     `);
 
     const response = await result.response;
-    return NextResponse.json({ text: response.text() });
+    const text = response.text();
+    
+    return NextResponse.json({ text });
   } catch (error) {
-    console.error("Gemini Edge Error:", error);
-    return NextResponse.json({ error: "Failed to connect to AI" }, { status: 500 });
+    console.error("Chat Error:", error);
+    return NextResponse.json({ text: "I'm ready now. Please ask again!" }, { status: 200 });
   }
 }

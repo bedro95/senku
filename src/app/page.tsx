@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Download, Radio, Cpu, ShieldCheck, Fingerprint, Volume2, VolumeX, Github } from 'lucide-react';
 import { toPng } from 'html-to-image';
 
-export default function WagmiMasterpieceFinal() {
+export default function WagmiDrStoneEdition() {
   const [address, setAddress] = useState('');
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
@@ -71,12 +71,32 @@ export default function WagmiMasterpieceFinal() {
   return (
     <div className="min-h-screen bg-[#000] text-white flex flex-col items-center p-4 md:p-10 font-sans overflow-x-hidden relative selection:bg-cyan-500">
       
+      {/* DR. STONE PERSONA (SENKU) - Desktop Only for Clean Design */}
+      <motion.div 
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 0.8, x: 0 }}
+        transition={{ duration: 1.5, delay: 1 }}
+        className="fixed bottom-0 right-0 z-0 hidden lg:block pointer-events-none"
+      >
+        <div className="relative">
+          {/* Neon Glow behind Character */}
+          <div className="absolute inset-0 bg-cyan-500/20 blur-[120px] rounded-full" />
+          <motion.img 
+            animate={{ y: [0, -20, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            src="https://www.transparentpng.com/download/dr-stone/senku-ishigami-dr-stone-png-7.png" // رابط صورة Senku (Dr. Stone)
+            alt="Senku Ishigami"
+            className="w-[450px] object-contain drop-shadow-[0_0_30px_rgba(6,182,212,0.3)] grayscale-[30%] hover:grayscale-0 transition-all duration-700"
+          />
+        </div>
+      </motion.div>
+
       {/* Audio Toggle */}
       <button onClick={() => setIsMuted(!isMuted)} className="fixed top-6 right-6 z-50 p-3 bg-white/5 border border-white/10 rounded-full hover:bg-white/10 transition-all backdrop-blur-md">
         {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} className="text-cyan-400" />}
       </button>
 
-      {/* --- FULL SCREEN SNOW SYSTEM --- */}
+      {/* --- SNOW SYSTEM --- */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         {[...Array(60)].map((_, i) => (
           <motion.div
@@ -98,14 +118,14 @@ export default function WagmiMasterpieceFinal() {
           </h1>
           <div className="mt-4 flex flex-col items-center">
              <motion.p animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 3, repeat: Infinity }} className="text-[10px] md:text-[14px] font-mono tracking-[1.2em] text-cyan-400 uppercase font-black italic">
-               NEURAL INTERFACE v4.6 // BEYOND REALITY
+               NEURAL INTERFACE v4.7 // SCIENCE OVER LUCK
              </motion.p>
              <div className="mt-2 w-32 h-[1px] bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
           </div>
         </motion.div>
 
         {/* INPUT SECTION */}
-        <div className="w-full max-w-lg mb-20 px-4">
+        <div className="w-full max-w-lg mb-20 px-4 relative z-20">
           <div className="relative p-[1px] rounded-full bg-white/10 focus-within:bg-gradient-to-r focus-within:from-cyan-500 focus-within:to-purple-600 transition-all duration-700">
             <input 
               onMouseEnter={() => playSound(hoverSound)}
@@ -127,16 +147,14 @@ export default function WagmiMasterpieceFinal() {
 
         <AnimatePresence>
           {data && (
-            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col items-center gap-12 w-full px-2">
+            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col items-center gap-12 w-full px-2 relative z-20">
               
-              {/* THE MASTERPIECE NEON CARD */}
               <div className="relative w-full max-w-[620px] aspect-[1.58/1] rounded-[2.5rem] md:rounded-[3.8rem] p-[3px] overflow-hidden shadow-[0_0_100px_rgba(0,0,0,1)]">
                 <div className="absolute inset-[-500%] animate-[spin_4s_linear_infinity] bg-[conic-gradient(from_0deg,transparent,transparent,#06b6d4,#a855f7,#06b6d4,transparent,transparent)]" />
                 
                 <div ref={cardRef} className="relative w-full h-full bg-[#050505] rounded-[2.4rem] md:rounded-[3.7rem] p-8 md:p-14 overflow-hidden flex flex-col justify-between z-10">
                   <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")` }} />
                   
-                  {/* Top Header */}
                   <div className="flex justify-between items-start relative z-20">
                     <div className="flex items-center gap-6">
                       <div className="w-14 h-14 md:w-20 md:h-20 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 shadow-[0_0_20px_rgba(6,182,212,0.1)]">
@@ -147,19 +165,14 @@ export default function WagmiMasterpieceFinal() {
                         <p className="text-[10px] md:text-[12px] font-mono text-white/30 tracking-[0.2em] uppercase italic">Verified Asset Node</p>
                       </div>
                     </div>
-                    <div className="flex flex-col items-end">
-                      <Radio className="text-cyan-500 animate-pulse w-7 h-7 md:w-10 md:h-10" />
-                      <p className="text-[8px] font-mono text-cyan-500/50 mt-1 uppercase tracking-widest">Live</p>
-                    </div>
+                    <Radio className="text-cyan-500 animate-pulse w-7 h-7 md:w-10 md:h-10" />
                   </div>
 
-                  {/* Balance Section */}
                   <div className="flex items-center gap-4 text-left relative z-20">
                     <h2 className="text-6xl md:text-[7rem] font-[1000] tracking-tighter text-white drop-shadow-[0_0_40px_rgba(255,255,255,0.4)] leading-none italic">{data.sol}</h2>
                     <span className="text-xl md:text-3xl font-black text-cyan-400 italic self-end mb-2 md:mb-4">SOL</span>
                   </div>
 
-                  {/* Bottom Info */}
                   <div className="flex justify-between items-end border-t border-white/5 pt-8 md:pt-12 relative z-20">
                     <div className="text-left">
                         <div className="flex items-center gap-2 mb-2">
@@ -168,16 +181,11 @@ export default function WagmiMasterpieceFinal() {
                         </div>
                         <p className="text-sm md:text-2xl font-black italic tracking-tight text-white/90 uppercase">{data.status}</p>
                     </div>
-                    <div className="flex flex-col items-end gap-1">
-                        <p className="text-[8px] font-mono text-white/20 uppercase tracking-tighter">Node Signature Verified</p>
-                        <div className="h-[2px] w-12 bg-cyan-500/30 self-end" />
-                        <p className="text-[10px] font-mono text-white/40 mt-1">ID: #{data.id}</p>
-                    </div>
+                    <p className="text-[10px] font-mono text-white/40">ID: #{data.id}</p>
                   </div>
                 </div>
               </div>
 
-              {/* Action Button */}
               <button 
                 onMouseEnter={() => playSound(hoverSound)}
                 onClick={saveCard} 
@@ -189,31 +197,15 @@ export default function WagmiMasterpieceFinal() {
           )}
         </AnimatePresence>
 
-        {/* FOOTER WITH UPDATED GITHUB USER */}
         <footer className="mt-20 pb-10 flex flex-col items-center gap-6 opacity-40 hover:opacity-100 transition-all duration-500">
-          <div className="flex items-center gap-8">
-            <a 
-              href="https://github.com/bedro95" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              onMouseEnter={() => playSound(hoverSound)}
-              className="group flex flex-col items-center gap-2"
-            >
+          <a href="https://github.com/bedro95" target="_blank" rel="noopener noreferrer" onMouseEnter={() => playSound(hoverSound)} className="group flex flex-col items-center gap-2">
               <div className="p-3 bg-white/5 rounded-full border border-white/10 group-hover:border-cyan-500 group-hover:bg-cyan-500/10 transition-all">
                 <Github size={24} className="group-hover:text-cyan-400" />
               </div>
-              <span className="text-[10px] font-mono tracking-widest uppercase group-hover:text-cyan-400">GitHub</span>
-            </a>
-          </div>
-          
-          <div className="text-center">
-            <p className="text-[10px] font-mono tracking-[1.5em] uppercase">
-              WAGMI PROTOCOL // <span className="text-white">Bader Alkorgli</span>
-            </p>
-            <p className="text-[8px] font-mono text-white/30 mt-4 tracking-[0.5em] uppercase italic">
-              Built on Solana Blockchain
-            </p>
-          </div>
+          </a>
+          <p className="text-[10px] font-mono tracking-[1.5em] uppercase text-center">
+            WAGMI PROTOCOL // <span className="text-white">Bader Alkorgli</span>
+          </p>
         </footer>
       </div>
 

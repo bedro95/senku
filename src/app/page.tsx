@@ -2,10 +2,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Connection, PublicKey } from '@solana/web3.js';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Download, Zap, Layers, Radio, Cpu, Sparkles, ShieldCheck, Fingerprint, Volume2, VolumeX } from 'lucide-react';
+import { Download, Radio, Cpu, ShieldCheck, Fingerprint, Volume2, VolumeX, Github, Globe } from 'lucide-react';
 import { toPng } from 'html-to-image';
 
-export default function WagmiUltimateFinal() {
+export default function WagmiMasterpieceFinal() {
   const [address, setAddress] = useState('');
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
@@ -98,7 +98,7 @@ export default function WagmiUltimateFinal() {
           </h1>
           <div className="mt-4 flex flex-col items-center">
              <motion.p animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 3, repeat: Infinity }} className="text-[10px] md:text-[14px] font-mono tracking-[1.2em] text-cyan-400 uppercase font-black italic">
-               NEURAL INTERFACE v4.0 // BEYOND REALITY
+               NEURAL INTERFACE v4.5 // BEYOND REALITY
              </motion.p>
              <div className="mt-2 w-32 h-[1px] bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
           </div>
@@ -131,7 +131,6 @@ export default function WagmiUltimateFinal() {
               
               {/* THE MASTERPIECE NEON CARD */}
               <div className="relative w-full max-w-[620px] aspect-[1.58/1] rounded-[2.5rem] md:rounded-[3.8rem] p-[3px] overflow-hidden shadow-[0_0_100px_rgba(0,0,0,1)]">
-                {/* RACING BORDER */}
                 <div className="absolute inset-[-500%] animate-[spin_4s_linear_infinity] bg-[conic-gradient(from_0deg,transparent,transparent,#06b6d4,#a855f7,#06b6d4,transparent,transparent)]" />
                 
                 <div ref={cardRef} className="relative w-full h-full bg-[#050505] rounded-[2.4rem] md:rounded-[3.7rem] p-8 md:p-14 overflow-hidden flex flex-col justify-between z-10">
@@ -148,7 +147,10 @@ export default function WagmiUltimateFinal() {
                         <p className="text-[10px] md:text-[12px] font-mono text-white/30 tracking-[0.2em] uppercase italic">Verified Asset Node</p>
                       </div>
                     </div>
-                    <Radio className="text-cyan-500 animate-pulse w-7 h-7 md:w-10 md:h-10" />
+                    <div className="flex flex-col items-end">
+                      <Radio className="text-cyan-500 animate-pulse w-7 h-7 md:w-10 md:h-10" />
+                      <p className="text-[8px] font-mono text-cyan-500/50 mt-1 uppercase tracking-widest">Live</p>
+                    </div>
                   </div>
 
                   {/* Balance Section */}
@@ -166,11 +168,10 @@ export default function WagmiUltimateFinal() {
                         </div>
                         <p className="text-sm md:text-2xl font-black italic tracking-tight text-white/90 uppercase">{data.status}</p>
                     </div>
-                    <div className="flex flex-col items-end gap-3">
-                        <p className="text-[8px] font-mono text-white/20">NODE ID: {data.id}</p>
-                        <div className="w-16 h-16 md:w-24 md:h-24 bg-cyan-400 rounded-3xl flex items-center justify-center shadow-[0_0_50px_rgba(6,182,212,0.5)] transform rotate-3">
-                            <Zap size={32} className="md:w-14 md:h-14 text-black" fill="currentColor" />
-                        </div>
+                    <div className="flex flex-col items-end gap-1">
+                        <p className="text-[8px] font-mono text-white/20 uppercase tracking-tighter">Node Signature Verified</p>
+                        <div className="h-[2px] w-12 bg-cyan-500/30 self-end" />
+                        <p className="text-[10px] font-mono text-white/40 mt-1">ID: #{data.id}</p>
                     </div>
                   </div>
                 </div>
@@ -180,7 +181,7 @@ export default function WagmiUltimateFinal() {
               <button 
                 onMouseEnter={() => playSound(hoverSound)}
                 onClick={saveCard} 
-                className="flex items-center gap-6 bg-white/5 border border-white/10 px-24 py-6 rounded-full font-black text-xs uppercase tracking-[0.8em] hover:bg-white hover:text-black transition-all mb-20 group"
+                className="flex items-center gap-6 bg-white/5 border border-white/10 px-24 py-6 rounded-full font-black text-xs uppercase tracking-[0.8em] hover:bg-white hover:text-black transition-all mb-2 group"
               >
                 EXPORT IDENTITY <Download size={20} className="group-hover:translate-y-1 transition-transform" />
               </button>
@@ -188,12 +189,32 @@ export default function WagmiUltimateFinal() {
           )}
         </AnimatePresence>
 
-        {/* FOOTER */}
-        <div className="pb-10 text-center opacity-20 hover:opacity-100 transition-opacity">
-           <p className="text-[10px] font-mono tracking-[1.5em] uppercase">
-             WAGMI PROTOCOL // <span className="text-white">Bader Alkorgli</span>
-           </p>
-        </div>
+        {/* NEW FOOTER WITH GITHUB */}
+        <footer className="mt-20 pb-10 flex flex-col items-center gap-6 opacity-40 hover:opacity-100 transition-all duration-500">
+          <div className="flex items-center gap-8">
+            <a 
+              href="https://github.com/BaderAlkorgli" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              onMouseEnter={() => playSound(hoverSound)}
+              className="group flex flex-col items-center gap-2"
+            >
+              <div className="p-3 bg-white/5 rounded-full border border-white/10 group-hover:border-cyan-500 group-hover:bg-cyan-500/10 transition-all">
+                <Github size={24} className="group-hover:text-cyan-400" />
+              </div>
+              <span className="text-[10px] font-mono tracking-widest uppercase group-hover:text-cyan-400">GitHub</span>
+            </a>
+          </div>
+          
+          <div className="text-center">
+            <p className="text-[10px] font-mono tracking-[1.5em] uppercase">
+              WAGMI PROTOCOL // <span className="text-white">Bader Alkorgli</span>
+            </p>
+            <p className="text-[8px] font-mono text-white/30 mt-4 tracking-[0.5em] uppercase italic">
+              Built on Solana Blockchain
+            </p>
+          </div>
+        </footer>
       </div>
 
       <style jsx global>{`

@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Connection, PublicKey } from '@solana/web3.js';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Download, Radio, Cpu, ShieldCheck, Fingerprint, Volume2, VolumeX, Github, Globe } from 'lucide-react';
+import { Download, Radio, Cpu, ShieldCheck, Fingerprint, Volume2, VolumeX, Github } from 'lucide-react';
 import { toPng } from 'html-to-image';
 
 export default function WagmiMasterpieceFinal() {
@@ -98,7 +98,7 @@ export default function WagmiMasterpieceFinal() {
           </h1>
           <div className="mt-4 flex flex-col items-center">
              <motion.p animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 3, repeat: Infinity }} className="text-[10px] md:text-[14px] font-mono tracking-[1.2em] text-cyan-400 uppercase font-black italic">
-               NEURAL INTERFACE v4.5 // BEYOND REALITY
+               NEURAL INTERFACE v4.6 // BEYOND REALITY
              </motion.p>
              <div className="mt-2 w-32 h-[1px] bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
           </div>
@@ -189,11 +189,11 @@ export default function WagmiMasterpieceFinal() {
           )}
         </AnimatePresence>
 
-        {/* NEW FOOTER WITH GITHUB */}
+        {/* FOOTER WITH UPDATED GITHUB USER */}
         <footer className="mt-20 pb-10 flex flex-col items-center gap-6 opacity-40 hover:opacity-100 transition-all duration-500">
           <div className="flex items-center gap-8">
             <a 
-              href="https://github.com/BaderAlkorgli" 
+              href="https://github.com/bedro95" 
               target="_blank" 
               rel="noopener noreferrer"
               onMouseEnter={() => playSound(hoverSound)}

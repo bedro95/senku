@@ -22,7 +22,6 @@ export default function WagmiSuperNovaTerminal() {
   const { scrollYProgress } = useScroll();
   const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
 
-  // منطق الـ Scan (المستقر والأصلي)
   const handleScan = async () => {
     if (!address || address.length < 32) {
       alert("Please enter a valid Solana address");
@@ -46,91 +45,92 @@ export default function WagmiSuperNovaTerminal() {
       
       {/* --- BACKGROUND ENGINE --- */}
       <motion.div style={{ y: backgroundY }} className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[80vw] h-[80vw] bg-cyan-500/20 blur-[180px] rounded-full animate-pulse" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[80vw] h-[80vw] bg-orange-500/10 blur-[180px] rounded-full animate-pulse" />
+        <div className="absolute top-[-10%] left-[-10%] w-[80vw] h-[80vw] bg-[#9945FF]/10 blur-[180px] rounded-full animate-pulse" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[80vw] h-[80vw] bg-[#14F195]/10 blur-[180px] rounded-full animate-pulse" />
       </motion.div>
 
-      {/* --- BITCOIN CORE & ECOSYSTEM ANIMATION --- */}
-      <div className="fixed right-[5%] top-1/2 -translate-y-1/2 z-0 opacity-40 pointer-events-none">
-        {/* النواة: شعار بيتكوين المتوهج */}
+      {/* --- SOLANA CORE & ECOSYSTEM FOUNTAIN --- */}
+      <div className="fixed right-[5%] top-1/2 -translate-y-1/2 z-0 opacity-60 pointer-events-none">
+        {/* النواة: شعار سولانا الاحترافي */}
         <motion.div 
-          animate={{ rotate: [0, 10, -10, 0], scale: [1, 1.05, 1] }} 
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-          className="relative w-32 h-32 md:w-48 md:h-48 bg-gradient-to-tr from-[#F7931A] to-[#FFAB40] rounded-full blur-[1px] shadow-[0_0_100px_rgba(247,147,26,0.4)] flex items-center justify-center p-8"
+          animate={{ rotate: 360 }} 
+          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+          className="relative w-36 h-36 md:w-56 md:h-56 bg-gradient-to-tr from-[#9945FF] via-[#14F195] to-[#00FFA3] rounded-full blur-[1px] shadow-[0_0_120px_rgba(20,241,149,0.3)] flex items-center justify-center p-10"
         >
-           {/* Bitcoin Official SVG */}
-           <svg viewBox="0 0 64 64" className="w-full h-full text-white drop-shadow-lg">
-             <path d="M63.04 39.74c-2.63 10.51-13.21 16.93-23.73 14.3s-16.92-13.23-14.3-23.73 13.22-16.93 23.73-14.3 16.93 13.22 14.3 23.73z" fill="none"/>
-             <path d="M46.1 30.74c.64-4.29-2.62-6.6-7.07-8.14l1.45-5.79-3.53-.88-1.41 5.64c-.93-.23-1.88-.45-2.82-.66l1.42-5.69-3.53-.88-1.45 5.79c-.77-.18-1.52-.35-2.25-.53l.01-.04-4.87-1.21-.94 3.77s2.62.6 2.57.64c1.43.36 1.69 1.3 1.65 2.05l-1.65 6.63c.1.03.22.06.36.11l-.36-.09-2.31 9.27c-.17.43-.62 1.09-1.61.84.04.05-2.57-.64-2.57-.64l-1.75 4.04 4.6 1.15c.85.21 1.69.43 2.51.63l-1.47 5.9 3.53.88 1.45-5.82c.96.26 1.9.51 2.82.74l-1.44 5.77 3.53.88 1.47-5.88c6.03 1.14 10.56.68 12.46-4.77 1.54-4.39-.08-6.93-3.26-8.59 2.32-.54 4.06-2.07 4.53-5.22zm-8.11 11.41c-1.09 4.38-8.48 2.02-10.88 1.42l1.94-7.79c2.4.6 10.08 1.78 8.94 6.37zm1.09-11.47c-1 4-7.16 1.97-9.15 1.47l1.77-7.1c1.99.5 8.42 1.43 7.38 5.63z" fill="currentColor"/>
+           {/* Official Solana SVG Logo */}
+           <svg viewBox="0 0 397 311" className="w-full h-full text-black drop-shadow-xl">
+             <path d="M64.6 237.9c2.4-2.4 5.7-3.8 9.2-3.8h317.4c5.8 0 8.7 7 4.6 11.1l-62.7 62.7c-2.4 2.4-5.7 3.8-9.2 3.8H46.5c-5.8 0-8.7-7-4.6-11.1l62.7-62.7zm0-150.3c2.4-2.4 5.7-3.8 9.2-3.8h317.4c5.8 0 8.7 7 4.6 11.1l-62.7 62.7c-2.4 2.4-5.7 3.8-9.2 3.8H46.5c-5.8 0-8.7-7-4.6-11.1l62.7-62.7zm268.1-150.3c2.4-2.4 5.7-3.8 9.2-3.8H24.5c-5.8 0-8.7 7-4.6 11.1l62.7 62.7c2.4 2.4 5.7 3.8 9.2 3.8h317.4c5.8 0 8.7-7 4.6-11.1l-62.7-62.7z" fill="currentColor"/>
            </svg>
         </motion.div>
 
-        {/* العملات والبرامج المنبثقة */}
+        {/* ينبوع الأيقونات المنبثقة */}
         {ECOSYSTEM_ICONS.map((icon, i) => (
-          <motion.img
+          <motion.div
             key={i}
-            src={icon}
-            initial={{ opacity: 0, x: 0, y: 0, scale: 0 }}
+            initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
             animate={{ 
               opacity: [0, 1, 0],
-              x: [0, Math.random() * 300 - 150],
-              y: [0, Math.random() * -400 - 100],
-              scale: [0, 1, 0.5],
-              rotate: 360
+              scale: [0.5, 1, 0.5],
+              x: [0, (i % 2 === 0 ? 1 : -1) * (100 + Math.random() * 200)],
+              y: [0, -200 - Math.random() * 300],
             }}
-            transition={{ duration: 4 + Math.random() * 4, repeat: Infinity, delay: i * 1.5 }}
-            className="absolute top-1/2 left-1/2 w-8 h-8 md:w-12 md:h-12 rounded-full border border-white/20 p-1 bg-black shadow-lg"
-          />
+            transition={{ duration: 6, repeat: Infinity, delay: i * 1.2, ease: "easeOut" }}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+          >
+            <div className="p-2 bg-black/40 backdrop-blur-md rounded-full border border-white/10 shadow-2xl">
+              <img src={icon} className="w-8 h-8 md:w-10 md:h-10 rounded-full" alt="eco" />
+            </div>
+          </motion.div>
         ))}
       </div>
 
       {/* --- HERO SECTION --- */}
       <section className="relative z-10 min-h-screen flex flex-col items-center justify-center p-6 text-center">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <h1 className="text-[12vw] md:text-[10rem] font-serif font-black italic tracking-tighter leading-none bg-gradient-to-b from-white via-white to-gray-600 bg-clip-text text-transparent drop-shadow-[0_0_50px_rgba(255,255,255,0.3)] select-none">
+          <h1 className="text-[12vw] md:text-[10rem] font-serif font-black italic tracking-tighter leading-none bg-gradient-to-b from-white via-white to-gray-600 bg-clip-text text-transparent drop-shadow-[0_0_50px_rgba(255,255,255,0.3)]">
             WAGMI
           </h1>
-          <p className="text-[10px] md:text-[12px] font-mono tracking-[1.5em] text-cyan-400 uppercase mt-4 font-black italic mb-16 drop-shadow-[0_0_15px_rgba(6,182,212,0.8)]">
+          <p className="text-[10px] md:text-[12px] font-mono tracking-[1.5em] text-cyan-400 uppercase mt-4 font-black italic mb-16">
             NEURAL TERMINAL v3.0
           </p>
         </motion.div>
 
         <div className="w-full max-w-xl px-4 space-y-6">
           <div className="relative group">
-            <div className="absolute -inset-1 bg-gradient-to-r from-cyan-400 to-orange-500 rounded-full blur opacity-40 group-focus-within:opacity-100 transition duration-1000"></div>
+            <div className="absolute -inset-1 bg-gradient-to-r from-cyan-400 to-purple-600 rounded-full blur opacity-40 group-focus-within:opacity-100 transition duration-1000"></div>
             <input className="relative w-full bg-black/80 backdrop-blur-md border border-white/10 rounded-full p-6 text-center outline-none font-mono text-lg text-white" placeholder="ENTER SOLANA ADDRESS" value={address} onChange={(e) => setAddress(e.target.value)} />
           </div>
-          <button onClick={handleScan} disabled={loading} className="w-full py-6 bg-white text-black rounded-full font-[1000] uppercase text-2xl tracking-[0.5em] hover:bg-orange-500 hover:text-white transition-all active:scale-95 shadow-[0_0_60px_rgba(255,255,255,0.2)]">
+          <button onClick={handleScan} disabled={loading} className="w-full py-6 bg-white text-black rounded-full font-[1000] uppercase text-2xl tracking-[0.5em] hover:bg-cyan-400 hover:text-white transition-all active:scale-95 shadow-[0_0_60px_rgba(255,255,255,0.2)]">
             {loading ? "SCANNING..." : "SCAN"}
           </button>
         </div>
       </section>
 
-      {/* --- RESULT SECTION (GLASS CARD) --- */}
+      {/* --- RESULT SECTION --- */}
       <AnimatePresence>
         {data && (
           <section id="result-view" className="relative z-10 py-32 flex flex-col items-center">
             <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col items-center gap-16 w-full max-w-[640px] px-4">
-              <div className="relative w-full aspect-[1.58/1] rounded-[2.5rem] md:rounded-[3.5rem] p-[3px] overflow-hidden shadow-[0_0_150px_rgba(247,147,26,0.3)] group">
-                <div className="absolute inset-[-500%] animate-[spin_3s_linear_infinity] bg-[conic-gradient(from_0deg,transparent,transparent,#06b6d4,#f7931a,#06b6d4,transparent,transparent)]" />
+              <div className="relative w-full aspect-[1.58/1] rounded-[2.5rem] md:rounded-[3.5rem] p-[3px] overflow-hidden shadow-[0_0_150px_rgba(6,182,212,0.6)] group">
+                <div className="absolute inset-[-500%] animate-[spin_3s_linear_infinity] bg-[conic-gradient(from_0deg,transparent,transparent,#06b6d4,#a855f7,#14F195,transparent,transparent)]" />
                 <div ref={cardRef} className="relative w-full h-full bg-black/40 backdrop-blur-[40px] rounded-[2.3rem] md:rounded-[3.3rem] p-8 md:p-12 overflow-hidden flex flex-col justify-between z-10 border border-white/10">
                   <div className="flex justify-between items-start">
                     <div className="flex items-center gap-5">
-                      <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center border border-white/20"><Layers className="text-orange-400 w-8 h-8" /></div>
+                      <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center border border-white/20"><Layers className="text-cyan-400 w-8 h-8" /></div>
                       <div className="text-left leading-none">
-                        <p className="text-xl font-black italic text-white uppercase tracking-tighter drop-shadow-md">Identity Pass</p>
+                        <p className="text-xl font-black italic text-white uppercase tracking-tighter">Identity Pass</p>
                         <p className="text-[10px] font-mono text-white/40 uppercase mt-1 italic tracking-widest">ID: //WAGMI-{data.id}//</p>
                       </div>
                     </div>
-                    <Radio className="text-orange-500 animate-pulse w-8 h-8 drop-shadow-[0_0_15px_rgba(247,147,26,1)]" />
+                    <Radio className="text-cyan-500 animate-pulse w-8 h-8" />
                   </div>
                   <div className="flex items-center gap-8 text-left">
                     <div className="w-20 h-14 bg-white/5 rounded-xl border border-white/10 flex items-center justify-center"><Cpu size={32} className="text-white/20" /></div>
-                    <div><h2 className="text-6xl md:text-8xl font-[1000] tracking-tighter text-white leading-none drop-shadow-2xl">{data.sol}</h2><p className="text-[10px] font-mono text-orange-400/60 uppercase mt-2 italic font-bold tracking-widest">RESERVE_ASSET: SOL</p></div>
+                    <div><h2 className="text-6xl md:text-8xl font-[1000] tracking-tighter text-white leading-none">{data.sol}</h2><p className="text-[10px] font-mono text-cyan-400/60 uppercase mt-2 italic font-bold tracking-widest">RESERVE_ASSET: SOL</p></div>
                   </div>
                   <div className="flex justify-between items-end border-t border-white/10 pt-8">
-                    <div className="text-left"><p className="text-[10px] font-black text-orange-400 uppercase tracking-widest italic mb-1">ENCRYPTED TERMINAL ACCESS</p><p className="text-lg md:text-2xl font-black italic text-white uppercase">RANK: {data.status}</p></div>
-                    <div className="w-16 h-16 bg-orange-500 rounded-3xl flex items-center justify-center shadow-[0_0_60px_rgba(247,147,26,1)]"><Zap size={32} className="text-black" fill="currentColor" /></div>
+                    <div className="text-left"><p className="text-[10px] font-black text-cyan-400 uppercase tracking-widest italic mb-1">ENCRYPTED TERMINAL ACCESS</p><p className="text-lg md:text-2xl font-black italic text-white uppercase">RANK: {data.status}</p></div>
+                    <div className="w-16 h-16 bg-cyan-400 rounded-3xl flex items-center justify-center shadow-[0_0_60px_rgba(6,182,212,1)]"><Zap size={32} className="text-black" fill="currentColor" /></div>
                   </div>
                 </div>
               </div>
@@ -144,7 +144,7 @@ export default function WagmiSuperNovaTerminal() {
       <section className="relative z-10 py-40 px-6 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10">
         {[{ icon: <ShieldCheck size={40} />, title: "SECURE SCAN" }, { icon: <Activity size={40} />, title: "LIVE STATS" }, { icon: <Globe size={40} />, title: "UNIVERSAL" }].map((feat, i) => (
           <div key={i} className="p-10 bg-white/5 border border-white/10 rounded-[2.5rem] backdrop-blur-xl transition-all">
-            <div className="text-orange-400 mb-6">{feat.icon}</div>
+            <div className="text-cyan-400 mb-6">{feat.icon}</div>
             <h3 className="text-2xl font-black italic mb-4 uppercase">{feat.title}</h3>
             <p className="text-gray-400 font-mono text-sm">Mainnet-beta node verification protocols active.</p>
           </div>
@@ -154,8 +154,8 @@ export default function WagmiSuperNovaTerminal() {
       <footer className="relative z-10 py-20 border-t border-white/5 px-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
           <div className="text-left">
-            <h2 className="text-4xl font-black italic tracking-tighter text-white uppercase leading-none drop-shadow-lg">WAGMI PULSE</h2>
-            <p className="text-gray-500 font-mono text-xs tracking-[0.5em] uppercase italic mt-2">Designed by <span className="text-orange-500 font-bold underline">Bader Alkorgli</span></p>
+            <h2 className="text-4xl font-black italic tracking-tighter text-white uppercase leading-none">WAGMI PULSE</h2>
+            <p className="text-gray-500 font-mono text-xs tracking-[0.5em] uppercase italic mt-2">Designed by <span className="text-cyan-500 font-bold underline">Bader Alkorgli</span></p>
           </div>
           <a href="https://github.com/bedro95" target="_blank" className="flex items-center gap-3 bg-white/10 hover:bg-white hover:text-black border border-white/10 px-8 py-4 rounded-2xl transition-all duration-500 shadow-xl group">
             <Github size={24} className="group-hover:rotate-12 transition-transform" />
@@ -168,7 +168,7 @@ export default function WagmiSuperNovaTerminal() {
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         html { scroll-behavior: smooth; }
         ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: #f7931a; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #06b6d4; border-radius: 10px; }
       `}</style>
     </div>
   );

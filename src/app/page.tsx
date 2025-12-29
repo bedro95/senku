@@ -6,51 +6,71 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Download, Radio, Fingerprint, Volume2, 
   VolumeX, Activity, Cpu, Zap, Globe, 
-  BarChart3, Eye, ChevronRight, Trophy, TrendingUp
+  BarChart3, Eye, ChevronRight, Trophy, TrendingUp, Music
 } from 'lucide-react';
 import { toPng } from 'html-to-image';
 
-export default function SenkuWhaleProtocolUltimate() {
+export default function SenkuUltimateMasterpiece() {
   const [address, setAddress] = useState('');
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true); 
   const [activeTab, setActiveTab] = useState('scan'); 
   const [whaleAlerts, setWhaleAlerts] = useState<any[]>([]);
   const cardRef = useRef<HTMLDivElement>(null);
 
+  const bgMusic = useRef<HTMLAudioElement | null>(null);
   const audioScan = useRef<HTMLAudioElement | null>(null);
-  const audioSuccess = useRef<HTMLAudioElement | null>(null);
 
-  // 1. نظام الرادار المباشر (تنبيهات الحيتان التلقائية)
+  // 1. نظام الصوت والموسيقى
+  useEffect(() => {
+    bgMusic.current = new Audio('https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptitle=Dr+Stone+Opening+1&filename=25/254425-4556488a-3644-486d-895c-5959959e6616.mp3');
+    bgMusic.current.loop = true;
+    bgMusic.current.volume = 0.4;
+
+    audioScan.current = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
+
+    const handleFirstInteraction = () => {
+      if (!isMuted && bgMusic.current && bgMusic.current.paused) {
+        bgMusic.current.play().catch(() => {});
+      }
+    };
+
+    window.addEventListener('mousedown', handleFirstInteraction);
+    return () => window.removeEventListener('mousedown', handleFirstInteraction);
+  }, [isMuted]);
+
+  // 2. تحديث رادار الحيتان المباشر
   useEffect(() => {
     const assets = ['SOL', 'USDC', 'JUP', 'BONK', 'PYTH'];
     const generateAlert = () => {
       const newAlert = {
         id: Date.now(),
-        amount: (Math.random() * 800000 + 5000).toLocaleString(undefined, { maximumFractionDigits: 0 }),
+        amount: (Math.random() * 950000 + 1000).toLocaleString(),
         asset: assets[Math.floor(Math.random() * assets.length)],
-        time: "Just Now",
-        usd: (Math.random() * 100 + 1).toFixed(1) + "M",
-        type: Math.random() > 0.4 ? "Transfer" : "Large Swap",
-        from: "Whale_" + Math.floor(Math.random() * 999),
-        to: "Exchange_Node"
+        usd: (Math.random() * 200 + 1).toFixed(1) + "M",
+        type: "WHALE_INCOMING"
       };
-      setWhaleAlerts(prev => [newAlert, ...prev].slice(0, 6));
+      setWhaleAlerts(prev => [newAlert, ...prev].slice(0, 5));
     };
-
-    generateAlert();
-    const interval = setInterval(generateAlert, 4000);
+    const interval = setInterval(generateAlert, 4500);
     return () => clearInterval(interval);
   }, []);
 
-  // 2. إعداد ملفات الصوت
-  useEffect(() => {
-    audioScan.current = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
-    audioSuccess.current = new Audio('https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3');
-  }, []);
+  const toggleMute = () => {
+    if (bgMusic.current) {
+      if (isMuted) {
+        bgMusic.current.play();
+        setIsMuted(false);
+      } else {
+        bgMusic.current.pause();
+        setIsMuted(true);
+      }
+    } else {
+      setIsMuted(!isMuted);
+    }
+  };
 
-  // 3. تحليل المحفظة عبر شبكة سولانا
   const analyze = async () => {
     if (!address) return;
     setLoading(true);
@@ -61,10 +81,7 @@ export default function SenkuWhaleProtocolUltimate() {
       const key = new PublicKey(address.trim());
       const balance = await connection.getBalance(key);
       const sol = balance / 1_000_000_000;
-
-      let tierColor = sol >= 1000 ? "#22c55e" : sol >= 100 ? "#a855f7" : "#3b82f6";
-      
-      if (!isMuted && sol >= 100) audioSuccess.current?.play();
+      let tierColor = sol >= 1000 ? "#22c55e" : sol >= 100 ? "#a855f7" : "#00f2ff";
 
       setData({
         sol: sol.toLocaleString(undefined, { minimumFractionDigits: 2 }),
@@ -73,7 +90,7 @@ export default function SenkuWhaleProtocolUltimate() {
         id: Math.floor(100000 + Math.random() * 900000),
       });
     } catch (e) {
-      alert("Precision Error! Check the address strings.");
+      alert("Precision required! Check address.");
     } finally {
       setLoading(false);
     }
@@ -83,86 +100,74 @@ export default function SenkuWhaleProtocolUltimate() {
     if (!cardRef.current) return;
     const dataUrl = await toPng(cardRef.current, { pixelRatio: 3, backgroundColor: '#000' });
     const link = document.createElement('a');
-    link.download = `SENKU-ID-${data?.id}.png`;
+    link.download = `SENKU-CARD-${data?.id}.png`;
     link.href = dataUrl;
     link.click();
   };
 
   return (
-    <div className="min-h-screen bg-[#000] text-white flex flex-col items-center p-4 md:p-10 font-sans overflow-hidden relative">
+    <div className="min-h-screen bg-[#000] text-white flex flex-col items-center p-4 md:p-10 font-sans overflow-hidden relative border-[4px] border-transparent animate-neon-border">
       
-      {/* --- نظام الثلج النيوني --- */}
-      <div className="fixed inset-0 z-0 pointer-events-none opacity-25">
+      {/* غطاء النيون الخلفي */}
+      <div className="fixed inset-0 z-0 pointer-events-none shadow-[inset_0_0_120px_rgba(0,242,255,0.15)]" />
+
+      {/* نظام الجزيئات والثلج */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-40">
         {[...Array(35)].map((_, i) => (
-          <motion.div key={i} animate={{ y: "110vh" }} transition={{ duration: 10, repeat: Infinity, ease: "linear", delay: i * 0.2 }}
-            className="absolute w-[1.5px] h-[1.5px] bg-blue-500 rounded-full" style={{ left: `${Math.random() * 100}vw`, top: `-5vh` }} />
+          <motion.div key={i} animate={{ y: "110vh", x: ["-15px", "15px", "-15px"] }} transition={{ duration: Math.random() * 12 + 6, repeat: Infinity, ease: "linear" }}
+            className="absolute w-[1.5px] h-[1.5px] bg-cyan-400 rounded-full shadow-[0_0_8px_#00f2ff]" style={{ left: `${Math.random() * 100}vw`, top: `-20px` }} />
         ))}
       </div>
 
-      {/* --- شخصية SENKU التفاعلية --- */}
-      <motion.div 
-        className="fixed z-[1] pointer-events-none mix-blend-screen"
-        animate={{ 
-          x: loading ? [0, 15, -15, 0] : [0, 120, -120, 0],
-          y: [0, -40, 40, 0],
-          scale: data?.status === "WHITE WHALE" ? 1.35 : 1,
-          filter: data?.status === "WHITE WHALE" ? "hue-rotate(120deg) brightness(1.6)" : "none"
-        }}
-        transition={{ duration: loading ? 0.15 : 22, repeat: Infinity, ease: "easeInOut" }}
-        style={{ top: '35%', left: '25%' }}
-      >
-        <div className="relative group">
-          <img src="/senku.GIF" alt="Senku" className="w-[280px] md:w-[580px] opacity-45 shadow-inner"
-            style={{ maskImage: 'radial-gradient(circle, black 50%, transparent 100%)', WebkitMaskImage: 'radial-gradient(circle, black 50%, transparent 100%)' }} />
-          <motion.div className="absolute top-0 right-0 bg-green-500/10 border border-green-500/30 p-2 rounded-xl text-[9px] font-mono text-green-400 backdrop-blur-xl">
-            {loading ? "SEARCHING..." : "SENKU_MONITOR_ACTIVE"}
-          </motion.div>
-        </div>
+      {/* شخصية SENKU المتحركة */}
+      <motion.div className="fixed z-[1] pointer-events-none mix-blend-screen"
+        animate={{ x: loading ? [0, 8, -8, 0] : [0, 90, -90, 0], y: [0, -40, 40, 0], scale: !isMuted ? [1, 1.03, 1] : 1 }}
+        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }} style={{ top: '35%', left: '25%' }}>
+        <img src="/senku.GIF" alt="Senku" className="w-[300px] md:w-[620px] opacity-40 filter contrast-125 brightness-110"
+          style={{ maskImage: 'radial-gradient(circle, black 55%, transparent 100%)', WebkitMaskImage: 'radial-gradient(circle, black 55%, transparent 100%)' }} />
       </motion.div>
 
-      {/* --- زر كتم الصوت --- */}
-      <button onClick={() => setIsMuted(!isMuted)} className="fixed top-6 right-6 z-[100] p-4 bg-white/5 border border-white/10 rounded-full backdrop-blur-lg hover:bg-white/10 transition-all">
-        {isMuted ? <VolumeX size={22} className="text-white/40" /> : <Volume2 size={22} className="text-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]" />}
-      </button>
+      {/* أزرار التحكم بالصوت */}
+      <div className="fixed top-8 right-8 z-[100]">
+        <button onClick={toggleMute} className="p-5 bg-black/50 border border-cyan-500/40 rounded-full backdrop-blur-2xl hover:shadow-[0_0_25px_rgba(0,242,255,0.5)] transition-all group">
+          {isMuted ? <VolumeX size={24} className="text-white/30" /> : <div className="relative"><Volume2 size={24} className="text-cyan-400" /><Music size={14} className="absolute -top-3 -right-3 text-green-400 animate-bounce" /></div>}
+        </button>
+      </div>
 
-      {/* --- القائمة العلوية --- */}
-      <nav className="relative z-[90] flex bg-white/5 border border-white/10 p-1 rounded-2xl mb-12 backdrop-blur-3xl shadow-2xl">
+      {/* القائمة العلوية */}
+      <nav className="relative z-[90] flex bg-black/40 border border-white/10 p-1.5 rounded-2xl mb-16 backdrop-blur-3xl shadow-2xl">
         {['scan', 'radar', 'hall of fame'].map((tab) => (
-          <button key={tab} onClick={() => setActiveTab(tab)} 
-            className={`px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all ${activeTab === tab ? 'bg-green-600 text-white shadow-lg' : 'text-white/20 hover:text-white/50'}`}>
-            {tab}
-          </button>
+          <button key={tab} onClick={() => setActiveTab(tab)} className={`px-10 py-3.5 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all ${activeTab === tab ? 'bg-cyan-600 text-white shadow-[0_0_25px_#00f2ff]' : 'text-white/20 hover:text-white'}`}>{tab}</button>
         ))}
       </nav>
 
-      {/* --- المحتوى الرئيسي --- */}
       <div className="relative z-10 w-full max-w-5xl flex flex-col items-center">
-        
         {activeTab === 'scan' && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full flex flex-col items-center">
-            <h1 className="text-8xl md:text-[13rem] font-[1000] italic tracking-tighter leading-none text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.1)]">SENKU</h1>
-            <p className="text-[10px] md:text-xs font-mono tracking-[1.2em] text-green-500 uppercase font-black mb-14 italic text-center">THE SCIENTIFIC PROTOCOL</p>
+            <h1 className="text-9xl md:text-[15rem] font-[1000] italic tracking-tighter leading-none text-white drop-shadow-[0_0_50px_rgba(0,242,255,0.4)] select-none">SENKU</h1>
+            <p className="text-[11px] font-mono tracking-[1.6em] text-cyan-400 uppercase font-black mb-16 animate-pulse text-center">KINGDOM_OF_SCIENCE_V2.0</p>
 
-            <div className="w-full max-w-md px-4 mb-14">
-              <div className="relative p-[1px] rounded-2xl bg-white/10 focus-within:bg-green-600 transition-all duration-500 shadow-2xl">
-                <input className="w-full bg-black rounded-2xl p-6 text-center outline-none font-mono text-sm text-white" 
-                  placeholder="SOLANA_ADDRESS" value={address} onChange={(e) => setAddress(e.target.value)} />
+            <div className="w-full max-w-lg px-6 mb-16">
+              <div className="relative group">
+                <div className="absolute -inset-1 bg-gradient-to-r from-cyan-600 to-green-600 rounded-2xl blur opacity-20 group-focus-within:opacity-50 transition duration-1000"></div>
+                <input className="relative w-full bg-black border border-white/10 rounded-2xl p-6 text-center outline-none font-mono text-sm text-white focus:border-cyan-500 transition-all" 
+                  placeholder="ENTER_SOLANA_WALLET" value={address} onChange={(e) => setAddress(e.target.value)} />
               </div>
-              <button onClick={analyze} className="w-full mt-5 py-5 bg-white text-black rounded-2xl font-[1000] uppercase text-[11px] tracking-[0.6em] hover:bg-green-600 hover:text-white transition-all active:scale-95 shadow-[0_0_40px_rgba(255,255,255,0.1)]">
-                {loading ? <Cpu className="animate-spin mx-auto" /> : "START_SCAN"}
+              <button onClick={analyze} className="w-full mt-6 py-6 bg-white text-black rounded-2xl font-[1000] uppercase text-xs tracking-[0.6em] hover:bg-cyan-500 hover:text-white transition-all active:scale-95 shadow-2xl">
+                {loading ? "SEARCHING_10_BILLION%..." : "EXECUTE_EXPERIMENT"}
               </button>
             </div>
 
             <AnimatePresence>
               {data && (
-                <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="w-full flex flex-col items-center pb-40">
-                  <div ref={cardRef} className="relative w-full max-w-[460px] aspect-[1.6/1] bg-gradient-to-br from-[#0a0a0a] to-[#000] border border-white/10 rounded-[2.5rem] p-10 overflow-hidden shadow-2xl">
-                    <div className="absolute top-0 right-0 w-48 h-48 blur-[100px] opacity-30" style={{ backgroundColor: data.tierColor }} />
-                    <div className="flex justify-between items-start"><Fingerprint size={32} style={{ color: data.tierColor }} /><Radio size={20} className="text-red-500 animate-pulse" /></div>
-                    <div className="text-6xl md:text-7xl font-[1000] italic my-8 tracking-tighter">{data.sol} <span className="text-xl font-black" style={{ color: data.tierColor }}>SOL</span></div>
-                    <div className="flex justify-between items-end border-t border-white/5 pt-6">
-                      <div><p className="text-[9px] font-black opacity-30 uppercase tracking-widest">Senku Status</p><p className="text-3xl font-[1000] italic" style={{ color: data.tierColor }}>{data.status}</p></div>
-                      <button onClick={saveCard} className="p-4 bg-white/5 rounded-2xl hover:bg-white/10 transition-all"><Download size={20} /></button>
+                <motion.div initial={{ y: 60, opacity: 0, scale: 0.9 }} animate={{ y: 0, opacity: 1, scale: 1 }} className="w-full flex justify-center pb-48">
+                  <div ref={cardRef} className="relative w-full max-w-[500px] aspect-[1.6/1] bg-[#050505] border-[3px] rounded-[3.5rem] p-12 overflow-hidden shadow-[0_0_70px_rgba(0,0,0,1)] animate-neon-card" style={{ borderColor: data.tierColor }}>
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent" />
+                    <div className="flex justify-between mb-10"><Fingerprint size={40} style={{ color: data.tierColor }} /><Activity size={24} className="text-red-500 animate-pulse" /></div>
+                    <div className="text-7xl md:text-8xl font-[1000] italic mb-12 tracking-tighter text-white">{data.sol} <span className="text-2xl" style={{ color: data.tierColor }}>SOL</span></div>
+                    <div className="flex justify-between items-end border-t border-white/10 pt-8">
+                      <div><p className="text-[10px] opacity-40 uppercase tracking-widest font-black mb-1">Vessel Rank</p><p className="text-4xl font-[1000] italic uppercase" style={{ color: data.tierColor }}>{data.status}</p></div>
+                      <button onClick={saveCard} className="p-5 bg-white/5 rounded-3xl border border-white/10 hover:bg-white/10 transition-all"><Download size={24} /></button>
                     </div>
                   </div>
                 </motion.div>
@@ -172,57 +177,49 @@ export default function SenkuWhaleProtocolUltimate() {
         )}
 
         {activeTab === 'radar' && (
-          <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="w-full px-4 pb-48 max-w-2xl">
-            <div className="flex items-center gap-4 mb-10"><Globe className="text-green-500 animate-spin-slow" size={32} /><h2 className="text-4xl font-[1000] italic uppercase tracking-tighter">Live Whale Feed</h2></div>
-            <div className="grid gap-4">
-              <AnimatePresence mode="popLayout">
-                {whaleAlerts.map((alert) => (
-                  <motion.div key={alert.id} layout initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: 20, opacity: 0 }}
-                    className="bg-[#050505] border border-white/5 p-6 rounded-3xl flex justify-between items-center hover:border-green-500/40 transition-all border-l-4 border-l-green-600">
-                    <div className="flex items-center gap-5">
-                      <div className="p-4 bg-green-600/10 rounded-2xl text-green-500"><TrendingUp size={24} /></div>
-                      <div>
-                        <div className="text-2xl font-[1000] italic">{alert.amount} <span className="text-xs text-green-500">{alert.asset}</span></div>
-                        <div className="text-[10px] font-mono text-white/30 uppercase tracking-widest">{alert.type}</div>
-                      </div>
-                    </div>
-                    <ChevronRight size={18} className="text-green-500" />
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </div>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full max-w-2xl px-6 pb-56 space-y-5">
+            <h2 className="text-5xl font-[1000] italic uppercase flex items-center gap-5 mb-12 tracking-tighter"><Zap className="text-cyan-400" /> Scientific Feed</h2>
+            {whaleAlerts.map((alert) => (
+              <div key={alert.id} className="bg-white/5 border border-white/10 p-7 rounded-[2rem] flex justify-between items-center border-l-[6px] border-l-cyan-500 hover:bg-white/10 transition-all group">
+                <div><div className="text-3xl font-[1000] italic group-hover:text-cyan-400 transition-colors">{alert.amount} <span className="text-xs text-cyan-400 font-black">{alert.asset}</span></div><div className="text-[11px] font-mono text-white/30 uppercase tracking-[0.4em] mt-1">{alert.type} • ${alert.usd}</div></div>
+                <ChevronRight className="text-cyan-500 group-hover:translate-x-2 transition-transform" size={24} />
+              </div>
+            ))}
           </motion.div>
         )}
 
         {activeTab === 'hall of fame' && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 px-4 pb-48 max-w-4xl">
-            {[
-              { name: "SENKU_DEV", bal: "15,240", rank: "1" },
-              { name: "CHROME_KING", bal: "8,900", rank: "2" },
-              { name: "KOHAKU_SOL", bal: "4,120", rank: "3" },
-              { name: "GEN_MINT", bal: "2,500", rank: "4" }
-            ].map((whale, i) => (
-              <div key={i} className="bg-black border border-white/10 p-8 rounded-[2.5rem] flex items-center gap-6 relative group overflow-hidden shadow-xl">
-                <Trophy size={60} className={`absolute -right-4 -bottom-4 opacity-10 group-hover:opacity-30 transition-all ${i === 0 ? 'text-yellow-500' : 'text-white'}`} />
-                <div className="w-16 h-16 rounded-2xl bg-green-600 flex items-center justify-center font-[1000] text-3xl italic shadow-[0_0_20px_rgba(34,197,94,0.3)]">#{whale.rank}</div>
-                <div>
-                  <div className="text-[10px] font-mono text-green-500/60 mb-1 tracking-widest">{whale.name}</div>
-                  <div className="text-4xl font-[1000] italic tracking-tighter">{whale.bal} <span className="text-sm font-black text-white/20">SOL</span></div>
-                </div>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full grid grid-cols-1 md:grid-cols-2 gap-8 px-6 pb-56 max-w-5xl">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="bg-black border border-white/10 p-10 rounded-[3rem] relative group overflow-hidden hover:border-cyan-500/50 transition-all shadow-2xl">
+                <Trophy size={80} className="absolute -right-6 -bottom-6 opacity-10 group-hover:opacity-30 group-hover:scale-110 transition-all text-cyan-400" />
+                <div className="w-20 h-20 rounded-[1.5rem] bg-cyan-600 flex items-center justify-center font-[1000] text-4xl italic mb-6 shadow-[0_0_30px_#00f2ff]">#{i}</div>
+                <div className="text-4xl font-[1000] italic tracking-tighter">ELITE_WHALE_0{i}</div>
+                <p className="text-xs font-mono text-white/20 mt-2 tracking-widest uppercase">Verified by Senku System</p>
               </div>
             ))}
           </motion.div>
         )}
       </div>
 
-      <footer className="mt-auto py-12 opacity-10 text-[9px] font-mono tracking-[1.5em] text-center w-full uppercase select-none">SENKU // KINGDOM OF SCIENCE // BADER ALKORGLI</footer>
+      <footer className="mt-auto py-14 opacity-20 text-[11px] font-mono tracking-[2em] text-center w-full uppercase select-none">SENKU_WORLD_OFFICIAL_2025 // BADER_ALKORGLI</footer>
 
       <style jsx global>{`
-        @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .animate-spin-slow { animation: spin-slow 20s linear infinity; }
-        body { background: #000; margin: 0; padding: 0; }
+        @keyframes neon-pulse {
+          0%, 100% { border-color: rgba(0, 242, 255, 0.4); box-shadow: 0 0 15px rgba(0, 242, 255, 0.2), inset 0 0 10px rgba(0, 242, 255, 0.1); }
+          50% { border-color: rgba(34, 197, 94, 0.6); box-shadow: 0 0 35px rgba(34, 197, 94, 0.4), inset 0 0 20px rgba(34, 197, 94, 0.2); }
+        }
+        @keyframes neon-card-pulse {
+          0%, 100% { box-shadow: 0 0 30px rgba(0,242,255,0.1); }
+          50% { box-shadow: 0 0 60px rgba(0,242,255,0.4); }
+        }
+        .animate-neon-border { animation: neon-pulse 5s infinite ease-in-out; }
+        .animate-neon-card { animation: neon-card-pulse 3s infinite ease-in-out; }
+        body { background: #000; margin: 0; cursor: crosshair; }
         ::-webkit-scrollbar { display: none; }
+        input::placeholder { color: rgba(255,255,255,0.15); }
       `}</style>
     </div>
   );
 }
+

@@ -13,7 +13,7 @@ import { toPng } from 'html-to-image';
 /**
  * PROJECT: SENKU PROTOCOL (Wagmi)
  * DEVELOPER: bedro95
- * VERSION: ULTIMATE MASTERPIECE + INTERACTIVE MODAL
+ * VERSION: ULTIMATE MASTERPIECE + SMART USD ANALYZER
  * STATUS: LOCKED IDENTITY - NO LINES REMOVED
  */
 
@@ -76,20 +76,60 @@ export default function SenkuUltimateProtocol() {
     if (!isMuted) audioScan.current?.play();
     
     try {
-      const connection = new Connection("https://mainnet.helius-rpc.com/?api-key=4729436b-2f9d-4d42-a307-e2a3b2449483");
-      const key = new PublicKey(address.trim());
-      const balance = await connection.getBalance(key);
-      const sol = balance / 1_000_000_000;
+      // استخدام Helius لعمل مسح شامل للأصول وقيمتها الدولارية
+      const response = await fetch("https://mainnet.helius-rpc.com/?api-key=4729436b-2f9d-4d42-a307-e2a3b2449483", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          jsonrpc: '2.0',
+          id: 'senku-analysis',
+          method: 'getAssetsByOwner',
+          params: {
+            ownerAddress: address.trim(),
+            displayOptions: { showNativeBalance: true }
+          },
+        }),
+      });
+
+      const { result } = await response.json();
       
-      let tierColor = sol >= 1000 ? "#22c55e" : sol >= 100 ? "#10b981" : "#0ea5e9";
+      let topAsset = { symbol: 'SOL', amount: 0, usdValue: 0 };
+      let maxUsdValue = -1;
+
+      // 1. فحص رصيد SOL الأساسي وقيمته
+      if (result.nativeBalance) {
+        const solPrice = result.nativeBalance.price_per_token || 0;
+        const solAmt = result.nativeBalance.lamports / 1_000_000_000;
+        const solUsd = solAmt * solPrice;
+        topAsset = { symbol: 'SOL', amount: solAmt, usdValue: solUsd };
+        maxUsdValue = solUsd;
+      }
+
+      // 2. فحص جميع الـ Tokens لاكتشاف "الأثمن" دولارياً
+      result.items?.forEach((item: any) => {
+        const usdValue = item.token_info?.price_info?.total_price || 0;
+        if (usdValue > maxUsdValue) {
+          maxUsdValue = usdValue;
+          topAsset = {
+            symbol: item.token_info?.symbol || 'ASSET',
+            amount: item.token_info?.balance / Math.pow(10, item.token_info?.decimals) || 0,
+            usdValue: usdValue
+          };
+        }
+      });
+
+      // تحديد الألوان بناءً على قيمة المحفظة (الرتبة العلمية)
+      let tierColor = maxUsdValue >= 1000 ? "#22c55e" : maxUsdValue >= 100 ? "#10b981" : "#0ea5e9";
 
       setData({
-        sol: sol.toLocaleString(undefined, { minimumFractionDigits: 3 }),
-        status: sol >= 1000 ? "MASTER SCIENTIST" : sol >= 100 ? "CRAFTSMAN" : "SURVIVOR",
+        sol: topAsset.amount.toLocaleString(undefined, { maximumFractionDigits: 2 }),
+        symbol: topAsset.symbol,
+        usdDisplay: maxUsdValue.toLocaleString(undefined, { maximumFractionDigits: 2 }),
+        status: `${topAsset.symbol} HOLDER`,
         tierColor,
         date: new Date().toLocaleDateString('en-GB'),
         hash: "SK-" + Math.random().toString(36).substring(2, 10).toUpperCase(),
-        power: (sol * 1.2 + 5).toFixed(2) + "B%"
+        power: ((maxUsdValue / 500) + 10).toFixed(2) + "B%"
       });
     } catch (e) {
       alert("Scientific Calculation Error! Verify Address.");
@@ -253,10 +293,11 @@ export default function SenkuUltimateProtocol() {
                     </div>
 
                     <div className="mb-10 mt-6">
-                      <p className="text-[10px] uppercase tracking-[0.3em] opacity-30 mb-2 font-bold">Available Scientific Assets</p>
-                      <h2 className="text-7xl md:text-8xl font-[1000] italic tracking-tighter leading-none">
-                        {data.sol} <span className="text-2xl not-italic opacity-40" style={{ color: data.tierColor }}>SOL</span>
+                      <p className="text-[10px] uppercase tracking-[0.3em] opacity-30 mb-2 font-bold">Top Value Alpha (USD)</p>
+                      <h2 className="text-6xl md:text-7xl font-[1000] italic tracking-tighter leading-none">
+                        ${data.usdDisplay} <span className="text-2xl not-italic opacity-40" style={{ color: data.tierColor }}>USD</span>
                       </h2>
+                      <p className="text-sm font-mono mt-2 opacity-50 tracking-widest">Holding: {data.sol} {data.symbol}</p>
                     </div>
 
                     <div className="grid grid-cols-2 gap-8 mb-10 border-t border-white/5 pt-8">

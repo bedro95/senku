@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { toPng } from 'html-to-image';
 
-export default function WagmiWhaleProtocolUltimate() {
+export default function SenkuWhaleProtocolUltimate() {
   const [address, setAddress] = useState('');
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
@@ -19,11 +19,10 @@ export default function WagmiWhaleProtocolUltimate() {
   const [whaleAlerts, setWhaleAlerts] = useState<any[]>([]);
   const cardRef = useRef<HTMLDivElement>(null);
 
-  // مراجع الأصوات (Audio References)
   const audioScan = useRef<HTMLAudioElement | null>(null);
   const audioSuccess = useRef<HTMLAudioElement | null>(null);
 
-  // 1. نظام Whale Alert المباشر - تحديث فوري وتلقائي
+  // 1. نظام الرادار المباشر (تنبيهات الحيتان التلقائية)
   useEffect(() => {
     const assets = ['SOL', 'USDC', 'JUP', 'BONK', 'PYTH'];
     const generateAlert = () => {
@@ -41,17 +40,17 @@ export default function WagmiWhaleProtocolUltimate() {
     };
 
     generateAlert();
-    const interval = setInterval(generateAlert, 4000); // تحديث كل 4 ثوانٍ
+    const interval = setInterval(generateAlert, 4000);
     return () => clearInterval(interval);
   }, []);
 
-  // 2. إعداد المؤثرات الصوتية
+  // 2. إعداد ملفات الصوت
   useEffect(() => {
     audioScan.current = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
     audioSuccess.current = new Audio('https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3');
   }, []);
 
-  // 3. دالة التحليل العلمي للمحفظة
+  // 3. تحليل المحفظة عبر شبكة سولانا
   const analyze = async () => {
     if (!address) return;
     setLoading(true);
@@ -84,7 +83,7 @@ export default function WagmiWhaleProtocolUltimate() {
     if (!cardRef.current) return;
     const dataUrl = await toPng(cardRef.current, { pixelRatio: 3, backgroundColor: '#000' });
     const link = document.createElement('a');
-    link.download = `WAGMI-LEGACY-${data?.id}.png`;
+    link.download = `SENKU-ID-${data?.id}.png`;
     link.href = dataUrl;
     link.click();
   };
@@ -92,7 +91,7 @@ export default function WagmiWhaleProtocolUltimate() {
   return (
     <div className="min-h-screen bg-[#000] text-white flex flex-col items-center p-4 md:p-10 font-sans overflow-hidden relative">
       
-      {/* --- BACKGROUND SNOW SYSTEM --- */}
+      {/* --- نظام الثلج النيوني --- */}
       <div className="fixed inset-0 z-0 pointer-events-none opacity-25">
         {[...Array(35)].map((_, i) => (
           <motion.div key={i} animate={{ y: "110vh" }} transition={{ duration: 10, repeat: Infinity, ease: "linear", delay: i * 0.2 }}
@@ -100,7 +99,7 @@ export default function WagmiWhaleProtocolUltimate() {
         ))}
       </div>
 
-      {/* --- EVOLVED SENKU (GIF) INTERACTION --- */}
+      {/* --- شخصية SENKU التفاعلية --- */}
       <motion.div 
         className="fixed z-[1] pointer-events-none mix-blend-screen"
         animate={{ 
@@ -116,17 +115,17 @@ export default function WagmiWhaleProtocolUltimate() {
           <img src="/senku.GIF" alt="Senku" className="w-[280px] md:w-[580px] opacity-45 shadow-inner"
             style={{ maskImage: 'radial-gradient(circle, black 50%, transparent 100%)', WebkitMaskImage: 'radial-gradient(circle, black 50%, transparent 100%)' }} />
           <motion.div className="absolute top-0 right-0 bg-green-500/10 border border-green-500/30 p-2 rounded-xl text-[9px] font-mono text-green-400 backdrop-blur-xl">
-            {loading ? "DATA_OVERLOAD_999%" : "SYSTEM_STATUS: SCIENTIFIC"}
+            {loading ? "SEARCHING..." : "SENKU_MONITOR_ACTIVE"}
           </motion.div>
         </div>
       </motion.div>
 
-      {/* --- AUDIO TOGGLE --- */}
+      {/* --- زر كتم الصوت --- */}
       <button onClick={() => setIsMuted(!isMuted)} className="fixed top-6 right-6 z-[100] p-4 bg-white/5 border border-white/10 rounded-full backdrop-blur-lg hover:bg-white/10 transition-all">
         {isMuted ? <VolumeX size={22} className="text-white/40" /> : <Volume2 size={22} className="text-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]" />}
       </button>
 
-      {/* --- NAVIGATION MENU --- */}
+      {/* --- القائمة العلوية --- */}
       <nav className="relative z-[90] flex bg-white/5 border border-white/10 p-1 rounded-2xl mb-12 backdrop-blur-3xl shadow-2xl">
         {['scan', 'radar', 'hall of fame'].map((tab) => (
           <button key={tab} onClick={() => setActiveTab(tab)} 
@@ -136,22 +135,21 @@ export default function WagmiWhaleProtocolUltimate() {
         ))}
       </nav>
 
-      {/* --- MAIN DISPLAY --- */}
+      {/* --- المحتوى الرئيسي --- */}
       <div className="relative z-10 w-full max-w-5xl flex flex-col items-center">
         
-        {/* TAB 1: SCANNER */}
         {activeTab === 'scan' && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full flex flex-col items-center">
-            <h1 className="text-8xl md:text-[13rem] font-[1000] italic tracking-tighter leading-none text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.1)]">WAGMI</h1>
-            <p className="text-[10px] md:text-xs font-mono tracking-[1.2em] text-green-500 uppercase font-black mb-14 italic text-center">KINGDOM OF SCIENCE PROTOCOL</p>
+            <h1 className="text-8xl md:text-[13rem] font-[1000] italic tracking-tighter leading-none text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.1)]">SENKU</h1>
+            <p className="text-[10px] md:text-xs font-mono tracking-[1.2em] text-green-500 uppercase font-black mb-14 italic text-center">THE SCIENTIFIC PROTOCOL</p>
 
             <div className="w-full max-w-md px-4 mb-14">
               <div className="relative p-[1px] rounded-2xl bg-white/10 focus-within:bg-green-600 transition-all duration-500 shadow-2xl">
                 <input className="w-full bg-black rounded-2xl p-6 text-center outline-none font-mono text-sm text-white" 
-                  placeholder="SOLANA_NODE_ADDRESS" value={address} onChange={(e) => setAddress(e.target.value)} />
+                  placeholder="SOLANA_ADDRESS" value={address} onChange={(e) => setAddress(e.target.value)} />
               </div>
               <button onClick={analyze} className="w-full mt-5 py-5 bg-white text-black rounded-2xl font-[1000] uppercase text-[11px] tracking-[0.6em] hover:bg-green-600 hover:text-white transition-all active:scale-95 shadow-[0_0_40px_rgba(255,255,255,0.1)]">
-                {loading ? <Cpu className="animate-spin mx-auto" /> : "INITIATE_EXPERIMENT"}
+                {loading ? <Cpu className="animate-spin mx-auto" /> : "START_SCAN"}
               </button>
             </div>
 
@@ -163,7 +161,7 @@ export default function WagmiWhaleProtocolUltimate() {
                     <div className="flex justify-between items-start"><Fingerprint size={32} style={{ color: data.tierColor }} /><Radio size={20} className="text-red-500 animate-pulse" /></div>
                     <div className="text-6xl md:text-7xl font-[1000] italic my-8 tracking-tighter">{data.sol} <span className="text-xl font-black" style={{ color: data.tierColor }}>SOL</span></div>
                     <div className="flex justify-between items-end border-t border-white/5 pt-6">
-                      <div><p className="text-[9px] font-black opacity-30 uppercase tracking-widest">Scientific Rank</p><p className="text-3xl font-[1000] italic" style={{ color: data.tierColor }}>{data.status}</p></div>
+                      <div><p className="text-[9px] font-black opacity-30 uppercase tracking-widest">Senku Status</p><p className="text-3xl font-[1000] italic" style={{ color: data.tierColor }}>{data.status}</p></div>
                       <button onClick={saveCard} className="p-4 bg-white/5 rounded-2xl hover:bg-white/10 transition-all"><Download size={20} /></button>
                     </div>
                   </div>
@@ -173,23 +171,22 @@ export default function WagmiWhaleProtocolUltimate() {
           </motion.div>
         )}
 
-        {/* TAB 2: LIVE WHALE RADAR */}
         {activeTab === 'radar' && (
           <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="w-full px-4 pb-48 max-w-2xl">
-            <div className="flex items-center gap-4 mb-10"><Globe className="text-green-500 animate-spin-slow" size={32} /><h2 className="text-4xl font-[1000] italic uppercase tracking-tighter">Live Alert Feed</h2></div>
+            <div className="flex items-center gap-4 mb-10"><Globe className="text-green-500 animate-spin-slow" size={32} /><h2 className="text-4xl font-[1000] italic uppercase tracking-tighter">Live Whale Feed</h2></div>
             <div className="grid gap-4">
               <AnimatePresence mode="popLayout">
                 {whaleAlerts.map((alert) => (
                   <motion.div key={alert.id} layout initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: 20, opacity: 0 }}
-                    className="bg-[#050505] border border-white/5 p-6 rounded-3xl flex justify-between items-center hover:border-green-500/40 transition-all border-l-4 border-l-green-600 shadow-xl">
+                    className="bg-[#050505] border border-white/5 p-6 rounded-3xl flex justify-between items-center hover:border-green-500/40 transition-all border-l-4 border-l-green-600">
                     <div className="flex items-center gap-5">
                       <div className="p-4 bg-green-600/10 rounded-2xl text-green-500"><TrendingUp size={24} /></div>
                       <div>
                         <div className="text-2xl font-[1000] italic">{alert.amount} <span className="text-xs text-green-500">{alert.asset}</span></div>
-                        <div className="text-[10px] font-mono text-white/30 tracking-widest uppercase">{alert.type} • ${alert.usd} VALUE</div>
+                        <div className="text-[10px] font-mono text-white/30 uppercase tracking-widest">{alert.type}</div>
                       </div>
                     </div>
-                    <div className="text-right"><div className="text-[9px] font-mono text-white/20 mb-1">{alert.from}</div><ChevronRight size={18} className="ml-auto text-green-500" /></div>
+                    <ChevronRight size={18} className="text-green-500" />
                   </motion.div>
                 ))}
               </AnimatePresence>
@@ -197,7 +194,6 @@ export default function WagmiWhaleProtocolUltimate() {
           </motion.div>
         )}
 
-        {/* TAB 3: HALL OF FAME */}
         {activeTab === 'hall of fame' && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 px-4 pb-48 max-w-4xl">
             {[
@@ -206,7 +202,7 @@ export default function WagmiWhaleProtocolUltimate() {
               { name: "KOHAKU_SOL", bal: "4,120", rank: "3" },
               { name: "GEN_MINT", bal: "2,500", rank: "4" }
             ].map((whale, i) => (
-              <div key={i} className="bg-gradient-to-br from-[#080808] to-black border border-white/10 p-8 rounded-[2.5rem] flex items-center gap-6 relative group overflow-hidden">
+              <div key={i} className="bg-black border border-white/10 p-8 rounded-[2.5rem] flex items-center gap-6 relative group overflow-hidden shadow-xl">
                 <Trophy size={60} className={`absolute -right-4 -bottom-4 opacity-10 group-hover:opacity-30 transition-all ${i === 0 ? 'text-yellow-500' : 'text-white'}`} />
                 <div className="w-16 h-16 rounded-2xl bg-green-600 flex items-center justify-center font-[1000] text-3xl italic shadow-[0_0_20px_rgba(34,197,94,0.3)]">#{whale.rank}</div>
                 <div>
@@ -219,14 +215,13 @@ export default function WagmiWhaleProtocolUltimate() {
         )}
       </div>
 
-      <footer className="mt-auto py-12 opacity-10 text-[9px] font-mono tracking-[1.5em] text-center w-full uppercase select-none">WAGMI // KINGDOM OF SCIENCE // BADER ALKORGLI</footer>
+      <footer className="mt-auto py-12 opacity-10 text-[9px] font-mono tracking-[1.5em] text-center w-full uppercase select-none">SENKU // KINGDOM OF SCIENCE // BADER ALKORGLI</footer>
 
       <style jsx global>{`
         @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .animate-spin-slow { animation: spin-slow 20s linear infinity; }
         body { background: #000; margin: 0; padding: 0; }
         ::-webkit-scrollbar { display: none; }
-        * { -webkit-tap-highlight-color: transparent; outline: none; }
       `}</style>
     </div>
   );

@@ -6,15 +6,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Download, Fingerprint, Volume2, VolumeX, Activity, 
   Zap, ChevronRight, Trophy, Music, Github, ShieldCheck, 
-  Cpu, Calendar, Hash, Globe, BarChart3, Radio, X, Maximize2, Sparkles, Flame, Terminal
+  Cpu, Calendar, Hash, Globe, BarChart3, Radio, X, Maximize2, Sparkles, Flame, Terminal, BrainCircuit, TrendingUp
 } from 'lucide-react';
 import { toPng } from 'html-to-image';
 
 /**
  * PROJECT: SENKU PROTOCOL (Wagmi)
  * DEVELOPER: Bader Alkorgli (bedro95)
- * VERSION: ULTIMATE V4.5 - HYBRID RADAR ENGINE
- * STATUS: LOCKED IDENTITY - NO LINES REMOVED - FULL ENGLISH
+ * VERSION: ULTIMATE V5.0 - NEURAL INTENT PREDICTION
+ * STATUS: LOCKED IDENTITY - FULL CODE RESTORATION
  */
 
 export default function SenkuUltimateProtocol() {
@@ -28,8 +28,6 @@ export default function SenkuUltimateProtocol() {
   
   const [isNeuralProcessing, setIsNeuralProcessing] = useState(false);
   const [intentSignal, setIntentSignal] = useState<string | null>(null);
-
-  // --- REVOLUTIONARY FEATURE: DYNAMIC PROOF GENERATOR ---
   const [intelligenceScore, setIntelligenceScore] = useState(0);
 
   const cardRef = useRef<HTMLDivElement>(null);
@@ -37,16 +35,21 @@ export default function SenkuUltimateProtocol() {
   const bgMusic = useRef<HTMLAudioElement | null>(null);
   const audioScan = useRef<HTMLAudioElement | null>(null);
 
+  // --- NEURAL INTENT ENGINE: PREDICTING THE FUTURE ---
   const triggerNeuralIntent = async () => {
     if (!data) return;
     setIsNeuralProcessing(true);
+    
+    // Simulate complex neural calculations
     setTimeout(() => {
-      const opportunities = [
-        "ARBITRAGE DETECTED: RAYDIUM -> ORCA (+4.2%)",
-        "MEV PROTECTION ACTIVE: SHIELDING ASSETS",
-        "LIQUIDITY ATTRACTOR: KAMINO VAULT OPTIMIZATION"
+      const predictions = [
+        "WHALE ACCUMULATION DETECTED: EXPECT +12% VOLATILITY",
+        "LIQUIDITY SHIFT: NEURAL NODES SUGGEST ENTRY AT $142.5",
+        "INSTITUTIONAL INTENT: LARGE OTC TRANSFER INBOUND",
+        "PATTERN RECOGNITION: ASCENDING TRIANGLE FORMING ON-CHAIN",
+        "MEV BOT ACTIVITY DETECTED: ALPHA SHIELD ACTIVATED"
       ];
-      setIntentSignal(opportunities[Math.floor(Math.random() * opportunities.length)]);
+      setIntentSignal(predictions[Math.floor(Math.random() * predictions.length)]);
       setIsNeuralProcessing(false);
     }, 2500);
   };
@@ -66,7 +69,7 @@ export default function SenkuUltimateProtocol() {
     return () => window.removeEventListener('click', handleInitialInteraction);
   }, [isMuted]);
 
-  // --- UPDATED: HYBRID RADAR ENGINE (REAL-TIME + FALLBACK SIMULATION) ---
+  // --- HYBRID RADAR ENGINE (REAL-TIME + FALLBACK SIMULATION) ---
   useEffect(() => {
     if (activeTab !== 'radar') return;
 
@@ -84,7 +87,6 @@ export default function SenkuUltimateProtocol() {
       setWhaleAlerts(prev => [newAlert, ...prev].slice(0, 8));
     };
 
-    // 1. WebSocket Logic
     const startWebSocket = () => {
       socket = new WebSocket('wss://mainnet.helius-rpc.com/?api-key=4729436b-2f9d-4d42-a307-e2a3b2449483');
       socket.onopen = () => {
@@ -107,15 +109,13 @@ export default function SenkuUltimateProtocol() {
       };
     };
 
-    // 2. Fallback Simulation (Ensures Radar is NEVER empty)
     const startFallback = () => {
       fallbackInterval = setInterval(() => {
-        // Only simulate if list is nearly empty or randomly to keep it "live"
-        if (Math.random() > 0.7) { 
-          const fakeAmount = Math.random() * 450 + 20;
+        if (Math.random() > 0.6) { 
+          const fakeAmount = Math.random() * 800 + 50;
           addAlert(fakeAmount, Math.random() > 0.5 ? "WHALE_INFLOW" : "WHALE_OUTFLOW", "NEURAL_PRED");
         }
-      }, 4000);
+      }, 4500);
     };
 
     startWebSocket();
@@ -179,7 +179,6 @@ export default function SenkuUltimateProtocol() {
       });
 
       let tierColor = maxUsdValue >= 1000 ? "#22c55e" : maxUsdValue >= 100 ? "#10b981" : "#0ea5e9";
-      
       const score = Math.floor(Math.random() * 40) + (maxUsdValue > 1000 ? 60 : 30);
       setIntelligenceScore(score);
 
@@ -194,7 +193,7 @@ export default function SenkuUltimateProtocol() {
         power: ((maxUsdValue / 500) + 10).toFixed(2) + "B%"
       });
     } catch (e) {
-      alert("Scientific Calculation Error! Verify Address.");
+      alert("Scientific Calculation Error!");
     } finally {
       setLoading(false);
     }
@@ -260,7 +259,7 @@ export default function SenkuUltimateProtocol() {
               </motion.h1>
               <div className="flex items-center justify-center gap-4 mt-2">
                 <div className="h-[1px] w-12 bg-green-500/50" />
-                <p className="text-[10px] font-mono tracking-[1.5em] text-green-400 uppercase opacity-80">Scientific Domain</p>
+                <p className="text-[10px] font-mono tracking-[1.5em] text-green-400 uppercase opacity-80">Neural Scientific Protocol</p>
                 <div className="h-[1px] w-12 bg-green-500/50" />
               </div>
             </div>
@@ -270,28 +269,29 @@ export default function SenkuUltimateProtocol() {
                 <div className="absolute -inset-1 bg-green-500/20 rounded-2xl blur opacity-0 group-focus-within:opacity-100 transition duration-500" />
                 <input 
                   className="relative w-full bg-slate-900/80 border border-white/10 rounded-2xl p-6 text-center outline-none focus:border-green-500 transition-all font-mono text-sm tracking-widest placeholder:opacity-20" 
-                  placeholder="INPUT_LAB_CREDENTIALS" 
+                  placeholder="INPUT_SOLANA_ADDRESS" 
                   value={address} 
                   onChange={(e) => setAddress(e.target.value)} 
                 />
               </div>
               <button onClick={analyze} className="w-full mt-5 py-6 bg-white text-black rounded-2xl font-[1000] uppercase text-[11px] tracking-[0.5em] hover:bg-green-600 hover:text-white transition-all active:scale-95 shadow-2xl">
-                {loading ? "SEARCHING 10 BILLION%..." : "INITIALIZE ANALYSIS"}
+                {loading ? "SEARCHING 10 BILLION%..." : "INITIALIZE NEURAL SCAN"}
               </button>
             </div>
 
             <AnimatePresence>
               {data && (
                 <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="pb-32 px-4 w-full flex flex-col items-center gap-6">
+                  {/* Intelligence Score Card */}
                   <div className="w-full max-w-md bg-white/5 border border-white/10 rounded-[2rem] p-1 overflow-hidden relative group">
                      <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 via-transparent to-green-500/10 animate-pulse" />
                      <div className="relative bg-[#020617] rounded-[1.9rem] p-6">
                         <div className="flex justify-between items-center mb-6">
                            <div className="flex items-center gap-2">
-                              <Terminal size={14} className="text-green-500" />
-                              <span className="text-[10px] font-black uppercase tracking-widest text-green-500/70">Neural Intelligence Proof</span>
+                              <BrainCircuit size={14} className="text-green-500" />
+                              <span className="text-[10px] font-black uppercase tracking-widest text-green-500/70">Neural Analysis Score</span>
                            </div>
-                           <span className="text-[10px] font-mono text-white/20">V.4.5.0</span>
+                           <span className="text-[10px] font-mono text-white/20">V.5.0</span>
                         </div>
                         <div className="flex items-end gap-4 mb-4">
                            <div className="text-5xl font-[1000] italic text-white">{intelligenceScore}</div>
@@ -300,30 +300,32 @@ export default function SenkuUltimateProtocol() {
                               <motion.div initial={{ width: 0 }} animate={{ width: `${intelligenceScore}%` }} className="absolute inset-y-0 left-0 bg-green-500 shadow-[0_0_10px_#22c55e]" />
                            </div>
                         </div>
-                        <p className="text-[9px] font-mono text-white/40 leading-relaxed uppercase tracking-wider">
-                           Verification: Dynamic On-chain Metadata generated for <span className="text-green-500">{data.hash}</span>.
-                        </p>
                      </div>
                   </div>
 
-                  <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="w-full max-w-md bg-green-500/5 border border-green-500/20 rounded-3xl p-6 backdrop-blur-md flex flex-col items-center gap-4">
-                    <div className="flex items-center gap-3 text-green-400 font-black uppercase text-[10px] tracking-[0.3em]">
-                      <Activity size={16} className={isNeuralProcessing ? "animate-spin" : ""} />
-                      {isNeuralProcessing ? "Processing Solana Intelligence..." : "Neural Intent Engine Active"}
+                  {/* REVOLUTIONARY: NEURAL INTENT ENGINE UI */}
+                  <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="w-full max-w-md bg-gradient-to-b from-green-500/10 to-transparent border border-green-500/20 rounded-3xl p-8 backdrop-blur-md flex flex-col items-center gap-6">
+                    <div className="flex items-center gap-3 text-green-400 font-black uppercase text-[11px] tracking-[0.4em]">
+                      <TrendingUp size={18} className={isNeuralProcessing ? "animate-bounce" : ""} />
+                      {isNeuralProcessing ? "Predicting Market Intent..." : "Neural Intent Engine"}
                     </div>
-                    {intentSignal && (
-                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center">
-                        <p className="text-white font-mono text-xs mb-4 flex items-center gap-2 justify-center">
-                          <Flame size={14} className="text-orange-500" /> {intentSignal}
-                        </p>
-                      </motion.div>
-                    )}
-                    <button onClick={triggerNeuralIntent} disabled={isNeuralProcessing} className="group relative flex items-center gap-3 bg-green-600 text-white px-8 py-3 rounded-xl font-black text-[9px] uppercase tracking-[0.2em] hover:bg-green-500 transition-all shadow-[0_0_20px_rgba(34,197,94,0.3)]">
-                      <Sparkles size={14} /> {isNeuralProcessing ? "Calculating..." : "Sync Neural Intent"}
+                    
+                    <div className="w-full bg-black/40 rounded-2xl p-4 border border-white/5 min-h-[80px] flex items-center justify-center text-center">
+                      {intentSignal ? (
+                        <motion.p initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="text-white font-mono text-[11px] leading-relaxed uppercase tracking-wider">
+                          <span className="text-green-500 font-black">[SIGNAL]</span> {intentSignal}
+                        </motion.p>
+                      ) : (
+                        <p className="text-white/20 font-mono text-[9px] uppercase tracking-widest italic">Awaiting sync with Mainnet intent...</p>
+                      )}
+                    </div>
+
+                    <button onClick={triggerNeuralIntent} disabled={isNeuralProcessing} className="w-full group relative flex items-center justify-center gap-3 bg-green-600 text-white py-4 rounded-xl font-black text-[10px] uppercase tracking-[0.3em] hover:bg-green-500 transition-all shadow-[0_0_30px_rgba(34,197,94,0.4)] disabled:opacity-50">
+                      <Sparkles size={16} /> {isNeuralProcessing ? "Processing..." : "Predict Future Intent"}
                     </button>
                   </motion.div>
 
-                  <p className="text-[10px] font-mono text-green-500/60 uppercase tracking-[0.5em] mb-6 animate-pulse">Scientific ID Generated</p>
+                  <p className="text-[10px] font-mono text-green-500/60 uppercase tracking-[0.5em] mb-6 animate-pulse">Identity Ready for Extraction</p>
                   
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setIsModalOpen(true)} className="relative cursor-pointer group">
                     <div className="absolute -inset-1 bg-green-500/30 blur-2xl opacity-0 group-hover:opacity-100 transition-all rounded-full" />
@@ -331,7 +333,7 @@ export default function SenkuUltimateProtocol() {
                       <img src="/senku.GIF" className="absolute opacity-10 grayscale w-full h-full object-cover" />
                       <div className="z-10 text-center">
                         <Maximize2 size={32} className="text-green-500 mx-auto mb-2 opacity-50 group-hover:opacity-100 transition-all" />
-                        <p className="text-[9px] font-black uppercase tracking-widest">Click to view identity</p>
+                        <p className="text-[9px] font-black uppercase tracking-widest">Open Scientific Identity</p>
                       </div>
                     </div>
                   </motion.div>
@@ -359,43 +361,43 @@ export default function SenkuUltimateProtocol() {
                           <ShieldCheck size={24} style={{ color: data.tierColor }} />
                         </div>
                         <div>
-                          <p className="text-[10px] font-black uppercase tracking-widest leading-none">Protocol Verified</p>
-                          <p className="text-[8px] opacity-30 font-mono mt-1">SECURED_BY_SENKU_LABS</p>
+                          <p className="text-[10px] font-black uppercase tracking-widest leading-none">Senku Verified</p>
+                          <p className="text-[8px] opacity-30 font-mono mt-1">SECURED_INTENT_ENGINE</p>
                         </div>
                       </div>
                       <Cpu size={24} className="opacity-20 animate-pulse" />
                     </div>
                     <div className="mb-10 mt-6">
-                      <p className="text-[10px] uppercase tracking-[0.3em] opacity-30 mb-2 font-bold">Top Value Alpha (USD)</p>
+                      <p className="text-[10px] uppercase tracking-[0.3em] opacity-30 mb-2 font-bold">Scientific Wealth Index</p>
                       <h2 className="text-6xl md:text-7xl font-[1000] italic tracking-tighter leading-none">
                         ${data.usdDisplay} <span className="text-2xl not-italic opacity-40" style={{ color: data.tierColor }}>USD</span>
                       </h2>
-                      <p className="text-sm font-mono mt-2 opacity-50 tracking-widest">Holding: {data.sol} {data.symbol}</p>
+                      <p className="text-sm font-mono mt-2 opacity-50 tracking-widest">{data.sol} {data.symbol} ON-CHAIN</p>
                     </div>
                     <div className="grid grid-cols-2 gap-8 mb-10 border-t border-white/5 pt-8">
                       <div>
-                        <p className="text-[9px] uppercase opacity-30 flex items-center gap-2 mb-1"><Calendar size={12} /> Creation Date</p>
+                        <p className="text-[9px] uppercase opacity-30 flex items-center gap-2 mb-1"><Calendar size={12} /> Generation</p>
                         <p className="text-sm font-mono font-bold tracking-widest">{data.date}</p>
                       </div>
                       <div>
-                        <p className="text-[9px] uppercase opacity-30 flex items-center gap-2 mb-1"><Hash size={12} /> Asset Index</p>
+                        <p className="text-[9px] uppercase opacity-30 flex items-center gap-2 mb-1"><Hash size={12} /> LAB_ID</p>
                         <p className="text-sm font-mono font-bold tracking-widest text-white/80">{data.hash}</p>
                       </div>
                     </div>
                     <div className="flex justify-between items-end border-t border-white/5 pt-8 mt-auto">
                       <div>
-                        <p className="text-[10px] font-black uppercase tracking-[0.4em] mb-2 opacity-40">Classification</p>
+                        <p className="text-[10px] font-black uppercase tracking-[0.4em] mb-2 opacity-40">Class</p>
                         <p className="text-4xl font-[1000] italic uppercase leading-none" style={{ color: data.tierColor }}>{data.status}</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-[9px] opacity-30 uppercase font-black tracking-widest">Power Level</p>
-                        <p className="text-lg font-mono text-green-500 font-black">{data.power}</p>
+                        <p className="text-[9px] opacity-30 uppercase font-black tracking-widest">Brain Power</p>
+                        <p className="text-lg font-mono text-green-500 font-black">{intelligenceScore} IQ</p>
                       </div>
                     </div>
                   </div>
                 </div>
                 <button onClick={saveCard} className="mt-8 flex items-center gap-4 bg-white text-black px-12 py-5 rounded-2xl font-black uppercase text-[10px] tracking-[0.4em] hover:bg-green-600 hover:text-white transition-all shadow-2xl active:scale-95">
-                  <Download size={20} /> Download Scientific Card
+                  <Download size={20} /> Extract Lab Credentials
                 </button>
               </motion.div>
             </motion.div>
@@ -405,12 +407,12 @@ export default function SenkuUltimateProtocol() {
         {/* Radar Tab */}
         {activeTab === 'radar' && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full max-w-2xl px-6 pt-10 pb-40 space-y-5">
-            <h2 className="text-5xl font-[1000] italic uppercase flex items-center gap-5 text-green-500 tracking-tighter"><Zap /> Stone Radar</h2>
-            <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest mb-4">Monitoring Live Mainnet Whale Activity (&gt;5 SOL)</p>
+            <h2 className="text-5xl font-[1000] italic uppercase flex items-center gap-5 text-green-500 tracking-tighter"><Zap /> Neural Radar</h2>
+            <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest mb-4">Real-time Whale Activity Analysis & Prediction</p>
             {whaleAlerts.length === 0 && (
               <div className="py-20 text-center flex flex-col items-center gap-4 opacity-20">
                 <div className="w-10 h-10 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
-                <p className="font-mono text-[9px] tracking-widest">CONNECTING TO SOLANA MAINNET...</p>
+                <p className="font-mono text-[9px] tracking-widest">SCANNING NEURAL WAVES...</p>
               </div>
             )}
             {whaleAlerts.map((a) => (

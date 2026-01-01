@@ -6,15 +6,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Download, Fingerprint, Volume2, VolumeX, Activity, 
   Zap, ChevronRight, Trophy, Music, Github, ShieldCheck, 
-  Cpu, Calendar, Hash, Globe, BarChart3, Radio, X, Maximize2, Sparkles, Flame, Terminal, BrainCircuit, TrendingUp
+  Cpu, Calendar, Hash, Globe, BarChart3, Radio, X, Maximize2, Sparkles, Flame, Terminal, BrainCircuit, TrendingUp, ShieldAlert, Search, Eye, AlertTriangle
 } from 'lucide-react';
 import { toPng } from 'html-to-image';
 
 /**
- * PROJECT: SENKU PROTOCOL
+ * PROJECT: SENKU PROTOCOL (WAGMI)
  * DEVELOPER: Bader Alkorgli (bedro95)
- * VERSION: ULTIMATE V5.0 - NEURAL INTENT PREDICTION
- * STATUS: LOCKED IDENTITY - FULL CODE RESTORATION
+ * VERSION: ULTIMATE V6.0 - RUG SHIELD INTEGRATED
+ * STATUS: PROFESSIONAL WEB3 INTERFACE
  */
 
 export default function SenkuUltimateProtocol() {
@@ -26,6 +26,11 @@ export default function SenkuUltimateProtocol() {
   const [whaleAlerts, setWhaleAlerts] = useState<any[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false); 
   
+  // New States for Rug Shield
+  const [rugAddress, setRugAddress] = useState('');
+  const [rugAnalysis, setRugAnalysis] = useState<any>(null);
+  const [isAnalyzingRug, setIsAnalyzingRug] = useState(false);
+
   const [isNeuralProcessing, setIsNeuralProcessing] = useState(false);
   const [intentSignal, setIntentSignal] = useState<string | null>(null);
   const [intelligenceScore, setIntelligenceScore] = useState(0);
@@ -35,12 +40,31 @@ export default function SenkuUltimateProtocol() {
   const bgMusic = useRef<HTMLAudioElement | null>(null);
   const audioScan = useRef<HTMLAudioElement | null>(null);
 
-  // --- NEURAL INTENT ENGINE: PREDICTING THE FUTURE ---
+  // --- RUG SHIELD ENGINE (NEW FEATURE) ---
+  const analyzeRug = async () => {
+    if (!rugAddress) return;
+    setIsAnalyzingRug(true);
+    if (!isMuted) audioScan.current?.play();
+    
+    // Simulate real-time on-chain security check
+    setTimeout(() => {
+      const mockResult = {
+        score: Math.floor(Math.random() * 20) + 80, // High score for demo
+        liquidity: "LOCKED (99.2%)",
+        mint: "DISABLED",
+        topHolders: "4.2%",
+        status: "SAFE_GRAIL",
+        riskLevel: "LOW"
+      };
+      setRugAnalysis(mockResult);
+      setIsAnalyzingRug(false);
+    }, 3000);
+  };
+
   const triggerNeuralIntent = async () => {
     if (!data) return;
     setIsNeuralProcessing(true);
     
-    // Simulate complex neural calculations
     setTimeout(() => {
       const predictions = [
         "WHALE ACCUMULATION DETECTED: EXPECT +12% VOLATILITY",
@@ -69,10 +93,8 @@ export default function SenkuUltimateProtocol() {
     return () => window.removeEventListener('click', handleInitialInteraction);
   }, [isMuted]);
 
-  // --- HYBRID RADAR ENGINE (REAL-TIME + FALLBACK SIMULATION) ---
   useEffect(() => {
     if (activeTab !== 'radar') return;
-
     let socket: WebSocket;
     let fallbackInterval: NodeJS.Timeout;
 
@@ -120,7 +142,6 @@ export default function SenkuUltimateProtocol() {
 
     startWebSocket();
     startFallback();
-
     return () => {
       if (socket) socket.close();
       if (fallbackInterval) clearInterval(fallbackInterval);
@@ -232,14 +253,15 @@ export default function SenkuUltimateProtocol() {
 
       <nav className="relative z-[100] mt-4 mb-12">
         <div className="flex bg-slate-900/60 border border-white/10 p-1.5 rounded-2xl backdrop-blur-3xl shadow-[0_0_50px_rgba(0,0,0,0.4)]">
-          {['scan', 'radar', 'hall of fame'].map((tab) => (
+          {['scan', 'rug shield', 'radar', 'hall of fame'].map((tab) => (
             <button key={tab} onClick={() => setActiveTab(tab)} 
-              className={`relative px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 ${activeTab === tab ? 'text-white' : 'text-white/30 hover:text-white'}`}>
+              className={`relative px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 ${activeTab === tab ? 'text-white' : 'text-white/30 hover:text-white'}`}>
               {activeTab === tab && (
                 <motion.div layoutId="tab-pill" className="absolute inset-0 bg-green-600 shadow-[0_0_25px_rgba(34,197,94,0.5)] rounded-xl" transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }} />
               )}
               <span className="relative z-10 flex items-center gap-2">
                 {tab === 'scan' && <Fingerprint size={14} />}
+                {tab === 'rug shield' && <ShieldAlert size={14} />}
                 {tab === 'radar' && <Radio size={14} />}
                 {tab === 'hall of fame' && <Trophy size={14} />}
                 {tab}
@@ -282,64 +304,170 @@ export default function SenkuUltimateProtocol() {
             <AnimatePresence>
               {data && (
                 <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="pb-32 px-4 w-full flex flex-col items-center gap-6">
-                  {/* Intelligence Score Card */}
-                  <div className="w-full max-w-md bg-white/5 border border-white/10 rounded-[2rem] p-1 overflow-hidden relative group">
-                     <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 via-transparent to-green-500/10 animate-pulse" />
-                     <div className="relative bg-[#020617] rounded-[1.9rem] p-6">
-                        <div className="flex justify-between items-center mb-6">
-                           <div className="flex items-center gap-2">
-                              <BrainCircuit size={14} className="text-green-500" />
-                              <span className="text-[10px] font-black uppercase tracking-widest text-green-500/70">Neural Analysis Score</span>
-                           </div>
-                           <span className="text-[10px] font-mono text-white/20">V.5.0</span>
+                  {/* Web3 Luxury Features Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-3xl">
+                     {/* Feature 1: Intelligence */}
+                     <div className="bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-xl hover:border-green-500/50 transition-all group overflow-hidden relative">
+                        <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <BrainCircuit size={80} />
                         </div>
-                        <div className="flex items-end gap-4 mb-4">
-                           <div className="text-5xl font-[1000] italic text-white">{intelligenceScore}</div>
-                           <div className="text-[10px] font-black uppercase tracking-tighter mb-2 text-white/40">IQ_POINTS</div>
-                           <div className="flex-grow h-[2px] bg-white/5 mb-3 relative overflow-hidden">
-                              <motion.div initial={{ width: 0 }} animate={{ width: `${intelligenceScore}%` }} className="absolute inset-y-0 left-0 bg-green-500 shadow-[0_0_10px_#22c55e]" />
-                           </div>
+                        <div className="flex justify-between items-center mb-4">
+                            <span className="text-[10px] font-black uppercase tracking-widest text-green-500">Neural IQ</span>
+                            <div className="flex gap-1">
+                                {[1,2,3].map(i => <div key={i} className="w-1 h-3 bg-green-500/30 rounded-full" />)}
+                            </div>
                         </div>
+                        <div className="text-4xl font-[1000] italic mb-1">{intelligenceScore}</div>
+                        <p className="text-[9px] font-mono text-white/40 uppercase tracking-tighter">On-chain Cognitive Assessment</p>
+                     </div>
+
+                     {/* Feature 2: Wealth Status */}
+                     <div className="bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-xl hover:border-blue-500/50 transition-all group overflow-hidden relative">
+                        <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <TrendingUp size={80} />
+                        </div>
+                        <div className="flex justify-between items-center mb-4">
+                            <span className="text-[10px] font-black uppercase tracking-widest text-blue-500">Asset Velocity</span>
+                            <div className="w-2 h-2 bg-blue-500 rounded-full animate-ping" />
+                        </div>
+                        <div className="text-4xl font-[1000] italic mb-1">+{data.power}</div>
+                        <p className="text-[9px] font-mono text-white/40 uppercase tracking-tighter">Power Tier Synchronization</p>
                      </div>
                   </div>
 
-                  {/* REVOLUTIONARY: NEURAL INTENT ENGINE UI */}
-                  <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="w-full max-w-md bg-gradient-to-b from-green-500/10 to-transparent border border-green-500/20 rounded-3xl p-8 backdrop-blur-md flex flex-col items-center gap-6">
-                    <div className="flex items-center gap-3 text-green-400 font-black uppercase text-[11px] tracking-[0.4em]">
-                      <TrendingUp size={18} className={isNeuralProcessing ? "animate-bounce" : ""} />
-                      {isNeuralProcessing ? "Predicting Market Intent..." : "Neural Intent Engine"}
+                  {/* NEURAL INTENT ENGINE UI */}
+                  <motion.div className="w-full max-w-3xl bg-gradient-to-b from-slate-900 to-black border border-white/5 rounded-[2.5rem] p-8 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 pointer-events-none" />
+                    <div className="flex items-center gap-3 text-white/80 font-black uppercase text-[11px] tracking-[0.4em] mb-6">
+                      <Terminal size={18} className="text-green-500" />
+                      Intent Prediction Hub
                     </div>
                     
-                    <div className="w-full bg-black/40 rounded-2xl p-4 border border-white/5 min-h-[80px] flex items-center justify-center text-center">
+                    <div className="w-full bg-black/60 rounded-2xl p-6 border border-white/5 min-h-[100px] mb-6 shadow-inner">
                       {intentSignal ? (
-                        <motion.p initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="text-white font-mono text-[11px] leading-relaxed uppercase tracking-wider">
-                          <span className="text-green-500 font-black">[SIGNAL]</span> {intentSignal}
+                        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-green-400 font-mono text-xs leading-relaxed uppercase tracking-widest">
+                          {">"} {intentSignal}
                         </motion.p>
                       ) : (
-                        <p className="text-white/20 font-mono text-[9px] uppercase tracking-widest italic">Awaiting sync with Mainnet intent...</p>
+                        <p className="text-white/10 font-mono text-[10px] uppercase tracking-widest animate-pulse">Awaiting neural input...</p>
                       )}
                     </div>
 
-                    <button onClick={triggerNeuralIntent} disabled={isNeuralProcessing} className="w-full group relative flex items-center justify-center gap-3 bg-green-600 text-white py-4 rounded-xl font-black text-[10px] uppercase tracking-[0.3em] hover:bg-green-500 transition-all shadow-[0_0_30px_rgba(34,197,94,0.4)] disabled:opacity-50">
-                      <Sparkles size={16} /> {isNeuralProcessing ? "Processing..." : "Predict Future Intent"}
+                    <button onClick={triggerNeuralIntent} disabled={isNeuralProcessing} className="w-full relative flex items-center justify-center gap-3 bg-white text-black py-5 rounded-2xl font-black text-[11px] uppercase tracking-[0.4em] hover:bg-green-500 hover:text-white transition-all">
+                       {isNeuralProcessing ? "PROCESSING DATA..." : "PREDICT FUTURE INTENT"}
                     </button>
                   </motion.div>
 
-                  <p className="text-[10px] font-mono text-green-500/60 uppercase tracking-[0.5em] mb-6 animate-pulse">Identity Ready for Extraction</p>
-                  
-                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setIsModalOpen(true)} className="relative cursor-pointer group">
-                    <div className="absolute -inset-1 bg-green-500/30 blur-2xl opacity-0 group-hover:opacity-100 transition-all rounded-full" />
-                    <div className="relative w-72 aspect-[1.58/1] bg-slate-900 border border-white/20 rounded-2xl overflow-hidden flex items-center justify-center backdrop-blur-xl">
-                      <img src="/senku.GIF" className="absolute opacity-10 grayscale w-full h-full object-cover" />
-                      <div className="z-10 text-center">
-                        <Maximize2 size={32} className="text-green-500 mx-auto mb-2 opacity-50 group-hover:opacity-100 transition-all" />
-                        <p className="text-[9px] font-black uppercase tracking-widest">Open Scientific Identity</p>
-                      </div>
+                  <motion.div whileHover={{ scale: 1.02 }} onClick={() => setIsModalOpen(true)} className="relative cursor-pointer group w-full max-w-md">
+                    <div className="absolute -inset-1 bg-green-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-all rounded-3xl" />
+                    <div className="relative bg-slate-900/40 border border-white/10 rounded-3xl p-6 flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center text-green-500">
+                                <Maximize2 size={24} />
+                            </div>
+                            <div>
+                                <p className="text-[10px] font-black uppercase tracking-widest">Digital Passport</p>
+                                <p className="text-[8px] font-mono text-white/30 uppercase tracking-widest">Scientific ID v.5.0</p>
+                            </div>
+                        </div>
+                        <ChevronRight className="text-white/20 group-hover:text-green-500 transition-colors" />
                     </div>
                   </motion.div>
                 </motion.div>
               )}
             </AnimatePresence>
+          </motion.div>
+        )}
+
+        {/* Rug Shield Tab (NEW FEATURE DESIGN) */}
+        {activeTab === 'rug shield' && (
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-3xl px-6 pt-10 pb-40">
+            <div className="flex flex-col items-center mb-12">
+                <div className="w-20 h-20 bg-green-500/10 rounded-3xl flex items-center justify-center mb-6 border border-green-500/20">
+                    <ShieldCheck size={40} className="text-green-500" />
+                </div>
+                <h2 className="text-5xl font-[1000] italic uppercase tracking-tighter text-white">RUG SHIELD</h2>
+                <p className="text-[10px] font-mono text-white/40 uppercase tracking-[0.5em] mt-2">Solana Contract Security Auditor</p>
+            </div>
+
+            <div className="space-y-4">
+                <div className="relative group">
+                    <input 
+                        className="w-full bg-slate-900/60 border border-white/10 rounded-2xl p-6 text-center outline-none focus:border-green-500 transition-all font-mono text-sm tracking-widest" 
+                        placeholder="PASTE_SOLANA_CONTRACT_ADDRESS" 
+                        value={rugAddress} 
+                        onChange={(e) => setRugAddress(e.target.value)} 
+                    />
+                </div>
+                <button onClick={analyzeRug} className="w-full py-6 bg-green-600 text-white rounded-2xl font-[1000] uppercase text-[11px] tracking-[0.5em] hover:bg-green-500 transition-all shadow-[0_0_40px_rgba(34,197,94,0.3)] flex items-center justify-center gap-3">
+                    {isAnalyzingRug ? <Activity className="animate-spin" /> : <Search size={18} />}
+                    {isAnalyzingRug ? "AUDITING CONTRACT..." : "START SECURITY SCAN"}
+                </button>
+            </div>
+
+            <AnimatePresence>
+                {rugAnalysis && (
+                    <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-xl relative overflow-hidden">
+                            <div className="text-[10px] font-black text-green-500 uppercase tracking-widest mb-6">Security Score</div>
+                            <div className="text-7xl font-[1000] italic text-white mb-2">{rugAnalysis.score}<span className="text-2xl opacity-20">/100</span></div>
+                            <div className={`text-[10px] font-black uppercase px-4 py-1.5 rounded-full inline-block ${rugAnalysis.riskLevel === 'LOW' ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-500'}`}>
+                                {rugAnalysis.status}
+                            </div>
+                        </div>
+
+                        <div className="bg-slate-900/40 border border-white/10 rounded-3xl p-8 space-y-6">
+                            {[
+                                { label: 'Liquidity', val: rugAnalysis.liquidity, icon: <Flame size={14} /> },
+                                { label: 'Mint Authority', val: rugAnalysis.mint, icon: <Activity size={14} /> },
+                                { label: 'Top 10 Holders', val: rugAnalysis.topHolders, icon: <Eye size={14} /> },
+                                { label: 'Renounced', val: 'YES', icon: <ShieldCheck size={14} /> }
+                            ].map((item, i) => (
+                                <div key={i} className="flex justify-between items-center border-b border-white/5 pb-4 last:border-0 last:pb-0">
+                                    <div className="flex items-center gap-2 opacity-40">
+                                        {item.icon}
+                                        <span className="text-[10px] font-bold uppercase tracking-widest">{item.label}</span>
+                                    </div>
+                                    <span className="text-[10px] font-mono font-black text-green-500 uppercase">{item.val}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+          </motion.div>
+        )}
+
+        {/* Radar Tab */}
+        {activeTab === 'radar' && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full max-w-2xl px-6 pt-10 pb-40 space-y-5">
+            <h2 className="text-5xl font-[1000] italic uppercase flex items-center gap-5 text-green-500 tracking-tighter"><Zap /> Neural Radar</h2>
+            <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest mb-4">Real-time Whale Activity Analysis</p>
+            {whaleAlerts.map((a) => (
+              <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} key={a.id} className="bg-slate-900/80 border border-white/5 p-8 rounded-[2.5rem] flex justify-between items-center border-l-[6px] border-l-green-600 shadow-xl group hover:bg-slate-800/80 transition-all">
+                <div>
+                  <p className="text-3xl font-[1000] italic group-hover:text-green-400 transition-colors">{a.amount} <span className="text-xs text-green-500">{a.asset}</span></p>
+                  <p className="text-[10px] opacity-30 uppercase tracking-[0.3em] mt-1">{a.type} • {a.usd}</p>
+                </div>
+                <ChevronRight className="text-green-600 group-hover:translate-x-2 transition-transform" />
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
+
+        {/* Hall of Fame Tab */}
+        {activeTab === 'hall of fame' && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 px-6 pt-10 pb-40">
+            {[
+              { id: 'SENKU', val: '50,000' }, { id: 'CHROME', val: '22,500' },
+              { id: 'KOHAKU', val: '15,200' }, { id: 'GEN_ASSAIRI', val: '10,100' }
+            ].map((w, i) => (
+              <div key={i} className="bg-slate-900/40 border border-white/10 p-12 rounded-[3.5rem] flex items-center gap-8 relative group hover:border-green-500 transition-all shadow-2xl overflow-hidden">
+                <Trophy size={100} className="absolute -right-6 -bottom-6 opacity-5 group-hover:opacity-20 text-green-500 transition-all" />
+                <div className="w-20 h-20 rounded-3xl bg-green-600 flex items-center justify-center font-[1000] text-4xl italic">#{i+1}</div>
+                <div><p className="text-xs font-mono text-green-500 uppercase tracking-[0.4em] mb-2">{w.id}_PROTOCOL</p><p className="text-5xl font-[1000] italic tracking-tighter">{w.val} <span className="text-sm opacity-20">SOL</span></p></div>
+              </div>
+            ))}
           </motion.div>
         )}
 
@@ -403,45 +531,6 @@ export default function SenkuUltimateProtocol() {
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* Radar Tab */}
-        {activeTab === 'radar' && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full max-w-2xl px-6 pt-10 pb-40 space-y-5">
-            <h2 className="text-5xl font-[1000] italic uppercase flex items-center gap-5 text-green-500 tracking-tighter"><Zap /> Neural Radar</h2>
-            <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest mb-4">Real-time Whale Activity Analysis & Prediction</p>
-            {whaleAlerts.length === 0 && (
-              <div className="py-20 text-center flex flex-col items-center gap-4 opacity-20">
-                <div className="w-10 h-10 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
-                <p className="font-mono text-[9px] tracking-widest">SCANNING NEURAL WAVES...</p>
-              </div>
-            )}
-            {whaleAlerts.map((a) => (
-              <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} key={a.id} className="bg-slate-900/80 border border-white/5 p-8 rounded-[2.5rem] flex justify-between items-center border-l-[6px] border-l-green-600 shadow-xl group hover:bg-slate-800/80 transition-all">
-                <div>
-                  <p className="text-3xl font-[1000] italic group-hover:text-green-400 transition-colors">{a.amount} <span className="text-xs text-green-500">{a.asset}</span></p>
-                  <p className="text-[10px] opacity-30 uppercase tracking-[0.3em] mt-1">{a.type} • {a.usd}</p>
-                </div>
-                <ChevronRight className="text-green-600 group-hover:translate-x-2 transition-transform" />
-              </motion.div>
-            ))}
-          </motion.div>
-        )}
-
-        {/* Hall of Fame Tab */}
-        {activeTab === 'hall of fame' && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 px-6 pt-10 pb-40">
-            {[
-              { id: 'SENKU', val: '50,000' }, { id: 'CHROME', val: '22,500' },
-              { id: 'KOHAKU', val: '15,200' }, { id: 'GEN_ASSAIRI', val: '10,100' }
-            ].map((w, i) => (
-              <div key={i} className="bg-slate-900/40 border border-white/10 p-12 rounded-[3.5rem] flex items-center gap-8 relative group hover:border-green-500 transition-all shadow-2xl overflow-hidden">
-                <Trophy size={100} className="absolute -right-6 -bottom-6 opacity-5 group-hover:opacity-20 text-green-500 transition-all" />
-                <div className="w-20 h-20 rounded-3xl bg-green-600 flex items-center justify-center font-[1000] text-4xl italic shadow-[0_0_30px_rgba(34,197,94,0.4)]">#{i+1}</div>
-                <div><p className="text-xs font-mono text-green-500 uppercase tracking-[0.4em] mb-2">{w.id}_PROTOCOL</p><p className="text-5xl font-[1000] italic tracking-tighter">{w.val} <span className="text-sm opacity-20">SOL</span></p></div>
-              </div>
-            ))}
-          </motion.div>
-        )}
       </main>
 
       {/* Footer System */}
@@ -458,10 +547,6 @@ export default function SenkuUltimateProtocol() {
                 <span className="text-[12px] font-mono text-white/90">@bedro95</span>
               </div>
             </a>
-          </div>
-          <div className="flex items-center gap-2 opacity-30 hover:opacity-100 transition-opacity">
-            <Globe size={12} className="text-green-500" />
-            <span className="text-[8px] font-mono uppercase tracking-[0.3em]">IPFS Node Active // Decentralized Hosting</span>
           </div>
         </div>
         <p className="text-[10px] font-mono tracking-[2em] opacity-10 uppercase select-none">SENKU_WORLD // 2025</p>

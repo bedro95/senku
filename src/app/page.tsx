@@ -11,7 +11,7 @@ import {
 import { toPng } from 'html-to-image';
 
 /**
- * PROJECT: SENKU PROTOCOL (WAGMI)
+ * PROJECT: SENKU PROTOCOL
  * DEVELOPER: Bader Alkorgli (bedro95)
  * VERSION: ULTIMATE V6.0 - RUG SHIELD INTEGRATED
  * STATUS: PROFESSIONAL WEB3 INTERFACE

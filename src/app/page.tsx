@@ -15,8 +15,7 @@ import { toPng } from 'html-to-image';
 /**
  * PROJECT: SENKU PROTOCOL (WAGMI)
  * DEVELOPER: Bader Alkorgli (bedro95)
- * VERSION: ULTIMATE V7.0 - UI REVOLUTION
- * STATUS: PRESERVED LOGIC + LUXURY UI UPGRADE
+ * VERSION: ULTIMATE V7.0 - FULL PRESERVED LOGIC + LUXURY UI
  */
 
 export default function SenkuUltimateProtocol() {
@@ -41,7 +40,7 @@ export default function SenkuUltimateProtocol() {
   const bgMusic = useRef<HTMLAudioElement | null>(null);
   const audioScan = useRef<HTMLAudioElement | null>(null);
 
-  // --- LUXURY MOTION EFFECTS ---
+  // --- تأثير الماوس الفخم للـ IQ CARD ---
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const rotateX = useSpring(useTransform(mouseY, [-300, 300], [10, -10]), { stiffness: 100, damping: 30 });
@@ -53,7 +52,7 @@ export default function SenkuUltimateProtocol() {
     mouseY.set(e.clientY - (rect.top + rect.height / 2));
   }
 
-  // --- LOGIC PRESERVED ---
+  // --- LOGIC: NEURAL INTENT ---
   const triggerNeuralIntent = async () => {
     if (!data) return;
     setIsNeuralProcessing(true);
@@ -70,6 +69,7 @@ export default function SenkuUltimateProtocol() {
     }, 2500);
   };
 
+  // --- LOGIC: RUG CHECK (ORIGINAL) ---
   const analyzeRug = async () => {
     if (!rugAddress || rugAddress.length < 32) return;
     setRugLoading(true);
@@ -99,11 +99,12 @@ export default function SenkuUltimateProtocol() {
         mintDisabled: !mintAuth,
         freezeDisabled: !freezeAuth,
         immutable: !isMutable,
-        riskLevel: score >= 80 ? 'SECURE NODE' : score >= 50 ? 'CAUTION ADVISED' : 'CRITICAL BREACH'
+        riskLevel: score >= 80 ? 'LOW RISK' : score >= 50 ? 'MEDIUM RISK' : 'CRITICAL DANGER'
       });
     } catch (e) { alert("Neural Shield Error"); } finally { setRugLoading(false); }
   };
 
+  // --- AUDIO & MUSIC (ORIGINAL) ---
   useEffect(() => {
     bgMusic.current = new Audio('https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Ketsa/Raising_Frequency/Ketsa_-_08_-_World_In_Motion.mp3'); 
     bgMusic.current.loop = true;
@@ -114,6 +115,7 @@ export default function SenkuUltimateProtocol() {
     return () => window.removeEventListener('click', handleInitialInteraction);
   }, [isMuted]);
 
+  // --- RADAR LOGIC (ORIGINAL) ---
   useEffect(() => {
     if (activeTab !== 'radar') return;
     let socket: WebSocket;
@@ -146,6 +148,7 @@ export default function SenkuUltimateProtocol() {
     if (bgMusic.current) isMuted ? bgMusic.current.play() : bgMusic.current.pause();
   };
 
+  // --- SCAN LOGIC (ORIGINAL) ---
   const analyze = async () => {
     if (!address) return;
     setLoading(true);
@@ -193,14 +196,14 @@ export default function SenkuUltimateProtocol() {
   return (
     <div className="min-h-screen bg-[#020617] text-white flex flex-col items-center p-4 md:p-8 font-sans overflow-hidden relative selection:bg-green-500/30">
       
-      {/* Background System (Snow + Senku) */}
+      {/* Background System (Snow + GIF) */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,197,94,0.12),transparent_70%)] z-10" />
         <motion.img 
-          src="/senku.GIF" alt="Senku" initial={{ opacity: 0 }}
-          animate={{ opacity: 0.2, x: [-5, 5, -5] }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute inset-0 w-full h-full object-cover filter grayscale contrast-125"
+          src="/senku.GIF" alt="Senku Background" initial={{ opacity: 0 }}
+          animate={{ opacity: 0.25, x: [-10, 10, -10], y: [-5, 5, -5] }}
+          transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+          className="absolute inset-0 w-full h-full object-cover opacity-20 filter grayscale contrast-125"
         />
         {[...Array(30)].map((_, i) => (
           <motion.div key={i} animate={{ y: "110vh", opacity: [0, 1, 0] }} transition={{ duration: Math.random() * 10 + 5, repeat: Infinity }}
@@ -208,14 +211,14 @@ export default function SenkuUltimateProtocol() {
         ))}
       </div>
 
-      {/* Modern Navigation */}
+      {/* Navigation (Original Tabs) */}
       <nav className="relative z-[100] mt-4 mb-12">
         <div className="flex bg-slate-900/60 border border-white/10 p-1.5 rounded-2xl backdrop-blur-3xl shadow-2xl">
           {['scan', 'rug-shield', 'radar', 'hall of fame'].map((tab) => (
             <button key={tab} onClick={() => setActiveTab(tab)} 
               className={`relative px-6 md:px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 ${activeTab === tab ? 'text-white' : 'text-white/30 hover:text-white'}`}>
               {activeTab === tab && (
-                <motion.div layoutId="tab-pill" className="absolute inset-0 bg-green-600 shadow-[0_0_20px_rgba(34,197,94,0.4)] rounded-xl" />
+                <motion.div layoutId="tab-pill" className="absolute inset-0 bg-green-600 shadow-[0_0_25px_rgba(34,197,94,0.5)] rounded-xl" transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }} />
               )}
               <span className="relative z-10 flex items-center gap-2">
                 {tab === 'scan' && <Fingerprint size={14} />}
@@ -229,140 +232,140 @@ export default function SenkuUltimateProtocol() {
         </div>
       </nav>
 
-      <main className="relative z-10 w-full max-w-6xl flex flex-grow flex-col items-center justify-center">
+      <main className="relative z-10 w-full max-w-6xl flex flex-col items-center flex-grow justify-center">
         
-        {/* SCAN TAB - LUXURY VERSION */}
+        {/* --- SCAN TAB (LUXURY UPGRADE) --- */}
         {activeTab === 'scan' && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full flex flex-col items-center">
             <div className="text-center mb-12 relative">
-              <motion.h1 className="text-[18vw] md:text-[13rem] font-[1000] italic tracking-tighter leading-none bg-gradient-to-b from-white to-green-500/20 bg-clip-text text-transparent drop-shadow-2xl select-none px-4">
+              <motion.h1 className="text-[18vw] md:text-[13rem] font-[1000] italic tracking-tighter leading-none bg-gradient-to-b from-white via-white to-green-500 bg-clip-text text-transparent drop-shadow-2xl select-none px-4">
                 SENKU
               </motion.h1>
-              <p className="text-[10px] font-mono tracking-[1.5em] text-green-400 uppercase opacity-50 mt-4">Neural Scientific Protocol</p>
+              <div className="flex items-center justify-center gap-4 mt-2">
+                <div className="h-[1px] w-12 bg-green-500/50" />
+                <p className="text-[10px] font-mono tracking-[1.5em] text-green-400 uppercase opacity-80">Neural Scientific Protocol</p>
+                <div className="h-[1px] w-12 bg-green-500/50" />
+              </div>
             </div>
 
             <div className="w-full max-w-lg px-6 mb-16">
               <div className="relative group bg-slate-900/80 border border-white/10 rounded-2xl p-2 shadow-2xl">
                 <input 
-                  className="w-full bg-transparent p-5 outline-none font-mono text-sm tracking-widest text-center" 
+                  className="w-full bg-transparent p-5 outline-none font-mono text-sm tracking-widest text-center placeholder:opacity-20" 
                   placeholder="INPUT_SOLANA_ADDRESS" 
                   value={address} onChange={(e) => setAddress(e.target.value)} 
                 />
                 <button onClick={analyze} className="w-full mt-2 py-5 bg-white text-black rounded-xl font-[1000] uppercase text-[10px] tracking-[0.4em] hover:bg-green-600 hover:text-white transition-all shadow-xl">
-                  {loading ? "SEARCHING..." : "INITIALIZE SCAN"}
+                  {loading ? "SEARCHING 10 BILLION%..." : "INITIALIZE NEURAL SCAN"}
                 </button>
               </div>
             </div>
 
-            {/* RESULTS LUXURY GRID */}
             <AnimatePresence>
               {data && (
-                <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8 px-6 pb-40">
-                  
-                  {/* IQ Card with 3D Interaction */}
-                  <motion.div 
-                    onMouseMove={handleMouseMove}
-                    style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-                    className="bg-white/5 border border-white/10 rounded-[3rem] p-10 backdrop-blur-2xl relative overflow-hidden group"
-                  >
-                    <div className="absolute top-0 right-0 p-10 opacity-5 group-hover:opacity-10 transition-opacity">
-                       <BrainCircuit size={120} />
-                    </div>
-                    <div className="relative z-10">
-                       <p className="text-[10px] font-black uppercase tracking-[0.4em] text-green-500 mb-8">Neural IQ Index</p>
-                       <h2 className="text-8xl font-[1000] italic leading-none mb-6">{intelligenceScore}</h2>
-                       <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                          <motion.div initial={{ width: 0 }} animate={{ width: `${intelligenceScore}%` }} className="h-full bg-green-500 shadow-[0_0_20px_#00ffa3]" />
+                <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="pb-32 px-4 w-full flex flex-col items-center gap-8">
+                  <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    {/* IQ Card (3D Luxury) */}
+                    <motion.div 
+                      onMouseMove={handleMouseMove}
+                      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+                      className="bg-white/5 border border-white/10 rounded-[2.5rem] p-10 backdrop-blur-2xl relative overflow-hidden group"
+                    >
+                      <div className="absolute top-0 right-0 p-10 opacity-5 group-hover:opacity-10 transition-opacity">
+                         <BrainCircuit size={120} />
+                      </div>
+                      <div className="relative z-10">
+                         <p className="text-[10px] font-black uppercase tracking-[0.4em] text-green-500 mb-8">Neural IQ Index</p>
+                         <h2 className="text-8xl font-[1000] italic leading-none mb-6">{intelligenceScore}</h2>
+                         <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                            <motion.div initial={{ width: 0 }} animate={{ width: `${intelligenceScore}%` }} className="h-full bg-green-500 shadow-[0_0_20px_#00ffa3]" />
+                         </div>
+                         <p className="text-[9px] font-mono text-white/30 mt-4 uppercase tracking-widest">Scientific IQ Data Verified</p>
+                      </div>
+                    </motion.div>
+
+                    {/* Intent Engine (Luxury) */}
+                    <div className="bg-slate-900/50 border border-white/5 rounded-[2.5rem] p-10 backdrop-blur-2xl flex flex-col justify-between">
+                       <div className="flex items-center gap-4 mb-10 border-b border-white/5 pb-6">
+                          <Activity className="text-green-500 animate-pulse" />
+                          <span className="text-[10px] font-black uppercase tracking-widest">Market Intent Pred</span>
                        </div>
-                       <p className="text-[9px] font-mono text-white/30 mt-4 uppercase tracking-widest">Calculated via On-Chain Cognitive Patterns</p>
+                       <div className="bg-black/40 p-6 rounded-2xl border border-white/5 mb-8 italic text-[11px] font-mono text-white/60 min-h-[100px] flex items-center justify-center text-center">
+                          {intentSignal ? (
+                            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}><span className="text-green-500">[SIGNAL]</span> {intentSignal}</motion.p>
+                          ) : "READY TO PREDICT FUTURE NODES..."}
+                       </div>
+                       <button onClick={triggerNeuralIntent} disabled={isNeuralProcessing} className="w-full py-5 bg-white text-black rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] hover:bg-green-500 hover:text-white transition-all shadow-2xl">
+                          {isNeuralProcessing ? "DECODING..." : "TRIGGER PREDICTION"}
+                       </button>
+                    </div>
+                  </div>
+
+                  {/* ID Card Entry */}
+                  <motion.div whileHover={{ scale: 1.05 }} onClick={() => setIsModalOpen(true)} className="relative cursor-pointer group mt-4">
+                    <div className="absolute -inset-1 bg-green-500/30 blur-2xl opacity-0 group-hover:opacity-100 transition-all rounded-full" />
+                    <div className="relative w-72 aspect-[1.58/1] bg-slate-900 border border-white/20 rounded-2xl overflow-hidden flex items-center justify-center backdrop-blur-xl">
+                      <img src="/senku.GIF" className="absolute opacity-10 grayscale w-full h-full object-cover" />
+                      <div className="z-10 text-center">
+                        <Maximize2 size={32} className="text-green-500 mx-auto mb-2 opacity-50 group-hover:opacity-10 transition-all" />
+                        <p className="text-[9px] font-black uppercase tracking-widest">Open Scientific Identity</p>
+                      </div>
                     </div>
                   </motion.div>
-
-                  {/* Intent Engine Luxury Box */}
-                  <div className="bg-slate-900/50 border border-white/5 rounded-[3rem] p-10 backdrop-blur-2xl flex flex-col justify-between">
-                     <div className="flex items-center gap-4 mb-10 border-b border-white/5 pb-6">
-                        <Activity className="text-green-500 animate-pulse" />
-                        <span className="text-[10px] font-black uppercase tracking-widest">Market Intent Predictor</span>
-                     </div>
-                     <div className="bg-black/40 p-6 rounded-2xl border border-white/5 mb-8 italic text-xs font-mono text-white/60 min-h-[100px] flex items-center justify-center text-center">
-                        {intentSignal || "AWAITING NEURAL SYNC..."}
-                     </div>
-                     <button onClick={triggerNeuralIntent} disabled={isNeuralProcessing} className="w-full py-5 bg-white text-black rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] hover:bg-green-500 hover:text-white transition-all shadow-2xl disabled:opacity-50">
-                        {isNeuralProcessing ? "DECODING..." : "TRIGGER PREDICTION"}
-                     </button>
-                  </div>
-
-                  {/* ID Extraction Entry */}
-                  <div className="md:col-span-2 flex justify-center">
-                    <motion.div whileHover={{ scale: 1.02 }} onClick={() => setIsModalOpen(true)} className="w-full max-w-sm cursor-pointer group relative">
-                       <div className="absolute -inset-1 bg-green-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-all" />
-                       <div className="relative bg-slate-900 border border-white/10 rounded-[2rem] p-6 flex items-center justify-between overflow-hidden">
-                          <div className="flex items-center gap-4">
-                             <div className="p-3 bg-green-500/10 rounded-xl text-green-500"><Maximize2 size={20} /></div>
-                             <span className="text-[10px] font-black uppercase tracking-widest">Open Scientific Identity</span>
-                          </div>
-                          <ChevronRight className="opacity-20 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
-                       </div>
-                    </motion.div>
-                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
           </motion.div>
         )}
 
-        {/* RUG SHIELD - REVOLUTIONARY UI */}
+        {/* --- RUG SHIELD TAB (LUXURY REVOLUTION) --- */}
         {activeTab === 'rug-shield' && (
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-4xl px-6 pt-10 pb-40">
+          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-4xl px-6 pt-10 pb-40">
             <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
               
-              {/* Input Panel */}
               <div className="md:col-span-12 bg-gradient-to-br from-green-500/10 to-transparent border border-green-500/20 rounded-[3rem] p-12 backdrop-blur-2xl">
                 <div className="flex flex-col items-center text-center mb-10">
-                   <ShieldCheck size={48} className="text-green-500 mb-4" />
-                   <h2 className="text-4xl font-[1000] italic uppercase tracking-tighter">Neural Audit</h2>
-                   <p className="text-[9px] font-mono text-green-500/40 uppercase tracking-[0.4em] mt-2">Protocol Vulnerability Scanner</p>
+                   <div className="inline-flex p-4 rounded-full bg-green-500/10 border border-green-500/20 mb-4">
+                      <ShieldCheck size={40} className="text-green-500 animate-pulse" />
+                   </div>
+                   <h2 className="text-4xl font-[1000] italic uppercase tracking-tighter">NEURAL SHIELD</h2>
+                   <p className="text-[10px] font-mono text-green-500/50 uppercase tracking-[0.5em] mt-2">Advanced Smart-Contract Audit</p>
                 </div>
                 <div className="flex flex-col md:flex-row gap-4 max-w-2xl mx-auto">
                   <input 
                     className="flex-1 bg-black/50 border border-white/10 rounded-2xl p-5 font-mono text-xs tracking-widest text-green-400 focus:border-green-500 outline-none transition-all"
-                    placeholder="CONTRACT_ADDRESS_TO_AUDIT"
+                    placeholder="ENTER_CONTRACT_ADDRESS"
                     value={rugAddress} onChange={(e) => setRugAddress(e.target.value)}
                   />
                   <button onClick={analyzeRug} className="px-10 py-5 bg-green-600 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl hover:bg-green-500 transition-all">
-                    {rugLoading ? "DECODING..." : "START AUDIT"}
+                    {rugLoading ? "DECODING..." : "START SCAN"}
                   </button>
                 </div>
               </div>
 
-              {/* Dynamic Results Grid */}
               <AnimatePresence>
                 {rugData && (
                   <>
-                    <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="md:col-span-7 bg-white/5 border border-white/10 rounded-[2.5rem] p-10">
-                       <p className="text-[10px] font-black opacity-30 uppercase tracking-widest mb-8 flex items-center gap-2"><Terminal size={12}/> Security Breakdown</p>
+                    <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="md:col-span-7 bg-white/5 border border-white/10 rounded-[2.5rem] p-8">
+                       <p className="text-[10px] font-black opacity-30 uppercase tracking-widest mb-6">Security Breakdown</p>
                        <div className="space-y-4">
                           {[
-                            { label: "Mint Authority", status: rugData.mintDisabled, desc: "Can the dev print more tokens?" },
-                            { label: "Freeze Authority", status: rugData.freezeDisabled, desc: "Can the dev block your wallet?" },
-                            { label: "Metadata Mutable", status: rugData.immutable, desc: "Can the token info be changed?" }
+                            { label: "Mint Authority", status: rugData.mintDisabled },
+                            { label: "Freeze Authority", status: rugData.freezeDisabled },
+                            { label: "Contract Metadata", status: rugData.immutable }
                           ].map((item, i) => (
-                            <div key={i} className="flex justify-between items-center p-5 bg-black/30 rounded-[1.5rem] border border-white/5 group hover:border-white/10 transition-all">
-                               <div>
-                                  <span className="text-[11px] font-black uppercase block">{item.label}</span>
-                                  <span className="text-[8px] opacity-20 font-mono">{item.desc}</span>
-                               </div>
-                               {item.status ? <CheckCircle2 className="text-green-500" size={20} /> : <ShieldAlert className="text-red-500" size={20} />}
+                            <div key={i} className="flex justify-between items-center p-4 bg-black/20 rounded-xl border border-white/5">
+                               <span className="text-[11px] font-bold uppercase">{item.label}</span>
+                               {item.status ? <CheckCircle2 className="text-green-500" size={18} /> : <ShieldAlert className="text-red-500" size={18} />}
                             </div>
                           ))}
                        </div>
                     </motion.div>
-
-                    <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="md:col-span-5 bg-green-600 rounded-[2.5rem] p-10 flex flex-col items-center justify-center text-black text-center relative overflow-hidden group">
-                       <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none grayscale"><img src="/senku.GIF" className="w-full h-full object-cover"/></div>
-                       <p className="text-[10px] font-black uppercase tracking-widest mb-4 opacity-60">Neural Safety Score</p>
-                       <h3 className="text-8xl font-[1000] italic leading-none mb-4 group-hover:scale-110 transition-transform">{rugData.score}%</h3>
-                       <p className="text-[11px] font-black uppercase bg-black text-white px-6 py-2 rounded-full tracking-widest">{rugData.riskLevel}</p>
+                    <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="md:col-span-5 bg-green-600 rounded-[2.5rem] p-8 flex flex-col items-center justify-center text-black text-center relative overflow-hidden group">
+                       <p className="text-[10px] font-black uppercase tracking-widest mb-2 z-10">Safety Score</p>
+                       <h3 className="text-7xl font-[1000] italic leading-none mb-2 z-10">{rugData.score}%</h3>
+                       <p className="text-[10px] font-black uppercase bg-black/10 px-4 py-1 rounded-full z-10">{rugData.riskLevel}</p>
                     </motion.div>
                   </>
                 )}
@@ -371,12 +374,13 @@ export default function SenkuUltimateProtocol() {
           </motion.div>
         )}
 
-        {/* ... (باقي التبويبات Radar و Hall of Fame تظل كما هي في كودك الأصلي لأنها منسقة بشكل جيد) ... */}
+        {/* --- RADAR TAB (ORIGINAL) --- */}
         {activeTab === 'radar' && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full max-w-2xl px-6 pt-10 pb-40 space-y-5">
             <h2 className="text-5xl font-[1000] italic uppercase flex items-center gap-5 text-green-500 tracking-tighter"><Zap /> Neural Radar</h2>
+            <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest mb-4">Real-time Whale Activity Analysis</p>
             {whaleAlerts.map((a) => (
-              <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} key={a.id} className="bg-slate-900/80 border border-white/5 p-8 rounded-[2.5rem] flex justify-between items-center border-l-[6px] border-l-green-600 shadow-xl group hover:bg-slate-800/80 transition-all">
+              <motion.div key={a.id} className="bg-slate-900/80 border border-white/5 p-8 rounded-[2.5rem] flex justify-between items-center border-l-[6px] border-l-green-600 shadow-xl group hover:bg-slate-800/80 transition-all">
                 <div>
                   <p className="text-3xl font-[1000] italic group-hover:text-green-400 transition-colors">{a.amount} <span className="text-xs text-green-500">{a.asset}</span></p>
                   <p className="text-[10px] opacity-30 uppercase tracking-[0.3em] mt-1">{a.type} • {a.usd}</p>
@@ -387,6 +391,7 @@ export default function SenkuUltimateProtocol() {
           </motion.div>
         )}
 
+        {/* --- HALL OF FAME TAB (ORIGINAL) --- */}
         {activeTab === 'hall of fame' && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 px-6 pt-10 pb-40">
             {[
@@ -395,7 +400,7 @@ export default function SenkuUltimateProtocol() {
             ].map((w, i) => (
               <div key={i} className="bg-slate-900/40 border border-white/10 p-12 rounded-[3.5rem] flex items-center gap-8 relative group hover:border-green-500 transition-all shadow-2xl overflow-hidden">
                 <Trophy size={100} className="absolute -right-6 -bottom-6 opacity-5 group-hover:opacity-20 text-green-500 transition-all" />
-                <div className="w-20 h-20 rounded-3xl bg-green-600 flex items-center justify-center font-[1000] text-4xl italic">#{i+1}</div>
+                <div className="w-20 h-20 rounded-3xl bg-green-600 flex items-center justify-center font-[1000] text-4xl italic shadow-[0_0_30px_rgba(34,197,94,0.4)]">#{i+1}</div>
                 <div><p className="text-xs font-mono text-green-500 uppercase tracking-[0.4em] mb-2">{w.id}_PROTOCOL</p><p className="text-5xl font-[1000] italic tracking-tighter">{w.val} <span className="text-sm opacity-20">SOL</span></p></div>
               </div>
             ))}
@@ -403,33 +408,60 @@ export default function SenkuUltimateProtocol() {
         )}
       </main>
 
-      {/* Modal - Preserved Identity Card */}
+      {/* --- MODAL IDENTITY CARD (PRESERVED FULL) --- */}
       <AnimatePresence>
         {isModalOpen && data && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-black/95 backdrop-blur-2xl">
-            <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="relative w-full max-w-[550px] flex flex-col items-center">
-              <button onClick={() => setIsModalOpen(false)} className="absolute -top-16 right-0 text-white/50 hover:text-red-500 transition-colors"><X size={40} /></button>
-              <div ref={modalRef} className="relative w-full aspect-[1.58/1] bg-[#020617] border-[3px] rounded-[3rem] p-10 overflow-hidden shadow-2xl" style={{ borderColor: data.tierColor }}>
-                <img src="/senku.GIF" className="absolute right-[-10%] bottom-[-10%] w-[250px] opacity-10 grayscale pointer-events-none" />
-                <div className="relative z-10 h-full flex flex-col justify-between">
-                  <div className="flex justify-between items-start">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[1000] flex items-center justify-center p-4 md:p-8 bg-black/95 backdrop-blur-2xl">
+            <motion.div initial={{ scale: 0.8, y: 50 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.8, y: 50 }} className="relative w-full max-w-[550px] flex flex-col items-center">
+              <button onClick={() => setIsModalOpen(false)} className="absolute -top-12 right-0 md:-right-12 p-3 text-white/50 hover:text-red-500 transition-colors">
+                <X size={32} />
+              </button>
+              <div ref={modalRef} className="relative w-full aspect-[1.58/1] bg-[#020617] border-[2.5px] rounded-[3rem] p-10 overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.8)]" style={{ borderColor: data.tierColor }}>
+                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
+                <img src="/senku.GIF" className="absolute right-[-15%] bottom-[-15%] w-[280px] opacity-10 grayscale pointer-events-none" />
+                <div className="relative z-10 h-full flex flex-col">
+                  <div className="flex justify-between items-start mb-auto">
                     <div className="flex items-center gap-3">
-                      <ShieldCheck size={28} style={{ color: data.tierColor }} />
-                      <div><p className="text-[10px] font-black uppercase tracking-widest leading-none">Senku Verified</p><p className="text-[8px] opacity-30 font-mono mt-1">SECURED_INTENT_ENGINE</p></div>
+                      <div className="p-2 rounded-lg bg-white/5 border border-white/10">
+                        <ShieldCheck size={24} style={{ color: data.tierColor }} />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-black uppercase tracking-widest leading-none">Senku Verified</p>
+                        <p className="text-[8px] opacity-30 font-mono mt-1">SECURED_INTENT_ENGINE</p>
+                      </div>
                     </div>
-                    <Cpu size={24} className="opacity-20" />
+                    <Cpu size={24} className="opacity-20 animate-pulse" />
                   </div>
-                  <div>
+                  <div className="mb-10 mt-6">
                     <p className="text-[10px] uppercase tracking-[0.3em] opacity-30 mb-2 font-bold">Scientific Wealth Index</p>
-                    <h2 className="text-7xl font-[1000] italic tracking-tighter leading-none">${data.usdDisplay} <span className="text-2xl not-italic opacity-40">USD</span></h2>
+                    <h2 className="text-6xl md:text-7xl font-[1000] italic tracking-tighter leading-none">
+                      ${data.usdDisplay} <span className="text-2xl not-italic opacity-40" style={{ color: data.tierColor }}>USD</span>
+                    </h2>
+                    <p className="text-sm font-mono mt-2 opacity-50 tracking-widest">{data.sol} {data.symbol} ON-CHAIN</p>
                   </div>
-                  <div className="flex justify-between items-end border-t border-white/5 pt-8">
-                    <div><p className="text-[10px] font-black uppercase tracking-[0.4em] mb-2 opacity-40">Class</p><p className="text-4xl font-[1000] italic uppercase leading-none" style={{ color: data.tierColor }}>{data.status}</p></div>
-                    <div className="text-right"><p className="text-[9px] opacity-30 uppercase font-black">Brain Power</p><p className="text-lg font-mono text-green-500 font-black">{intelligenceScore} IQ</p></div>
+                  <div className="grid grid-cols-2 gap-8 mb-10 border-t border-white/5 pt-8">
+                    <div>
+                      <p className="text-[9px] uppercase opacity-30 flex items-center gap-2 mb-1"><Calendar size={12} /> Generation</p>
+                      <p className="text-sm font-mono font-bold tracking-widest">{data.date}</p>
+                    </div>
+                    <div>
+                      <p className="text-[9px] uppercase opacity-30 flex items-center gap-2 mb-1"><Hash size={12} /> LAB_ID</p>
+                      <p className="text-sm font-mono font-bold tracking-widest text-white/80">{data.hash}</p>
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-end border-t border-white/5 pt-8 mt-auto">
+                    <div>
+                      <p className="text-[10px] font-black uppercase tracking-[0.4em] mb-2 opacity-40">Class</p>
+                      <p className="text-4xl font-[1000] italic uppercase leading-none" style={{ color: data.tierColor }}>{data.status}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[9px] opacity-30 uppercase font-black tracking-widest">Brain Power</p>
+                      <p className="text-lg font-mono text-green-500 font-black">{intelligenceScore} IQ</p>
+                    </div>
                   </div>
                 </div>
               </div>
-              <button onClick={saveCard} className="mt-8 flex items-center gap-4 bg-white text-black px-12 py-5 rounded-2xl font-black uppercase text-[10px] tracking-[0.4em] hover:bg-green-600 hover:text-white transition-all">
+              <button onClick={saveCard} className="mt-8 flex items-center gap-4 bg-white text-black px-12 py-5 rounded-2xl font-black uppercase text-[10px] tracking-[0.4em] hover:bg-green-600 hover:text-white transition-all shadow-2xl active:scale-95">
                 <Download size={20} /> Extract Lab Credentials
               </button>
             </motion.div>
@@ -437,19 +469,29 @@ export default function SenkuUltimateProtocol() {
         )}
       </AnimatePresence>
 
-      <footer className="relative z-[100] py-10 w-full flex flex-col items-center gap-6 mt-auto">
-        <div className="flex gap-4">
-          <button onClick={toggleMute} className="p-4 bg-white/5 border border-white/10 rounded-full">{isMuted ? <VolumeX size={20} /> : <Volume2 size={20} className="text-green-500 animate-pulse" />}</button>
-          <a href="https://github.com/bedro95" target="_blank" className="bg-white/5 border border-white/10 px-8 py-4 rounded-2xl text-[12px] font-mono hover:border-green-500 transition-all flex items-center gap-3">
-            <Github size={18} /> @bedro95
-          </a>
+      {/* --- FOOTER (ORIGINAL) --- */}
+      <footer className="relative z-[100] py-14 w-full flex flex-col items-center gap-6 mt-auto">
+        <div className="flex flex-col items-center gap-4">
+          <div className="flex gap-4">
+            <button onClick={toggleMute} className="p-4 bg-white/5 border border-green-500/20 rounded-full hover:bg-green-500/10 transition-all">
+              {isMuted ? <VolumeX size={20} className="text-red-400" /> : <Volume2 size={20} className="text-green-400 animate-pulse" />}
+            </button>
+            <a href="https://github.com/bedro95" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-4 bg-white/5 border border-white/10 px-8 py-4 rounded-2xl hover:border-green-500/50 transition-all shadow-xl">
+              <Github size={20} className="group-hover:text-green-500 transition-colors" />
+              <div className="flex flex-col">
+                <span className="text-[9px] font-black uppercase tracking-[0.4em] opacity-40">Protocol Lead</span>
+                <span className="text-[12px] font-mono text-white/90">@bedro95</span>
+              </div>
+            </a>
+          </div>
         </div>
-        <p className="text-[9px] font-mono tracking-[2em] opacity-10 uppercase">SENKU_WORLD // 2026</p>
+        <p className="text-[10px] font-mono tracking-[2em] opacity-10 uppercase select-none">SENKU_WORLD // 2026</p>
       </footer>
 
       <style jsx global>{`
-        body { background: #020617; margin: 0; cursor: crosshair; }
+        body { background-color: #020617; margin: 0; cursor: crosshair; }
         ::-webkit-scrollbar { display: none; }
+        input::placeholder { color: rgba(255,255,255,0.1); }
       `}</style>
     </div>
   );

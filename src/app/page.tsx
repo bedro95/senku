@@ -11,7 +11,7 @@ import {
 import { toPng } from 'html-to-image';
 
 /**
- * PROJECT: SENKU PROTOCOL (Wagmi)
+ * PROJECT: SENKU PROTOCOL
  * DEVELOPER: Bader Alkorgli (bedro95)
  * VERSION: ULTIMATE V5.0 - NEURAL INTENT PREDICTION
  * STATUS: LOCKED IDENTITY - FULL CODE RESTORATION

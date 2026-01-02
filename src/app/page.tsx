@@ -6,14 +6,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Download, Fingerprint, Volume2, VolumeX, Activity, 
   Zap, ChevronRight, Trophy, Music, Github, ShieldCheck, 
-  Cpu, Calendar, Hash, Globe, BarChart3, Radio, X, Maximize2, Sparkles, Flame, Terminal, BrainCircuit, TrendingUp, ShieldAlert, Search, Eye, AlertTriangle, ArrowUpRight
+  Cpu, Calendar, Hash, Globe, BarChart3, Radio, X, Maximize2, Sparkles, Flame, Terminal, BrainCircuit, TrendingUp, ShieldAlert, Search, Eye, AlertTriangle, Users, ArrowUpRight
 } from 'lucide-react';
 import { toPng } from 'html-to-image';
 
 /**
- * PROJECT: SENKU PROTOCOL
+ * PROJECT: SENKU PROTOCOL (Senku)
  * DEVELOPER: Bader Alkorgli (bedro95)
- * VERSION: ULTIMATE V7.0 - LIVE DEX DATA INTEGRATED
+ * VERSION: ULTIMATE V7.0 - COMPETITORS INTEGRATED
  * STATUS: PROFESSIONAL WEB3 INTERFACE
  */
 
@@ -26,65 +26,29 @@ export default function SenkuUltimateProtocol() {
   const [whaleAlerts, setWhaleAlerts] = useState<any[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false); 
   
-  // States for Rug Shield
+  // New States for Rug Shield
   const [rugAddress, setRugAddress] = useState('');
   const [rugAnalysis, setRugAnalysis] = useState<any>(null);
   const [isAnalyzingRug, setIsAnalyzingRug] = useState(false);
 
-  // States for Live Hall of Fame
-  const [kolsData, setKolsData] = useState<any[]>([]);
-  const [isLoadingKols, setIsLoadingKols] = useState(false);
-
   const [isNeuralProcessing, setIsNeuralProcessing] = useState(false);
   const [intentSignal, setIntentSignal] = useState<string | null>(null);
   const [intelligenceScore, setIntelligenceScore] = useState(0);
+
+  // Competitors State
+  const [competitors, setCompetitors] = useState([
+    { rank: 1, name: "SENKU_MAIN", pnl: "+1,420%", volume: "$12.4M", status: "LEGENDARY" },
+    { rank: 2, name: "CHROME_LABS", pnl: "+856%", volume: "$8.1M", status: "ELITE" },
+    { rank: 3, name: "KOHAKU_X", pnl: "+612%", volume: "$4.2M", status: "PRO" },
+    { rank: 4, name: "GEN_ALPHA", pnl: "+340%", volume: "$2.9M", status: "ACTIVE" },
+  ]);
 
   const cardRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const bgMusic = useRef<HTMLAudioElement | null>(null);
   const audioScan = useRef<HTMLAudioElement | null>(null);
 
-  // --- FUNCTION TO FETCH CLEAN DEX DATA ---
-  const fetchKolsLeaderboard = async () => {
-    setIsLoadingKols(true);
-    try {
-      // Fetching live top traders/boosts
-      const response = await fetch('https://api.dexscreener.com/token-boosts/top/v1');
-      const boosts = await response.json();
-      
-      // Formatting data to show CLEAN names instead of URLs
-      const formattedData = boosts.slice(0, 10).map((item: any, index: number) => {
-        // Extract a clean name from the header or description
-        let cleanName = "ANON_KOL";
-        if (item.header && !item.header.includes('http')) {
-            cleanName = item.header;
-        } else if (item.url) {
-            cleanName = item.url.split('/').pop().replace(/[^a-zA-Z0-9]/g, '_');
-        }
-
-        return {
-          rank: index + 1,
-          maker: cleanName.substring(0, 12),
-          bought: (Math.random() * 20 + 5).toFixed(1) + "K",
-          sold: (Math.random() * 40 + 10).toFixed(1) + "K",
-          profit: (Math.random() * 15 + 2).toFixed(1) + "K",
-        };
-      });
-      
-      setKolsData(formattedData);
-    } catch (error) {
-      console.error("DexScreener API Error:", error);
-    } finally {
-      setIsLoadingKols(false);
-    }
-  };
-
-  useEffect(() => {
-    if (activeTab === 'hall of fame') {
-      fetchKolsLeaderboard();
-    }
-  }, [activeTab]);
-
+  // --- RUG SHIELD ENGINE ---
   const analyzeRug = async () => {
     if (!rugAddress) return;
     setIsAnalyzingRug(true);
@@ -296,7 +260,7 @@ export default function SenkuUltimateProtocol() {
 
       <nav className="relative z-[100] mt-4 mb-12">
         <div className="flex bg-slate-900/60 border border-white/10 p-1.5 rounded-2xl backdrop-blur-3xl shadow-[0_0_50px_rgba(0,0,0,0.4)]">
-          {['scan', 'rug shield', 'radar', 'hall of fame'].map((tab) => (
+          {['scan', 'rug shield', 'radar', 'Competitors'].map((tab) => (
             <button key={tab} onClick={() => setActiveTab(tab)} 
               className={`relative px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 ${activeTab === tab ? 'text-white' : 'text-white/30 hover:text-white'}`}>
               {activeTab === tab && (
@@ -306,7 +270,7 @@ export default function SenkuUltimateProtocol() {
                 {tab === 'scan' && <Fingerprint size={14} />}
                 {tab === 'rug shield' && <ShieldAlert size={14} />}
                 {tab === 'radar' && <Radio size={14} />}
-                {tab === 'hall of fame' && <Trophy size={14} />}
+                {tab === 'Competitors' && <Trophy size={14} />}
                 {tab}
               </span>
             </button>
@@ -347,7 +311,9 @@ export default function SenkuUltimateProtocol() {
             <AnimatePresence>
               {data && (
                 <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="pb-32 px-4 w-full flex flex-col items-center gap-6">
+                  {/* Web3 Luxury Features Grid */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-3xl">
+                     {/* Feature 1: Intelligence */}
                      <div className="bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-xl hover:border-green-500/50 transition-all group overflow-hidden relative">
                         <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                             <BrainCircuit size={80} />
@@ -362,6 +328,7 @@ export default function SenkuUltimateProtocol() {
                         <p className="text-[9px] font-mono text-white/40 uppercase tracking-tighter">On-chain Cognitive Assessment</p>
                      </div>
 
+                     {/* Feature 2: Wealth Status */}
                      <div className="bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-xl hover:border-blue-500/50 transition-all group overflow-hidden relative">
                         <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                             <TrendingUp size={80} />
@@ -375,6 +342,7 @@ export default function SenkuUltimateProtocol() {
                      </div>
                   </div>
 
+                  {/* NEURAL INTENT ENGINE UI */}
                   <motion.div className="w-full max-w-3xl bg-gradient-to-b from-slate-900 to-black border border-white/5 rounded-[2.5rem] p-8 relative overflow-hidden">
                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 pointer-events-none" />
                     <div className="flex items-center gap-3 text-white/80 font-black uppercase text-[11px] tracking-[0.4em] mb-6">
@@ -397,7 +365,7 @@ export default function SenkuUltimateProtocol() {
                     </button>
                   </motion.div>
 
-                  <motion.div whileHover={{ scale: 1.02 }} onClick={() => setIsModalOpen(true)} className="relative cursor-pointer group w-full max-md">
+                  <motion.div whileHover={{ scale: 1.02 }} onClick={() => setIsModalOpen(true)} className="relative cursor-pointer group w-full max-w-md">
                     <div className="absolute -inset-1 bg-green-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-all rounded-3xl" />
                     <div className="relative bg-slate-900/40 border border-white/10 rounded-3xl p-6 flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -418,7 +386,7 @@ export default function SenkuUltimateProtocol() {
           </motion.div>
         )}
 
-        {/* Rug Shield Tab */}
+        {/* Rug Shield Tab (NEW FEATURE DESIGN) */}
         {activeTab === 'rug shield' && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-3xl px-6 pt-10 pb-40">
             <div className="flex flex-col items-center mb-12">
@@ -494,74 +462,61 @@ export default function SenkuUltimateProtocol() {
           </motion.div>
         )}
 
-        {/* Hall of Fame Tab (FIXED DEX DATA DISPLAY) */}
-        {activeTab === 'hall of fame' && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full max-w-5xl px-4 pt-10 pb-40">
-            <div className="flex flex-col mb-10">
-                <h2 className="text-6xl md:text-8xl font-[1000] italic uppercase text-green-500 tracking-tighter leading-none">
-                    HALL OF FAME
-                </h2>
-                <p className="text-[10px] font-mono text-white/40 uppercase tracking-[0.5em] mt-2">
-                    LIVE DEXSCREENER KOLs & TOP TRADERS
-                </p>
+        {/* Competitors Tab (Updated from Hall of Fame) */}
+        {activeTab === 'Competitors' && (
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-5xl px-6 pt-10 pb-40">
+            <div className="flex items-center gap-4 mb-8">
+               <Users className="text-green-500" size={32} />
+               <h2 className="text-4xl font-[1000] italic uppercase tracking-tighter">Market Competitors</h2>
             </div>
+            
+            <div className="grid grid-cols-1 gap-4">
+              {competitors.map((comp, i) => (
+                <motion.div 
+                  key={i} 
+                  whileHover={{ x: 10 }}
+                  className="bg-slate-900/40 border border-white/10 p-6 rounded-2xl flex items-center justify-between group hover:border-green-500/50 transition-all shadow-xl overflow-hidden relative"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  
+                  <div className="flex items-center gap-6 relative z-10">
+                    <div className="w-12 h-12 rounded-xl bg-green-600 flex items-center justify-center font-[1000] text-xl italic shadow-lg shadow-green-900/20">
+                      #{comp.rank}
+                    </div>
+                    <div>
+                      <p className="text-xs font-mono text-green-500 uppercase tracking-widest">{comp.status}</p>
+                      <h3 className="text-2xl font-[1000] italic tracking-tighter">{comp.name}</h3>
+                    </div>
+                  </div>
 
-            <div className="bg-slate-900/40 border border-white/10 rounded-[2rem] overflow-hidden backdrop-blur-xl shadow-2xl">
-                <div className="overflow-x-auto">
-                    <table className="w-full border-collapse text-left min-w-[600px]">
-                        <thead>
-                            <tr className="border-b border-white/10 bg-white/5">
-                                <th className="p-6 text-[10px] font-black uppercase tracking-widest opacity-40">RANK</th>
-                                <th className="p-6 text-[10px] font-black uppercase tracking-widest opacity-40">MAKER / KOL</th>
-                                <th className="p-6 text-[10px] font-black uppercase tracking-widest opacity-40 text-red-500/70">BOUGHT</th>
-                                <th className="p-6 text-[10px] font-black uppercase tracking-widest opacity-40 text-green-500/70">SOLD</th>
-                                <th className="p-6 text-[10px] font-black uppercase tracking-widest opacity-40 text-green-500/70">PROFIT</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {isLoadingKols ? (
-                                [...Array(8)].map((_, i) => (
-                                    <tr key={i} className="animate-pulse border-b border-white/5">
-                                        <td colSpan={5} className="p-6"><div className="h-10 bg-white/5 rounded-xl w-full" /></td>
-                                    </tr>
-                                ))
-                            ) : (
-                                kolsData.map((kol) => (
-                                    <tr key={kol.rank} className="border-b border-white/5 hover:bg-green-500/5 transition-colors group">
-                                        <td className="p-6">
-                                            <span className="text-xl font-[1000] italic opacity-20 group-hover:opacity-100 group-hover:text-green-500 transition-all">#{kol.rank}</span>
-                                        </td>
-                                        <td className="p-6">
-                                            <div className="flex items-center gap-4">
-                                                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500/20 to-blue-500/20 flex items-center justify-center border border-white/10 overflow-hidden">
-                                                   <span className="text-green-500 font-black">{kol.maker.charAt(0).toUpperCase()}</span>
-                                                </div>
-                                                <div className="flex flex-col">
-                                                    <span className="text-sm font-black tracking-tight text-white group-hover:text-green-400 transition-colors uppercase">
-                                                        {kol.maker}
-                                                    </span>
-                                                    <span className="text-[9px] font-mono text-blue-400 opacity-60">VERIFIED_PROTOCOL</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="p-6">
-                                            <span className="font-mono text-red-500 font-black text-sm">${kol.bought}</span>
-                                        </td>
-                                        <td className="p-6">
-                                            <span className="font-mono text-green-500 font-black text-sm">${kol.sold}</span>
-                                        </td>
-                                        <td className="p-6">
-                                            <div className="flex items-center gap-2">
-                                                <span className="text-sm font-[1000] italic text-green-500">+${kol.profit}</span>
-                                                <ArrowUpRight size={14} className="text-green-500 opacity-0 group-hover:opacity-100 transition-all" />
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+                  <div className="flex items-center gap-12 relative z-10">
+                    <div className="text-right hidden md:block">
+                      <p className="text-[9px] uppercase opacity-30 font-black tracking-widest">30D Volume</p>
+                      <p className="font-mono font-bold text-white/80">{comp.volume}</p>
+                    </div>
+                    <div className="text-right min-w-[100px]">
+                      <p className="text-[9px] uppercase opacity-30 font-black tracking-widest">Net PnL</p>
+                      <p className="text-xl font-[1000] italic text-green-400 flex items-center justify-end gap-1">
+                        {comp.pnl} <ArrowUpRight size={14} />
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+            
+            <div className="mt-12 p-8 bg-green-500/5 border border-green-500/20 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-6">
+               <div className="flex items-center gap-4">
+                  <div className="p-3 bg-green-500/20 rounded-xl">
+                    <Zap className="text-green-500" size={24} />
+                  </div>
+                  <p className="text-xs font-mono text-white/60 leading-relaxed max-w-md">
+                    Neural nodes are currently tracking 14,209 active protocols. High-velocity assets are prioritized in the scientific queue.
+                  </p>
+               </div>
+               <button className="px-8 py-4 bg-white text-black rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-green-500 hover:text-white transition-all">
+                  Join Competition
+               </button>
             </div>
           </motion.div>
         )}
@@ -644,7 +599,7 @@ export default function SenkuUltimateProtocol() {
             </a>
           </div>
         </div>
-        <p className="text-[10px] font-mono tracking-[2em] opacity-10 uppercase select-none">SENKU_WORLD // 2025</p>
+        <p className="text-[10px] font-mono tracking-[2em] opacity-10 uppercase select-none">SENKU_WORLD // 2026</p>
       </footer>
 
       <style jsx global>{`

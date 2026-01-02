@@ -6,14 +6,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Download, Fingerprint, Volume2, VolumeX, Activity, 
   Zap, ChevronRight, Trophy, Music, Github, ShieldCheck, 
-  Cpu, Calendar, Hash, Globe, BarChart3, Radio, X, Maximize2, Sparkles, Flame, Terminal, BrainCircuit, TrendingUp, ShieldAlert, Search, Eye, AlertTriangle, Users, ArrowUpRight
+  Cpu, Calendar, Hash, Globe, BarChart3, Radio, X, Maximize2, Sparkles, Flame, Terminal, BrainCircuit, TrendingUp, ShieldAlert, Search, Eye, AlertTriangle, Users, Send, ExternalLink
 } from 'lucide-react';
 import { toPng } from 'html-to-image';
 
 /**
  * PROJECT: SENKU PROTOCOL (Senku)
  * DEVELOPER: Bader Alkorgli (bedro95)
- * VERSION: ULTIMATE V7.0 - COMPETITORS INTEGRATED
+ * VERSION: ULTIMATE V8.0 - KOLSCAN INTERFACE INTEGRATED
  * STATUS: PROFESSIONAL WEB3 INTERFACE
  */
 
@@ -26,7 +26,7 @@ export default function SenkuUltimateProtocol() {
   const [whaleAlerts, setWhaleAlerts] = useState<any[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false); 
   
-  // New States for Rug Shield
+  // States for Rug Shield
   const [rugAddress, setRugAddress] = useState('');
   const [rugAnalysis, setRugAnalysis] = useState<any>(null);
   const [isAnalyzingRug, setIsAnalyzingRug] = useState(false);
@@ -35,12 +35,15 @@ export default function SenkuUltimateProtocol() {
   const [intentSignal, setIntentSignal] = useState<string | null>(null);
   const [intelligenceScore, setIntelligenceScore] = useState(0);
 
-  // Competitors State
+  // KOL Leaderboard Data (Mirrored from Kolscan.io)
   const [competitors, setCompetitors] = useState([
-    { rank: 1, name: "SENKU_MAIN", pnl: "+1,420%", volume: "$12.4M", status: "LEGENDARY" },
-    { rank: 2, name: "CHROME_LABS", pnl: "+856%", volume: "$8.1M", status: "ELITE" },
-    { rank: 3, name: "KOHAKU_X", pnl: "+612%", volume: "$4.2M", status: "PRO" },
-    { rank: 4, name: "GEN_ALPHA", pnl: "+340%", volume: "$2.9M", status: "ACTIVE" },
+    { rank: 1, name: "Beaver", sol: "+303.97", usd: "$40,014.2", platforms: ['x'], avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Beaver" },
+    { rank: 2, name: "Inside Calls", sol: "+222.79", usd: "$29,327.8", platforms: ['x', 'tg'], avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Inside" },
+    { rank: 3, name: "Cented", sol: "+114.81", usd: "$15,114.2", platforms: ['x'], avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Cented" },
+    { rank: 4, name: "Gake", sol: "+112.49", usd: "$14,808.0", platforms: ['x', 'tg'], avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Gake" },
+    { rank: 5, name: "fz7", sol: "+70.20", usd: "$9,241.7", platforms: ['x'], avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=fz7" },
+    { rank: 6, name: "M A M B A 🐍", sol: "+62.53", usd: "$8,231.9", platforms: ['x'], avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Mamba" },
+    { rank: 7, name: "Rilsio", sol: "+56.08", usd: "$7,382.6", platforms: ['x', 'tg'], avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Rilsio" },
   ]);
 
   const cardRef = useRef<HTMLDivElement>(null);
@@ -386,7 +389,7 @@ export default function SenkuUltimateProtocol() {
           </motion.div>
         )}
 
-        {/* Rug Shield Tab (NEW FEATURE DESIGN) */}
+        {/* Rug Shield Tab */}
         {activeTab === 'rug shield' && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-3xl px-6 pt-10 pb-40">
             <div className="flex flex-col items-center mb-12">
@@ -462,61 +465,89 @@ export default function SenkuUltimateProtocol() {
           </motion.div>
         )}
 
-        {/* Competitors Tab (Updated from Hall of Fame) */}
+        {/* Competitors Tab - Mirroring Kolscan.io Design */}
         {activeTab === 'Competitors' && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-5xl px-6 pt-10 pb-40">
-            <div className="flex items-center gap-4 mb-8">
-               <Users className="text-green-500" size={32} />
-               <h2 className="text-4xl font-[1000] italic uppercase tracking-tighter">Market Competitors</h2>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full max-w-4xl px-4 pt-10 pb-40">
+            <div className="flex flex-col mb-8">
+              <h2 className="text-4xl font-[1000] italic uppercase tracking-tighter mb-2">KOL Leaderboard</h2>
+              <div className="flex gap-4">
+                 {['Daily', 'Weekly', 'Monthly'].map(period => (
+                   <button key={period} className={`px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest border border-white/10 ${period === 'Daily' ? 'bg-white text-black' : 'bg-white/5 text-white/40'}`}>
+                     {period}
+                   </button>
+                 ))}
+              </div>
             </div>
-            
-            <div className="grid grid-cols-1 gap-4">
-              {competitors.map((comp, i) => (
-                <motion.div 
-                  key={i} 
-                  whileHover={{ x: 10 }}
-                  className="bg-slate-900/40 border border-white/10 p-6 rounded-2xl flex items-center justify-between group hover:border-green-500/50 transition-all shadow-xl overflow-hidden relative"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                  
-                  <div className="flex items-center gap-6 relative z-10">
-                    <div className="w-12 h-12 rounded-xl bg-green-600 flex items-center justify-center font-[1000] text-xl italic shadow-lg shadow-green-900/20">
-                      #{comp.rank}
-                    </div>
-                    <div>
-                      <p className="text-xs font-mono text-green-500 uppercase tracking-widest">{comp.status}</p>
-                      <h3 className="text-2xl font-[1000] italic tracking-tighter">{comp.name}</h3>
-                    </div>
-                  </div>
 
-                  <div className="flex items-center gap-12 relative z-10">
-                    <div className="text-right hidden md:block">
-                      <p className="text-[9px] uppercase opacity-30 font-black tracking-widest">30D Volume</p>
-                      <p className="font-mono font-bold text-white/80">{comp.volume}</p>
-                    </div>
-                    <div className="text-right min-w-[100px]">
-                      <p className="text-[9px] uppercase opacity-30 font-black tracking-widest">Net PnL</p>
-                      <p className="text-xl font-[1000] italic text-green-400 flex items-center justify-end gap-1">
-                        {comp.pnl} <ArrowUpRight size={14} />
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-            
-            <div className="mt-12 p-8 bg-green-500/5 border border-green-500/20 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-6">
-               <div className="flex items-center gap-4">
-                  <div className="p-3 bg-green-500/20 rounded-xl">
-                    <Zap className="text-green-500" size={24} />
-                  </div>
-                  <p className="text-xs font-mono text-white/60 leading-relaxed max-w-md">
-                    Neural nodes are currently tracking 14,209 active protocols. High-velocity assets are prioritized in the scientific queue.
-                  </p>
+            <div className="bg-slate-900/40 border border-white/10 rounded-[2rem] overflow-hidden shadow-2xl">
+               {/* Table Header */}
+               <div className="grid grid-cols-[60px_1fr_auto] px-8 py-5 border-b border-white/5 bg-white/5 opacity-40">
+                  <span className="text-[10px] font-black uppercase tracking-widest">Rank</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest">Maker / KOL</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-right">Profit</span>
                </div>
-               <button className="px-8 py-4 bg-white text-black rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-green-500 hover:text-white transition-all">
-                  Join Competition
-               </button>
+
+               {/* Table Content */}
+               <div className="divide-y divide-white/5">
+                  {competitors.map((kol, i) => (
+                    <motion.div 
+                      key={i} 
+                      initial={{ x: -20, opacity: 0 }} 
+                      animate={{ x: 0, opacity: 1 }} 
+                      transition={{ delay: i * 0.05 }}
+                      className={`grid grid-cols-[60px_1fr_auto] items-center px-8 py-6 hover:bg-white/[0.02] transition-colors group ${kol.rank === 1 ? 'bg-yellow-500/5' : ''}`}
+                    >
+                      {/* Rank Column */}
+                      <div className="flex items-center">
+                        {kol.rank === 1 ? (
+                          <Trophy size={20} className="text-yellow-500" />
+                        ) : (
+                          <span className="text-xl font-[1000] italic opacity-40 group-hover:opacity-100 transition-opacity">
+                            {kol.rank}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Maker / KOL Info */}
+                      <div className="flex items-center gap-4">
+                        <img src={kol.avatar} className="w-10 h-10 rounded-full bg-white/5 border border-white/10" alt="" />
+                        <div className="flex flex-col">
+                           <div className="flex items-center gap-2">
+                              <span className="font-bold tracking-tight text-lg">{kol.name}</span>
+                              <div className="flex gap-1.5">
+                                 {kol.platforms.includes('x') && (
+                                   <div className="p-1 rounded bg-white/5 border border-white/10 opacity-60 hover:opacity-100 cursor-pointer">
+                                      <ExternalLink size={10} />
+                                   </div>
+                                 )}
+                                 {kol.platforms.includes('tg') && (
+                                   <div className="p-1 rounded bg-blue-500/10 border border-blue-500/20 text-blue-400 opacity-60 hover:opacity-100 cursor-pointer">
+                                      <Send size={10} />
+                                   </div>
+                                 )}
+                              </div>
+                           </div>
+                        </div>
+                      </div>
+
+                      {/* Profit Column */}
+                      <div className="text-right">
+                         <p className="text-xl font-[1000] italic text-green-400 leading-none mb-1">
+                           {kol.sol} Sol
+                         </p>
+                         <p className="text-[11px] font-mono text-green-400/50">
+                           ({kol.usd})
+                         </p>
+                      </div>
+                    </motion.div>
+                  ))}
+               </div>
+            </div>
+
+            <div className="mt-8 text-center">
+               <p className="text-[10px] font-mono text-white/20 uppercase tracking-[0.5em] animate-pulse">
+                 Live On-chain Neural Sync Active
+               </p>
             </div>
           </motion.div>
         )}

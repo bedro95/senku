@@ -13,10 +13,10 @@ import {
 import { toPng } from 'html-to-image';
 
 /**
- * PROJECT: SENKU PROTOCOL (WAGMI)
+ * PROJECT: SENKU PROTOCOL
  * DEVELOPER: Bader Alkorgli (bedro95)
  * STYLE: APPLE-INSPIRED NEON MINIMALISM
- * VERSION: ULTIMATE V7.0
+ * VERSION: ULTIMATE V10.1
  */
 
 export default function SenkuUltimateProtocol() {
@@ -129,7 +129,7 @@ export default function SenkuUltimateProtocol() {
             {tab === 'scan' && <Fingerprint size={18} />}
             {tab === 'rug shield' && <ShieldAlert size={18} />}
             {tab === 'radar' && <Radio size={18} />}
-            {tab === 'hall of fame' && <Trophy size={18} />}
+            {tab === 'leaderboard' && <Trophy size={18} />}
             <span className="text-[8px] font-bold uppercase tracking-tighter">{tab.split(' ')[0]}</span>
           </button>
         ))}
@@ -142,7 +142,7 @@ export default function SenkuUltimateProtocol() {
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
               <h2 className="text-green-500 font-mono text-[10px] tracking-[0.5em] uppercase mb-4">Neural Scientific Interface</h2>
               <h1 className="text-6xl md:text-9xl font-black tracking-tighter mb-8 bg-gradient-to-b from-white to-white/40 bg-clip-text text-transparent">
-                WAGMI <br/> PROTOCOL
+                SENKU <br/> PROTOCOL
               </h1>
               
               <div className="relative max-w-xl mx-auto">

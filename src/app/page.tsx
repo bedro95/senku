@@ -129,7 +129,7 @@ export default function SenkuUltimateProtocol() {
             {tab === 'scan' && <Fingerprint size={18} />}
             {tab === 'rug shield' && <ShieldAlert size={18} />}
             {tab === 'radar' && <Radio size={18} />}
-            {tab === 'leaderboard' && <Trophy size={18} />}
+            {tab === 'hall of fame' && <Trophy size={18} />}
             <span className="text-[8px] font-bold uppercase tracking-tighter">{tab.split(' ')[0]}</span>
           </button>
         ))}

@@ -150,47 +150,42 @@ export default function SenkuUltimateProtocol() {
         </div>
       </nav>
 
-      <main className="relative z-10 w-full max-w-md flex flex-col items-center">
-        
-        {/* تصميم الـ AGENT - مطابق للصورة المرفقة */}
-        <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="w-full mb-10 px-2">
-          <div className="relative flex items-center">
-             {/* صورة سنكو داخل الدائرة المتوهجة */}
-             <div className="relative z-20">
-                <div className="w-24 h-24 md:w-28 md:h-28 rounded-full border-[3px] border-green-500 bg-[#020617] overflow-hidden shadow-[0_0_25px_rgba(34,197,94,0.5)]">
-                   <img src="/senku.GIF" className="w-full h-full object-cover scale-110" alt="Agent" />
-                </div>
-                {/* خطوط الدائرة المحيطة (Decorative) */}
-                <div className="absolute -inset-2 border border-green-500/30 rounded-full animate-spin-slow" />
-             </div>
-
-             {/* فقاعة المحادثة الهندسية */}
-             <div className="relative -ml-4 flex-grow">
-                {/* الجزء العلوي المكسور (Spike) */}
-                <div className="absolute -top-3 left-8 w-6 h-6 bg-green-500 rotate-45 -z-10" />
-                
-                <div className="bg-[#020617]/90 border-2 border-green-500 rounded-[1.5rem] rounded-tl-none p-4 pt-5 backdrop-blur-md shadow-[0_0_30px_rgba(34,197,94,0.15)] relative">
-                   <div className="flex items-center gap-2 mb-1 border-b border-green-500/20 pb-1">
-                      <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                      <span className="text-[9px] font-black text-green-500 uppercase tracking-[0.2em]">Senku Agent</span>
-                   </div>
-                   <p className="text-[11px] font-mono italic text-white/90 leading-tight">
-                     "{agentDialog}"
-                   </p>
-                </div>
-             </div>
-          </div>
-        </motion.div>
-
-        {/* TAB: SCAN - التنسيق المحدث للاسم */}
-        {activeTab === 'scan' && (
-          <div className="w-full flex flex-col items-center">
-            <div className="relative mb-10 select-none">
-                <h1 className="text-[18vw] md:text-[10rem] font-[1000] italic tracking-[-0.05em] leading-none text-center bg-gradient-to-b from-white via-white to-green-500 bg-clip-text text-transparent transform scale-y-110">
-                    SENKU
-                </h1>
-                <div className="absolute -bottom-1 right-2 bg-green-600 text-black px-2 py-0.5 text-[9px] font-black skew-x-[-15deg] uppercase">V7.5 Live</div>
+      <main className="relative z-10 w-full max-w-md flex flex-col items-
             </div>
+                    {/* --- بداية كود الـ AGENT والاسم الجديد --- */}
+            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="w-full max-w-md mb-8 px-4">
+              <div className="relative flex items-center">
+                <div className="relative z-20">
+                  <div className="w-24 h-24 rounded-full border-[3px] border-[#39FF14] bg-[#020617] overflow-hidden shadow-[0_0_20px_rgba(57,255,20,0.5)]">
+                    <img src="/senku.GIF" className="w-full h-full object-cover scale-110" alt="Agent" />
+                  </div>
+                  <div className="absolute -inset-1 border border-[#39FF14]/30 rounded-full animate-pulse" />
+                </div>
+                <div className="relative -ml-4 flex-grow">
+                  <div className="absolute top-1/2 -left-2 w-4 h-4 bg-[#39FF14] rotate-45 -translate-y-1/2 -z-10" />
+                  <div className="bg-[#020617]/95 border-2 border-[#39FF14] rounded-[1.5rem] rounded-tl-none p-4 backdrop-blur-md shadow-[0_0_25px_rgba(57,255,20,0.15)] relative">
+                    <div className="flex items-center gap-2 mb-1 border-b border-[#39FF14]/20 pb-1">
+                      <div className="w-1.5 h-1.5 bg-[#39FF14] rounded-full animate-pulse" />
+                      <span className="text-[9px] font-black text-[#39FF14] uppercase tracking-widest">Senku Agent</span>
+                    </div>
+                    <p className="text-[10px] font-mono italic text-white/90 leading-tight">
+                      "Initialising neural link... Coordinates locked on target."
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            <div className="text-center mb-8 relative">
+              <motion.h1 className="text-[12vw] md:text-[8rem] font-[1000] italic tracking-tighter leading-none bg-gradient-to-b from-white to-green-500 bg-clip-text text-transparent drop-shadow-2xl select-none px-4 transform scale-y-110">
+                SENKU
+              </motion.h1>
+              <div className="absolute -bottom-1 right-1/4 bg-green-600 text-black px-2 py-0.5 text-[8px] font-black uppercase skew-x-[-15deg]">
+                V7.5 LIVE
+              </div>
+            </div>
+            {/* --- نهاية الكود المستبدل --- */}
+
 
             <div className="w-full px-4 space-y-4">
               <div className="relative group">

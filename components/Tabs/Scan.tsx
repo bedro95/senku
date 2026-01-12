@@ -1,37 +1,3 @@
-<div className="w-full flex flex-col items-center justify-center py-12 mb-8 relative">
-  {/* الخلفية الضوئية (Glow Aura) */}
-  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[100px] bg-[#14F195]/10 blur-[100px] rounded-full" />
-
-  <motion.div 
-    initial={{ opacity: 0, y: -20 }}
-    animate={{ opacity: 1, y: 0 }}
-    className="relative z-10 text-center"
-  >
-    {/* التاج الصغير فوق الاسم */}
-    <span className="text-[10px] font-mono text-[#14F195] tracking-[0.8em] uppercase mb-4 block animate-pulse">
-      Solana Scientific Network
-    </span>
-
-    {/* اسم SENKU الكبير */}
-    <h1 className="text-7xl md:text-9xl font-black tracking-[-0.05em] text-white flex items-center justify-center select-none">
-      S
-      <span className="text-[#14F195] drop-shadow-[0_0_30px_rgba(20,241,149,0.5)]">E</span>
-      NKU
-      <span className="text-[#9945FF] ml-2">.</span>
-    </h1>
-
-    {/* الخط السفلي المتدرج */}
-    <div className="mt-4 flex items-center gap-4 justify-center">
-      <div className="h-[1px] w-12 md:w-24 bg-gradient-to-r from-transparent to-[#14F195]" />
-      <span className="text-[12px] font-black text-white/40 uppercase tracking-[0.4em] italic">
-        The Future is Science
-      </span>
-      <div className="h-[1px] w-12 md:w-24 bg-gradient-to-l from-transparent to-[#14F195]" />
-    </div>
-  </motion.div>
-</div>
-"use client";
-
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Loader2, AlertTriangle, CheckCircle2, Globe, TrendingUp } from 'lucide-react';

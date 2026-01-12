@@ -1,100 +1,158 @@
+"use client";
+
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Activity, Radio, ChevronRight } from 'lucide-react';
 
 const RadarTab = () => {
-  const [topGainer, setTopGainer] = useState({ name: "SOL", volume: "2.4B", change: "+10%" });
-  const [whaleMovements, setWhaleMovements] = useState([
-    { id: 1, wallet: "6p6W...5YtZ", action: "BOUGHT", amount: "450 SOL", token: "PUMP" },
-    { id: 2, wallet: "4jK2...m9Qp", action: "BOUGHT", amount: "890 SOL", token: "WIF" },
-  ]);
+  const [topGainer, setTopGainer] = useState({ name: "LOADING", volume: "0", change: "0%" });
+  const [whaleMovements, setWhaleMovements] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // محاكاة تحديث البيانات الحية للحيتان
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const tokens = ["PUMP", "WIF", "BONK", "POPCAT"];
-      const randomToken = tokens[Math.floor(Math.random() * tokens.length)];
+  // جلب بيانات حقيقية من Solana Tokens
+  const fetchLiveRadarData = async () => {
+    try {
+      // جلب أكثر الأزواج نشاطاً في آخر ساعة على سولانا
+      const response = await fetch('https://api.dexscreener.com/latest/dex/search?q=solana');
+      const data = await response.json();
       
-      const newMovement = {
-        id: Date.now(),
-        wallet: "0x" + Math.random().toString(36).substring(2, 8).toUpperCase() + "...",
-        action: "BOUGHT",
-        amount: (Math.random() * 1000 + 100).toFixed(0) + " SOL",
-        token: randomToken
-      };
+      if (data.pairs && data.pairs.length > 0) {
+        // ترتيب حسب الفوليوم في آخر ساعة
+        const sortedPairs = data.pairs.sort((a: any, b: any) => b.volume.h1 - a.volume.h1);
+        
+        // العملة المركزية (الأكثر تجميعاً)
+        const leader = sortedPairs[0];
+        setTopGainer({
+          name: leader.baseToken.symbol,
+          volume: leader.volume.h24 > 1000000 ? (leader.volume.h24 / 1000000).toFixed(1) + "M" : (leader.volume.h24 / 1000).toFixed(1) + "K",
+          change: leader.priceChange.h1 > 0 ? `+${leader.priceChange.h1}%` : `${leader.priceChange.h1}%`
+        });
 
-      setWhaleMovements(prev => [newMovement, ...prev.slice(0, 4)]);
-      // تحديث العملة الأكثر تجميعاً عشوائياً للمحاكاة
-      setTopGainer({ 
-        name: randomToken, 
-        volume: (Math.random() * 5 + 1).toFixed(1) + "M", 
-        change: "+" + (Math.random() * 200).toFixed(0) + "%" 
-      });
-    }, 4000);
+        // تحويل باقي الأزواج إلى "Whale Logs" (حركات سيولة حقيقية)
+        const logs = sortedPairs.slice(1, 6).map((pair: any) => ({
+          id: pair.pairAddress,
+          wallet: pair.dexId.toUpperCase(), // إظهار اسم المنصة كمصدر
+          action: pair.priceChange.m5 > 0 ? "ACCUMULATING" : "DISTRIBUTING",
+          amount: "$" + (pair.volume.m5 > 1000 ? (pair.volume.m5 / 1000).toFixed(1) + "K" : pair.volume.m5.toFixed(0)),
+          token: pair.baseToken.symbol,
+          color: pair.priceChange.m5 > 0 ? "text-[#14F195]" : "text-red-400"
+        }));
+        
+        setWhaleMovements(logs);
+      }
+      setLoading(false);
+    } catch (err) {
+      console.error("Radar Link Error");
+    }
+  };
+
+  useEffect(() => {
+    fetchLiveRadarData();
+    const interval = setInterval(fetchLiveRadarData, 10000); // تحديث كل 10 ثوانٍ
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 p-2">
-      {/* القسم الرئيسي: الرادار الحي */}
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-2">
+      
+      {/* 📡 MAIN RADAR CORE */}
       <motion.div 
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-        className="lg:col-span-2 bg-black/80 border border-green-500/30 rounded-3xl p-6 relative overflow-hidden backdrop-blur-2xl shadow-[0_0_50px_rgba(34,197,94,0.1)]"
+        initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+        className="lg:col-span-2 bg-black/60 border border-[#14F195]/20 rounded-[40px] p-8 relative overflow-hidden backdrop-blur-3xl shadow-[0_0_80px_rgba(20,241,149,0.05)]"
       >
-        <div className="flex justify-between items-start mb-8">
-          <div>
-            <h2 className="text-2xl font-black text-green-400 tracking-tighter uppercase italic">Whale Radar v2.0</h2>
-            <p className="text-green-900 text-[10px] font-mono">SOLANA MAINNET LIVE FEED</p>
+        <div className="flex justify-between items-center mb-10 relative z-20">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-[#14F195]/10 rounded-xl flex items-center justify-center border border-[#14F195]/20">
+               <Radio className="w-5 h-5 text-[#14F195] animate-pulse" />
+            </div>
+            <div>
+              <h2 className="text-xl font-black text-white tracking-widest uppercase italic">Live Signal Radar</h2>
+              <p className="text-[#14F195]/40 text-[8px] font-mono tracking-[0.4em]">SCANNING SOLANA MAINNET POOLS</p>
+            </div>
           </div>
-          <div className="bg-green-500/10 border border-green-500/20 px-3 py-1 rounded-full">
-            <span className="text-green-500 text-[10px] font-bold animate-pulse">● SIGNAL ACTIVE</span>
+          <div className="flex items-center gap-2 bg-black/40 border border-white/5 px-4 py-1.5 rounded-full">
+             <div className="w-1.5 h-1.5 rounded-full bg-[#14F195] animate-ping" />
+             <span className="text-[9px] font-mono text-white/60 tracking-widest">REAL-TIME DATA</span>
           </div>
         </div>
 
-        <div className="relative h-64 flex items-center justify-center">
-          {/* تصميم الرادار التقني */}
-          <div className="absolute inset-0 flex items-center justify-center opacity-20">
-            {[1, 2, 3].map((circle) => (
-              <div key={circle} className={`absolute border border-green-500 rounded-full`} style={{ width: `${circle * 30}%`, height: `${circle * 30}%` }} />
-            ))}
+        {/* Radar Visuals */}
+        <div className="relative h-72 flex items-center justify-center">
+          <div className="absolute inset-0 flex items-center justify-center">
+             {[1, 2, 3].map((i) => (
+               <motion.div 
+                 key={i}
+                 initial={{ opacity: 0, scale: 0 }}
+                 animate={{ opacity: 0.1, scale: 1 }}
+                 transition={{ delay: i * 0.2 }}
+                 className="absolute border border-[#14F195] rounded-full" 
+                 style={{ width: `${i * 33}%`, height: `${i * 33}%` }}
+               />
+             ))}
           </div>
-          <div className="absolute inset-0 bg-[conic-gradient(from_0deg,transparent_0%,rgba(34,197,94,0.3)_100%)] animate-[spin_5s_linear_infinite] rounded-full" />
           
-          {/* عرض العملة الأكبر تجميعاً في المنتصف */}
+          {/* Sweeping Effect */}
+          <div className="absolute inset-0 bg-[conic-gradient(from_0deg,transparent_0%,rgba(20,241,149,0.1)_100%)] animate-[spin_4s_linear_infinite] rounded-full" />
+
+          {/* Central Target Info */}
           <div className="z-10 text-center">
-            <p className="text-green-700 text-[10px] uppercase font-mono mb-1">Top Accumulation</p>
-            <motion.h3 
-              key={topGainer.name}
-              initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-              className="text-5xl font-black text-white tracking-tighter shadow-green-500 drop-shadow-2xl"
-            >
-              ${topGainer.name}
-            </motion.h3>
-            <div className="mt-2 flex items-center justify-center space-x-3">
-              <span className="text-green-400 font-mono text-xs">{topGainer.volume} VOL</span>
-              <span className="bg-green-500 text-black text-[10px] px-2 font-bold rounded">{topGainer.change}</span>
-            </div>
+            <AnimatePresence mode="wait">
+              {!loading ? (
+                <motion.div
+                  key={topGainer.name}
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -20, opacity: 0 }}
+                >
+                  <p className="text-[#14F195] text-[9px] uppercase font-black tracking-[0.5em] mb-2">High Activity</p>
+                  <h3 className="text-6xl font-black text-white tracking-tighter drop-shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+                    {topGainer.name}
+                  </h3>
+                  <div className="mt-4 flex items-center justify-center gap-4">
+                    <span className="text-white/40 font-mono text-xs italic">${topGainer.volume} VOL</span>
+                    <span className="bg-[#14F195] text-black text-[10px] px-3 py-1 font-black rounded-lg shadow-lg shadow-[#14F195]/20">
+                      {topGainer.change}
+                    </span>
+                  </div>
+                </motion.div>
+              ) : (
+                <Activity className="w-12 h-12 text-[#14F195]/20 animate-spin" />
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </motion.div>
 
-      {/* القسم الجانبي: حركة الحيتان الأخيرة */}
-      <div className="space-y-4">
-        <h3 className="text-green-500 text-[10px] font-mono uppercase tracking-[0.3em] px-2">Whale Logs</h3>
+      {/* 📜 WHALE LOGS SIDEBAR */}
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center justify-between px-2">
+           <h3 className="text-white/40 text-[9px] font-black uppercase tracking-[0.3em]">Volume Spikes</h3>
+           <div className="h-px flex-grow mx-4 bg-white/5" />
+        </div>
+        
         <AnimatePresence mode="popLayout">
           {whaleMovements.map((move) => (
             <motion.div 
               key={move.id}
               layout
-              initial={{ x: 50, opacity: 0 }}
+              initial={{ x: 20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
-              exit={{ x: -50, opacity: 0 }}
-              className="bg-green-950/10 border border-green-500/10 p-3 rounded-xl flex justify-between items-center"
+              exit={{ x: -20, opacity: 0 }}
+              className="bg-white/[0.02] border border-white/5 p-4 rounded-2xl flex justify-between items-center group hover:bg-white/[0.05] transition-all cursor-crosshair"
             >
-              <div>
-                <p className="text-[10px] text-green-700 font-mono">{move.wallet}</p>
-                <p className="text-white text-xs font-bold">{move.action} <span className="text-green-400">{move.token}</span></p>
+              <div className="flex items-center gap-3">
+                <div className={`w-1 h-8 rounded-full ${move.color} opacity-40 group-hover:opacity-100 transition-all`} />
+                <div>
+                  <p className="text-[8px] text-white/20 font-mono uppercase">{move.wallet}</p>
+                  <p className="text-white text-[11px] font-bold tracking-tight">
+                    {move.action} <span className={move.color}>{move.token}</span>
+                  </p>
+                </div>
               </div>
-              <p className="text-green-500 font-mono text-xs font-bold">{move.amount}</p>
+              <div className="text-right">
+                <p className={`text-[11px] font-black font-mono ${move.color}`}>{move.amount}</p>
+                <ChevronRight className="w-3 h-3 text-white/10 ml-auto" />
+              </div>
             </motion.div>
           ))}
         </AnimatePresence>

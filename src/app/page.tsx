@@ -3,13 +3,15 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 
-import SenkuAgent from "/components/Agent/SenkuAgent";
-import ScanTab from "/components/Tabs/Scan";
-import RugShieldTab from "/components/Tabs/RugShield";
-import RadarTab from "/components/Tabs/Radar";
-import HallOfFameTab from "/components/Tabs/HallOfFame";
+// تصحيح المسارات للعودة للخلف خطوة واحدة للخروج من مجلد src
+import SenkuAgent from "../../components/Agent/SenkuAgent";
+import ScanTab from "../../components/Tabs/Scan";
+import RugShieldTab from "../../components/Tabs/RugShield";
+import RadarTab from "../../components/Tabs/Radar";
+import HallOfFameTab from "../../components/Tabs/HallOfFame";
 
-import { useAudioController } from "/hooks/useAudio";
+import { useAudioController } from "../../hooks/useAudio";
+
 
 /**
  * SENKU PROTOCOL – CORE PAGE

@@ -11,7 +11,7 @@ const RadarTab = () => {
   // محاكاة تحديث البيانات الحية للحيتان
   useEffect(() => {
     const interval = setInterval(() => {
-      const tokens = ["SENKU", "WIF", "BONK", "POPCAT"];
+      const tokens = ["PUMP", "WIF", "BONK", "POPCAT"];
       const randomToken = tokens[Math.floor(Math.random() * tokens.length)];
       
       const newMovement = {

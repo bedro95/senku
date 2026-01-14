@@ -17,7 +17,7 @@ const TABS = [
   { id: "scan", label: "Scanner", icon: Search, color: "text-[#00FF5F]" },
   { id: "rug shield", label: "Security", icon: Shield, color: "text-[#00E0FF]" },
   { id: "radar", label: "Radar", icon: Radar, color: "text-[#00FF5F]" },
-  { id: "bags", label: "Bags Tool", icon: LayoutGrid, color: "text-[#22C55E]" }, // Bags Green Color
+  { id: "bags", label: "Bags Tool", icon: LayoutGrid, color: "text-[#22C55E]" },
   { id: "hall of fame", label: "Alpha", icon: Trophy, color: "text-[#FFFFFF]" }, 
 ] as const;
 
@@ -32,11 +32,11 @@ export default function SenkuUltraPage() {
       case "rug shield": return <RugShieldTab />;
       case "radar": return <RadarTab />;
       case "bags": return (
-        <div className="p-6 md:p-8 text-center border border-[#22C55E]/20 bg-[#22C55E]/5 rounded-3xl backdrop-blur-xl">
-          <h2 className="text-[#22C55E] text-xl md:text-2xl font-black mb-4 uppercase tracking-tighter">Bags Ecosystem Tool</h2>
-          <p className="text-white/60 text-xs md:text-sm">Senku Neural Engine analyzing real-time social metrics for BagsApp users.</p>
-          <div className="mt-6 py-2 px-4 bg-[#22C55E]/20 text-[#22C55E] rounded-full text-[9px] animate-pulse inline-block font-bold tracking-widest">
-            LIVE_SYNCING_DATA
+        <div className="p-6 md:p-8 text-center border border-[#22C55E]/20 bg-[#22C55E]/5 rounded-3xl backdrop-blur-xl mx-2">
+          <h2 className="text-[#22C55E] text-xl font-black mb-4 uppercase tracking-tighter">Bags Ecosystem</h2>
+          <p className="text-white/60 text-[10px] md:text-sm leading-relaxed">Senku Neural Engine analyzing real-time social metrics for BagsApp users.</p>
+          <div className="mt-6 py-2 px-4 bg-[#22C55E]/20 text-[#22C55E] rounded-full text-[8px] animate-pulse inline-block font-bold tracking-widest uppercase">
+            Live_Sync_Active
           </div>
         </div>
       );
@@ -48,16 +48,16 @@ export default function SenkuUltraPage() {
   return (
     <div className="min-h-screen bg-[#020202] text-white flex flex-col items-center selection:bg-[#00FF5F]/30 overflow-x-hidden">
       
-      {/* 🌌 DYNAMIC BACKGROUND */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#001a0a_0%,#000_100%)] opacity-90" />
       </div>
 
-      <div className="relative z-10 w-full max-w-7xl min-h-screen flex flex-col pt-4 md:pt-6 pb-28 md:pb-20 px-4">
+      {/* Adjusted padding bottom to ensure content isn't hidden by nav */}
+      <div className="relative z-10 w-full max-w-7xl min-h-screen flex flex-col pt-4 md:pt-6 pb-32 md:pb-20 px-4">
         
         <div className="w-full bg-black/40 border border-white/5 rounded-[30px] md:rounded-[45px] backdrop-blur-3xl overflow-hidden shadow-[0_0_80px_rgba(0,0,0,0.5)] flex flex-col">
           
-          {/* 🧪 HEADER */}
+          {/* HEADER */}
           <div className="w-full px-6 md:px-10 py-6 md:py-8 flex justify-between items-center border-b border-white/5 bg-gradient-to-r from-white/[0.01] to-transparent">
             <div className="flex items-center gap-4 md:gap-6">
               <div className="relative group">
@@ -68,7 +68,7 @@ export default function SenkuUltraPage() {
               </div>
 
               <div className="flex flex-col">
-                <h1 className="text-lg md:text-2xl font-black text-white">
+                <h1 className="text-lg md:text-2xl font-black text-white uppercase tracking-tighter">
                   SENKU<span className="text-[#00FF5F]">.FUN</span>
                 </h1>
                 <span className="text-[7px] md:text-[8px] font-mono text-white/30 uppercase tracking-[0.3em]">Neural Interface</span>
@@ -78,7 +78,7 @@ export default function SenkuUltraPage() {
             <div className="flex items-center gap-2 md:gap-4">
                <div className="px-3 py-1.5 bg-[#22C55E]/10 border border-[#22C55E]/20 rounded-lg flex items-center gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-pulse" />
-                  <span className="text-[7px] md:text-[9px] font-black text-[#22C55E] uppercase tracking-widest">Bags_Module</span>
+                  <span className="text-[7px] md:text-[9px] font-black text-[#22C55E] uppercase tracking-widest">Bags_Lab</span>
                </div>
                <motion.a whileHover={{ scale: 1.05 }} href="https://github.com/bedro95" className="p-2 md:p-3 bg-white/5 border border-white/10 rounded-xl">
                 <Github className="w-4 h-4 md:w-5 md:h-5" />
@@ -88,8 +88,8 @@ export default function SenkuUltraPage() {
 
           <div className="flex flex-col md:flex-row min-h-[60vh] md:min-h-[75vh]">
             
-            {/* NAVIGATION (Mobile & Desktop) */}
-            <nav className="fixed bottom-4 left-4 right-4 md:relative md:bottom-auto md:left-auto md:right-auto md:w-32 border md:border-r border-white/10 md:border-white/5 flex md:flex-col items-center justify-around md:justify-center gap-2 md:gap-5 p-3 md:p-6 bg-black/90 md:bg-black/40 backdrop-blur-2xl md:backdrop-blur-none rounded-2xl md:rounded-none z-[100] shadow-2xl md:shadow-none">
+            {/* NAVIGATION (FIXED ON MOBILE TO PREVENT OVERLAP) */}
+            <nav className="fixed bottom-6 left-6 right-6 md:relative md:bottom-auto md:left-auto md:right-auto md:w-32 border md:border-r border-white/10 md:border-white/5 flex md:flex-col items-center justify-around md:justify-center gap-2 md:gap-5 p-4 md:p-6 bg-black/95 md:bg-black/40 backdrop-blur-3xl md:backdrop-blur-none rounded-[28px] md:rounded-none z-[200] shadow-[0_-10px_40px_rgba(0,0,0,0.8)]">
               {TABS.map((tab) => {
                 const Icon = tab.icon;
                 const isActive = activeTab === tab.id;
@@ -97,7 +97,7 @@ export default function SenkuUltraPage() {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`relative p-3 md:p-5 rounded-xl md:rounded-[22px] transition-all duration-300 ${isActive ? "bg-white/10 border border-white/20" : "opacity-30 hover:opacity-100"}`}
+                    className={`relative p-3 md:p-5 rounded-xl md:rounded-[22px] transition-all duration-300 ${isActive ? "bg-white/10 border border-white/20 shadow-[inset_0_0_10px_rgba(255,255,255,0.05)]" : "opacity-30 hover:opacity-100"}`}
                   >
                     <Icon className={`w-5 h-5 md:w-7 md:h-7 ${isActive ? tab.color : "text-white"}`} />
                     {isActive && (
@@ -108,8 +108,8 @@ export default function SenkuUltraPage() {
               })}
             </nav>
 
-            {/* MAIN CONTENT */}
-            <main className="flex-1 relative p-4 md:p-12 pb-20 md:pb-12">
+            {/* MAIN CONTENT Area - with extra bottom padding for mobile */}
+            <main className="flex-1 relative p-4 md:p-12 pb-40 md:pb-12">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeTab}
@@ -123,20 +123,11 @@ export default function SenkuUltraPage() {
               </AnimatePresence>
             </main>
           </div>
-
-          {/* FOOTER */}
-          <footer className="hidden md:flex w-full px-10 py-5 justify-between items-center bg-black/60 border-t border-white/5 text-[10px] font-mono text-white/20">
-            <div className="flex items-center gap-6">
-              <span className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#00FF5F]" /> Senku_Engine_v2</span>
-              <span className="text-[#22C55E]">Bags_Analytics_Active</span>
-            </div>
-            <span>© 2026 Senku Lab</span>
-          </footer>
         </div>
       </div>
 
-      {/* 🛠 FIXED SENKU AGENT POSITIONING FOR MOBILE */}
-      <div className="fixed bottom-24 right-4 md:bottom-10 md:right-10 z-[110] scale-[0.85] md:scale-100 origin-bottom-right">
+      {/* 🚀 SENKU AGENT - MOVED HIGHER AND SCALED DOWN ON MOBILE */}
+      <div className="fixed bottom-36 right-6 md:bottom-10 md:right-10 z-[150] scale-[0.7] md:scale-100 origin-bottom-right transition-all duration-500">
         <SenkuAgent activeTab={activeTab} />
       </div>
     </div>

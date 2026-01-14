@@ -2,7 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trophy, Crown, Star, ExternalLink, Loader2 } from 'lucide-react';
+import { Trophy, Crown, Star, ExternalLink, Loader2, Sparkles, Gem } from 'lucide-react';
+
+/**
+ * @project Senku (Wagmi)
+ * @feature Hall of Fame - The Golden Pantheon of Solana
+ * @engineering Professional grade scrolling & live blockchain data integration
+ */
 
 const HallOfFameTab = () => {
   const [legends, setLegends] = useState<any[]>([]);
@@ -10,31 +16,32 @@ const HallOfFameTab = () => {
 
   const fetchHallOfFame = async () => {
     try {
-      // جلب العملات الأكثر ربحاً (Top Gainers) في آخر 24 ساعة على سولانا
       const response = await fetch('https://api.dexscreener.com/latest/dex/search?q=solana');
       const data = await response.json();
       
       if (data.pairs) {
-        // ترتيب العملات بناءً على نسبة التغيير في 24 ساعة
+        // Advanced Filtering: High liquidity & 24h performance
         const topPerformers = data.pairs
-          .filter((p: any) => p.priceChange.h24 > 0)
+          .filter((p: any) => p.priceChange.h24 > 0 && p.liquidity?.usd > 10000)
           .sort((a: any, b: any) => b.priceChange.h24 - a.priceChange.h24)
-          .slice(0, 5) // نأخذ أفضل 5 أساطير
+          .slice(0, 10)
           .map((pair: any, index: number) => ({
             rank: index + 1,
             name: pair.baseToken.name,
             symbol: pair.baseToken.symbol,
-            pnl: `+${pair.priceChange.h24.toLocaleString()}%`,
-            volume: `$${pair.volume.h24.toLocaleString()}`,
+            pnl: pair.priceChange.h24.toFixed(0),
+            multiplier: (pair.priceChange.h24 / 100 + 1).toFixed(1),
+            volume: pair.volume.h24 > 1000000 ? (pair.volume.h24 / 1000000).toFixed(1) + "M" : (pair.volume.h24 / 1000).toFixed(0) + "K",
             address: pair.baseToken.address,
-            status: index === 0 ? "LEGENDARY" : index < 3 ? "EPIC" : "RARE"
+            liquidity: pair.liquidity.usd.toLocaleString(),
+            tier: index === 0 ? "DIVINE" : index < 3 ? "ASCENDED" : "IMMORTAL"
           }));
         
         setLegends(topPerformers);
       }
       setLoading(false);
     } catch (err) {
-      console.error("Hall of Fame Connection Error");
+      console.error("Archive Access Denied");
     }
   };
 
@@ -43,67 +50,87 @@ const HallOfFameTab = () => {
   }, []);
 
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="p-8 bg-gradient-to-br from-black via-[#1a1405] to-black border border-yellow-500/20 rounded-[40px] backdrop-blur-3xl relative overflow-hidden shadow-2xl"
-    >
-      {/* Golden Aura Effect */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-500/5 blur-[120px] rounded-full" />
-      <div className="absolute bottom-0 left-0 w-48 h-48 bg-yellow-600/5 blur-[100px] rounded-full" />
+    <div className="w-full min-h-screen overflow-y-auto touch-pan-y pb-40 px-4 font-mono">
       
-      <div className="text-center mb-12 relative">
-        <div className="inline-block p-3 bg-yellow-500/10 rounded-2xl border border-yellow-500/20 mb-4">
-           <Trophy className="w-8 h-8 text-yellow-500" />
+      {/* --- PANTHEON HEADER --- */}
+      <div className="text-center py-16 relative overflow-hidden">
+        <motion.div 
+          animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.6, 0.3] }} 
+          transition={{ duration: 4, repeat: Infinity }}
+          className="absolute inset-0 bg-yellow-500/10 blur-[120px] rounded-full" 
+        />
+        
+        <div className="relative z-10 flex flex-col items-center">
+           <div className="w-20 h-20 bg-gradient-to-b from-yellow-400 to-yellow-600 rounded-[30px] flex items-center justify-center shadow-[0_0_50px_rgba(234,179,8,0.4)] mb-6">
+              <Trophy className="w-10 h-10 text-black" />
+           </div>
+           <h2 className="text-4xl font-black text-white uppercase italic tracking-tighter mb-2">
+             The Immortal Hall
+           </h2>
+           <p className="text-yellow-500/50 text-[10px] font-black tracking-[0.5em] uppercase">Solana High-Yield Archives</p>
         </div>
-        <h2 className="text-3xl font-black text-white uppercase tracking-[0.4em] italic drop-shadow-[0_0_15px_rgba(234,179,8,0.3)]">
-          Solana Legends
-        </h2>
-        <p className="text-yellow-500/40 text-[9px] font-mono mt-2 tracking-[0.5em] uppercase">The Immortal Gainers of the Chain</p>
       </div>
 
-      <div className="space-y-4 relative z-10">
+      <div className="max-w-4xl mx-auto space-y-6">
         <AnimatePresence mode="wait">
           {loading ? (
-            <div className="flex flex-col items-center justify-center py-20">
-              <Loader2 className="w-8 h-8 text-yellow-500 animate-spin mb-4" />
-              <p className="text-yellow-500/30 font-mono text-[10px] tracking-widest">QUERYING CHAIN ARCHIVES...</p>
+            <div className="flex flex-col items-center py-20 opacity-20">
+              <Loader2 className="w-10 h-10 text-yellow-500 animate-spin mb-4" />
+              <span className="text-[9px] tracking-[1em]">DECRYPTING...</span>
             </div>
           ) : (
             legends.map((legend, index) => (
               <motion.div 
                 key={legend.address}
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
-                whileHover={{ scale: 1.02, backgroundColor: "rgba(234, 179, 8, 0.03)" }}
-                className="flex items-center justify-between p-5 border border-white/5 bg-black/40 rounded-[24px] group transition-all"
+                className={`group relative overflow-hidden rounded-[35px] border ${index === 0 ? 'border-yellow-500/40 bg-yellow-500/[0.03]' : 'border-white/5 bg-[#080808]'} p-6 md:p-8 transition-all hover:border-yellow-500/60`}
               >
-                <div className="flex items-center gap-6">
-                  <div className="relative">
-                    <span className={`text-2xl font-black italic ${index === 0 ? "text-yellow-400" : "text-white/20"}`}>
-                      #{legend.rank}
-                    </span>
-                    {index === 0 && <Crown className="absolute -top-4 -left-2 w-4 h-4 text-yellow-400 rotate-[-20deg]" />}
-                  </div>
-                  
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <p className="text-white font-black text-sm tracking-tight">{legend.name}</p>
-                      <span className="text-[9px] text-yellow-500/50 font-mono italic">${legend.symbol}</span>
+                {/* Visual Rank Background */}
+                <span className="absolute -right-4 -bottom-4 text-[120px] font-black text-white/[0.02] italic pointer-events-none group-hover:text-yellow-500/[0.04] transition-colors">
+                  #{legend.rank}
+                </span>
+
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+                  <div className="flex items-center gap-6">
+                    <div className="relative">
+                       <div className={`w-16 h-16 rounded-2xl flex items-center justify-center border-2 ${index === 0 ? 'border-yellow-500 bg-yellow-500/10' : 'border-white/10 bg-black'}`}>
+                          {index === 0 ? <Crown className="w-8 h-8 text-yellow-500" /> : <Gem className="w-6 h-6 text-white/20" />}
+                       </div>
+                       {index < 3 && <motion.div animate={{ rotate: 360 }} transition={{ duration: 8, repeat: Infinity, ease: "linear" }} className="absolute -inset-2 border border-dashed border-yellow-500/20 rounded-full" />}
                     </div>
-                    <p className="text-[8px] text-white/20 font-mono mt-1 group-hover:text-white/40 transition-colors">
-                      {legend.address.slice(0, 6)}...{legend.address.slice(-4)}
-                    </p>
+
+                    <div>
+                      <div className="flex items-center gap-3">
+                        <h4 className="text-xl font-black text-white tracking-tighter">{legend.name}</h4>
+                        <span className="px-2 py-0.5 bg-white/5 rounded text-[8px] text-white/40 font-bold tracking-widest uppercase">{legend.tier}</span>
+                      </div>
+                      <p className="text-yellow-500/40 text-[10px] font-bold mt-1 tracking-widest italic">${legend.symbol} • {legend.address.slice(0, 10)}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-8 border-t border-white/5 md:border-none pt-4 md:pt-0">
+                    <div className="text-right">
+                       <p className="text-[9px] text-white/20 font-black uppercase tracking-widest mb-1">Growth</p>
+                       <p className="text-2xl font-black text-yellow-500">+{legend.pnl}%</p>
+                    </div>
+                    <div className="w-[1px] h-10 bg-white/10 hidden md:block" />
+                    <div className="text-right min-w-[80px]">
+                       <p className="text-[9px] text-white/20 font-black uppercase tracking-widest mb-1">Multiplier</p>
+                       <p className="text-xl font-black text-white italic">{legend.multiplier}X</p>
+                    </div>
                   </div>
                 </div>
-                
-                <div className="text-right">
-                  <p className="text-yellow-500 font-black font-mono text-lg leading-none mb-1">{legend.pnl}</p>
-                  <div className="flex items-center justify-end gap-2">
-                    <span className="text-[8px] text-white/30 font-mono">VOL: {legend.volume}</span>
-                    <div className={`w-1.5 h-1.5 rounded-full ${index === 0 ? 'bg-yellow-500 animate-pulse' : 'bg-white/10'}`} />
-                  </div>
+
+                <div className="mt-6 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity">
+                   <div className="flex gap-4">
+                      <div className="text-[8px] text-white/30 font-bold uppercase tracking-widest">Liq: ${legend.liquidity}</div>
+                      <div className="text-[8px] text-white/30 font-bold uppercase tracking-widest">Vol: ${legend.volume}</div>
+                   </div>
+                   <a href={`https://solscan.io/token/${legend.address}`} target="_blank" className="flex items-center gap-2 text-[9px] font-black text-yellow-500 uppercase tracking-widest">
+                      View Relic <ExternalLink className="w-3 h-3" />
+                   </a>
                 </div>
               </motion.div>
             ))
@@ -111,17 +138,11 @@ const HallOfFameTab = () => {
         </AnimatePresence>
       </div>
 
-      <div className="mt-10 pt-6 border-t border-white/5 text-center">
-        <a 
-          href="https://solscan.io" 
-          target="_blank" 
-          className="inline-flex items-center gap-2 text-[9px] font-black font-mono text-yellow-500/40 hover:text-yellow-500 transition-all uppercase tracking-[0.3em] group"
-        >
-          Verify All Data on Solscan
-          <ExternalLink className="w-3 h-3 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-        </a>
+      <div className="mt-20 text-center opacity-30">
+         <Sparkles className="w-6 h-6 text-yellow-500 mx-auto mb-4 animate-pulse" />
+         <p className="text-[8px] font-black tracking-[0.8em] uppercase">The Science of Wealth • Senku Protocol</p>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

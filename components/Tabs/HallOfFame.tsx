@@ -1,155 +1,195 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Zap, Flame, Target, ExternalLink, Loader2, Radio, ChevronRight, Droplets, ShieldCheck } from 'lucide-react';
+import { 
+  Trophy, 
+  Activity, 
+  ArrowUpRight, 
+  ShieldCheck, 
+  Zap, 
+  Globe, 
+  BarChart3, 
+  Loader2, 
+  TrendingUp, 
+  TrendingDown 
+} from 'lucide-react';
 
 /**
  * @project Senku
- * @feature Neural Whale Hunter (Real-time Liquidity Pulse)
- * @engineering High-velocity data ingestion with terminal-grade UI
+ * @module HallOfFame
+ * @description High-performance Solana token radar for assets > $10M Market Cap.
+ * @version 2.5.0
  */
 
 const HallOfFameTab = () => {
-  const [signals, setSignals] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const [data, setData] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState<string>("");
 
-  const fetchWhaleSignals = async () => {
+  const fetchMarketIntelligence = useCallback(async () => {
     try {
-      // Fetching the most explosive pairs on Solana right now
-      const response = await fetch('https://api.dexscreener.com/latest/dex/search?q=solana%20pump');
-      const data = await response.json();
+      const response = await fetch('https://api.dexscreener.com/latest/dex/search?q=solana');
+      const json = await response.json();
       
-      if (data.pairs) {
-        const topSignals = data.pairs
-          .filter((p: any) => p.liquidity?.usd > 5000 && p.priceChange.m5 !== 0)
-          .sort((a: any, b: any) => Math.abs(b.priceChange.m5) - Math.abs(a.priceChange.m5))
-          .slice(0, 12)
-          .map((pair: any, index: number) => ({
-            id: pair.baseToken.address,
-            name: pair.baseToken.name,
-            symbol: pair.baseToken.symbol,
-            price: pair.priceUsd,
-            m5: pair.priceChange.m5,
-            h1: pair.priceChange.h1,
-            liq: pair.liquidity.usd > 1000 ? (pair.liquidity.usd / 1000).toFixed(1) + "K" : pair.liquidity.usd,
-            vol: pair.volume.h24 > 1000000 ? (pair.volume.h24 / 1000000).toFixed(1) + "M" : (pair.volume.h24 / 1000).toFixed(0) + "K",
-            isNew: pair.pairCreatedAt ? (Date.now() - pair.pairCreatedAt < 3600000) : false,
-            address: pair.baseToken.address,
-            dex: pair.dexId
+      if (json.pairs) {
+        // Filter: Solana chain + FDV > 10,000,000 + Valid Liquidity
+        const eliteAssets = json.pairs
+          .filter((p: any) => 
+            p.chainId === 'solana' && 
+            p.fdv >= 10000000 && 
+            p.liquidity?.usd > 50000
+          )
+          .sort((a: any, b: any) => (b.fdv || 0) - (a.fdv || 0))
+          .slice(0, 15)
+          .map((item: any, index: number) => ({
+            rank: index + 1,
+            id: item.baseToken.address,
+            name: item.baseToken.name,
+            symbol: item.baseToken.symbol,
+            price: item.priceUsd,
+            mCap: item.fdv,
+            volume: item.volume.h24,
+            change: item.priceChange.h24,
+            liq: item.liquidity.usd,
+            url: item.url
           }));
         
-        setSignals(topSignals);
-        setLoading(false);
+        setData(eliteAssets);
+        setLastUpdated(new Date().toLocaleTimeString());
       }
-    } catch (err) {
-      console.error("Signal Interrupted");
+    } catch (error) {
+      console.error("Critical: Data Ingestion Failed", error);
+    } finally {
+      setIsLoading(false);
     }
-  };
-
-  useEffect(() => {
-    fetchWhaleSignals();
-    const timer = setInterval(fetchWhaleSignals, 15000); // 15s for extreme speed
-    return () => clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    fetchMarketIntelligence();
+    const ticker = setInterval(fetchMarketIntelligence, 20000);
+    return () => clearInterval(ticker);
+  }, [fetchMarketIntelligence]);
+
   return (
-    <div className="w-full min-h-screen bg-black/20 text-[#00FF5F] font-mono p-2 md:p-6 pb-40">
+    <div className="w-full max-w-5xl mx-auto px-2 md:px-0 font-sans pb-32">
       
-      {/* --- RADAR HEADER --- */}
-      <div className="flex items-center justify-between mb-8 px-4 py-4 border-b border-[#00FF5F]/10 bg-[#00FF5F]/5 rounded-t-3xl">
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <Radio className="w-5 h-5 animate-pulse" />
-            <div className="absolute inset-0 bg-[#00FF5F]/20 blur-xl rounded-full" />
-          </div>
-          <div>
-            <h2 className="text-sm font-black tracking-[0.2em] uppercase">Neural_Whale_Hunter</h2>
-            <p className="text-[8px] text-[#00FF5F]/50 uppercase">Scanning Solana Mainnet-Beta...</p>
-          </div>
+      {/* --- ELITE INTERFACE HEADER --- */}
+      <div className="relative mb-8 p-6 md:p-8 rounded-[35px] bg-gradient-to-br from-[#0a0a0a] to-[#020202] border border-white/5 overflow-hidden shadow-2xl">
+        <div className="absolute top-0 right-0 p-8 opacity-5">
+          <Trophy className="w-32 h-32 text-white" />
         </div>
-        <div className="text-[9px] font-black bg-[#00FF5F]/10 px-3 py-1 rounded-full border border-[#00FF5F]/20 animate-pulse">
-          LIVE_PULSE
+        
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="flex items-center gap-5">
+            <div className="w-14 h-14 bg-[#00FF5F]/10 border border-[#00FF5F]/20 rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(0,255,95,0.1)]">
+              <Zap className="w-7 h-7 text-[#00FF5F]" />
+            </div>
+            <div>
+              <h2 className="text-2xl md:text-3xl font-black text-white tracking-tighter uppercase italic">
+                Elite <span className="text-[#00FF5F]">Archive</span>
+              </h2>
+              <p className="text-[10px] font-mono text-white/30 uppercase tracking-[0.3em] mt-1">
+                Real-time 10M+ Market Cap Index
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-6">
+            <div className="hidden md:block text-right">
+              <p className="text-[9px] font-bold text-white/20 uppercase">Network Stability</p>
+              <p className="text-[11px] font-mono text-[#00FF5F]">UPTIME 99.9%</p>
+            </div>
+            <div className="h-10 w-[1px] bg-white/5 hidden md:block" />
+            <div className="flex flex-col md:items-end">
+              <span className="flex items-center gap-2 text-[10px] font-bold text-[#00FF5F] uppercase">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#00FF5F] animate-ping" />
+                Live Syncing
+              </span>
+              <span className="text-[9px] font-mono text-white/20 mt-1">LAST_UPDATE: {lastUpdated}</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* --- SIGNALS GRID --- */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl mx-auto overflow-hidden">
+      {/* --- TERMINAL FEED --- */}
+      <div className="space-y-4">
         <AnimatePresence mode="popLayout">
-          {loading ? (
-            <div className="col-span-full py-20 flex flex-col items-center">
-              <Loader2 className="w-8 h-8 animate-spin mb-4" />
-              <span className="text-[10px] tracking-[0.5em]">DECRYPTING_PACKETS...</span>
+          {isLoading ? (
+            <div className="flex flex-col items-center py-20">
+              <Loader2 className="w-10 h-10 text-[#00FF5F] animate-spin mb-4" />
+              <p className="text-[10px] font-mono text-white/40 tracking-[0.5em] uppercase">Decrypting Market Data...</p>
             </div>
           ) : (
-            signals.map((signal) => (
+            data.map((asset) => (
               <motion.div
-                key={signal.id}
+                key={asset.id}
                 layout
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="group relative bg-black/40 border border-white/5 p-4 rounded-2xl hover:border-[#00FF5F]/40 transition-all shadow-[0_0_20px_rgba(0,0,0,0.5)]"
+                className="group relative bg-[#0a0a0a]/60 hover:bg-[#0f0f0f]/80 border border-white/5 hover:border-[#00FF5F]/30 rounded-[28px] p-4 md:p-6 transition-all duration-300"
               >
-                {/* Visual Glitch Decor */}
-                <div className="absolute top-0 right-0 w-16 h-16 overflow-hidden opacity-10">
-                   <Zap className="w-full h-full -rotate-12 translate-x-4 -translate-y-4" />
-                </div>
-
-                <div className="flex justify-between items-start mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded-lg ${signal.m5 > 0 ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
-                      {signal.m5 > 0 ? <Target className="w-5 h-5" /> : <Flame className="w-5 h-5" />}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  
+                  {/* TOKEN IDENTITY */}
+                  <div className="flex items-center gap-5">
+                    <div className="text-xs font-mono text-white/10 w-4 font-black">#{asset.rank}</div>
+                    <div className="relative">
+                      <div className="w-12 h-12 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <Activity className={`w-6 h-6 ${asset.change >= 0 ? 'text-[#00FF5F]' : 'text-red-500'}`} />
+                      </div>
+                      {asset.change > 20 && (
+                        <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#00FF5F] rounded-full shadow-[0_0_10px_#00FF5F]" />
+                      )}
                     </div>
                     <div>
-                      <h3 className="text-white font-black text-sm uppercase truncate w-32">{signal.name}</h3>
+                      <h4 className="text-sm md:text-lg font-black text-white tracking-tight uppercase truncate max-w-[140px] md:max-w-none">
+                        {asset.name}
+                      </h4>
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] text-[#00FF5F] font-bold tracking-widest">${signal.symbol}</span>
-                        {signal.isNew && <span className="text-[7px] bg-[#fbbf24]/20 text-[#fbbf24] px-1 rounded animate-pulse">NEW_BORN</span>}
+                        <span className="text-[10px] font-black text-[#00FF5F] tracking-tighter">${asset.symbol}</span>
+                        <div className="w-1 h-1 rounded-full bg-white/10" />
+                        <span className="text-[9px] font-mono text-white/20 truncate w-24 md:w-auto">{asset.id}</span>
                       </div>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <div className={`text-xs font-black ${signal.m5 > 0 ? 'text-green-400' : 'text-red-400'}`}>
-                      {signal.m5 > 0 ? '▲' : '▼'} {Math.abs(signal.m5)}%
-                    </div>
-                    <div className="text-[8px] text-white/30 uppercase mt-1">5M_SWING</div>
-                  </div>
-                </div>
 
-                <div className="grid grid-cols-3 gap-2 mb-4">
-                  <div className="bg-white/[0.02] p-2 rounded-lg border border-white/5">
-                    <div className="flex items-center gap-1 text-[7px] text-white/30 uppercase font-black mb-1">
-                      <Droplets className="w-2 h-2" /> Liquidity
+                  {/* MARKET METRICS */}
+                  <div className="grid grid-cols-3 md:flex items-center gap-4 md:gap-12 border-t border-white/5 md:border-none pt-4 md:pt-0">
+                    <div className="flex flex-col md:items-end">
+                      <p className="text-[8px] font-bold text-white/20 uppercase tracking-[0.2em] mb-1">Market Cap</p>
+                      <p className="text-xs md:text-sm font-black text-white italic">
+                        ${(asset.mCap / 1000000).toFixed(1)}M
+                      </p>
                     </div>
-                    <div className="text-[10px] text-white font-bold">${signal.liq}</div>
-                  </div>
-                  <div className="bg-white/[0.02] p-2 rounded-lg border border-white/5">
-                    <div className="flex items-center gap-1 text-[7px] text-white/30 uppercase font-black mb-1">
-                      <ShieldCheck className="w-2 h-2 text-[#00FF5F]" /> Safety
+                    <div className="flex flex-col md:items-end">
+                      <p className="text-[8px] font-bold text-white/20 uppercase tracking-[0.2em] mb-1">24H Volume</p>
+                      <p className="text-xs md:text-sm font-black text-white/70 font-mono">
+                        ${(asset.volume / 1000000).toFixed(2)}M
+                      </p>
                     </div>
-                    <div className="text-[10px] text-[#00FF5F] font-bold italic underline decoration-dotted">CLEAN</div>
-                  </div>
-                  <div className="bg-white/[0.02] p-2 rounded-lg border border-white/5">
-                    <div className="flex items-center gap-1 text-[7px] text-white/30 uppercase font-black mb-1">
-                      <Zap className="w-2 h-2" /> 24H_Vol
+                    <div className="flex flex-col md:items-end">
+                      <p className="text-[8px] font-bold text-white/20 uppercase tracking-[0.2em] mb-1">Status</p>
+                      <div className={`flex items-center gap-1 text-[11px] md:text-sm font-black ${asset.change >= 0 ? 'text-[#00FF5F]' : 'text-red-500'}`}>
+                        {asset.change >= 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                        {Math.abs(asset.change).toFixed(1)}%
+                      </div>
                     </div>
-                    <div className="text-[10px] text-white font-bold">${signal.vol}</div>
                   </div>
-                </div>
 
-                <div className="flex items-center justify-between">
-                  <div className="text-[8px] text-white/20 font-mono tracking-tighter truncate w-32">
-                    {signal.address}
+                  {/* INTERFACE ACTION */}
+                  <div className="flex items-center justify-between md:justify-end gap-4">
+                    <div className="md:hidden text-[9px] font-mono text-white/20">LIQ: ${(asset.liq / 1000000).toFixed(2)}M</div>
+                    <a 
+                      href={asset.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-3 bg-white/5 hover:bg-[#00FF5F] text-white hover:text-black border border-white/10 rounded-xl transition-all shadow-lg"
+                    >
+                      <ArrowUpRight className="w-4 h-4" />
+                    </a>
                   </div>
-                  <a 
-                    href={`https://dexscreener.com/solana/${signal.address}`}
-                    target="_blank"
-                    className="flex items-center gap-1 bg-[#00FF5F] text-black px-3 py-1 rounded-full text-[9px] font-black hover:bg-white transition-colors"
-                  >
-                    INJECT <ChevronRight className="w-3 h-3" />
-                  </a>
                 </div>
               </motion.div>
             ))
@@ -157,8 +197,17 @@ const HallOfFameTab = () => {
         </AnimatePresence>
       </div>
 
-      <div className="mt-12 text-center text-[8px] text-white/20 uppercase tracking-[1em]">
-        End of Transmission _ Senku Terminal
+      {/* --- FOOTER INTEL --- */}
+      <div className="mt-12 flex flex-col items-center gap-4">
+        <div className="flex items-center gap-3 px-5 py-2 bg-white/[0.03] border border-white/5 rounded-full backdrop-blur-md">
+          <ShieldCheck className="w-4 h-4 text-[#00FF5F]" />
+          <span className="text-[9px] font-black text-white/40 uppercase tracking-[0.4em]">Verified High-Velocity Data Stream</span>
+        </div>
+        <div className="flex items-center gap-4 text-[8px] font-mono text-white/10 uppercase tracking-widest">
+          <span>Solana Mainnet</span>
+          <span className="w-1 h-1 rounded-full bg-white/10" />
+          <span>Senku Lab Index v2.5</span>
+        </div>
       </div>
     </div>
   );

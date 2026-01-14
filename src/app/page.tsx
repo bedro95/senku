@@ -128,23 +128,34 @@ export default function SenkuUltraPage() {
             </main>
           </div>
 
-          {/* FOOTER */}
+                {/* FOOTER - Updated with GitHub Link */}
           <footer className="w-full px-10 py-5 flex justify-between items-center bg-black/60 border-t border-white/5 text-[10px] font-mono tracking-widest text-white/20 uppercase">
             <div className="flex items-center gap-6">
-              <span className="flex items-center gap-2 italic"><div className="w-1.5 h-1.5 rounded-full bg-[#00FF5F]" /> Session_Active</span>
+              <span className="flex items-center gap-2 italic">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#00FF5F]" /> 
+                Session_Active
+              </span>
               <span className="hidden md:inline">Integrity: 100% Secure</span>
             </div>
-            <div className="flex items-center gap-2">
-              <Zap className="w-3 h-3 text-[#00FF5F]" />
-              Senku Lab v2.5.0
+
+            <div className="flex items-center gap-6">
+              {/* GitHub Profile Link */}
+              <motion.a 
+                whileHover={{ scale: 1.1, color: "#00FF5F" }}
+                href="https://github.com/bedro95"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 transition-colors duration-300 group"
+              >
+                <Github className="w-4 h-4 group-hover:drop-shadow-[0_0_8px_#00FF5F]" />
+                <span className="hidden sm:inline">bedro95</span>
+              </motion.a>
+
+              <div className="h-3 w-[1px] bg-white/10" />
+
+              <div className="flex items-center gap-2 text-white/40">
+                <Zap className="w-3 h-3 text-[#00FF5F]" />
+                Senku Lab v2.5.0
+              </div>
             </div>
           </footer>
-        </div>
-      </div>
-
-      <div className="fixed bottom-10 right-10 z-[100]">
-        <SenkuAgent activeTab={activeTab} />
-      </div>
-    </div>
-  );
-}

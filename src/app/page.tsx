@@ -17,7 +17,7 @@ const TABS = [
   { id: "scan", label: "Scanner", icon: Search, color: "text-[#00FF5F]" },
   { id: "rug shield", label: "Security", icon: Shield, color: "text-[#00E0FF]" },
   { id: "radar", label: "Radar", icon: Radar, color: "text-[#00FF5F]" },
-  { id: "roadmap", label: "Evolution", icon: Zap, color: "text-[#fbbf24]" }, // التبويب الجديد
+  { id: "roadmap", label: "Roadmap", icon: Zap, color: "text-[#fbbf24]" }, 
   { id: "hall of fame", label: "Alpha", icon: Trophy, color: "text-[#FFFFFF]" }, 
 ] as const;
 
@@ -31,6 +31,7 @@ export default function SenkuUltraPage() {
       case "scan": return <ScanTab />;
       case "rug shield": return <RugShieldTab />;
       case "radar": return <RadarTab />;
+      case "roadmap": return <RoadmapTab />; // Successfully activated the feature
       case "hall of fame": return <HallOfFameTab />;
       default: return <ScanTab />;
     }
@@ -52,7 +53,6 @@ export default function SenkuUltraPage() {
           <div className="w-full px-10 py-8 flex justify-between items-center border-b border-white/5 bg-gradient-to-r from-white/[0.01] to-transparent">
             <div className="flex items-center gap-6">
               <div className="relative group">
-                {/* Laboratory S Logo */}
                 <div className="absolute -inset-1 bg-gradient-to-r from-[#00FF5F] to-[#00E0FF] rounded-2xl blur opacity-20 group-hover:opacity-50 transition duration-1000"></div>
                 <div className="relative w-14 h-14 bg-black border border-[#00FF5F]/30 rounded-2xl flex items-center justify-center overflow-hidden shadow-[inset_0_0_15px_rgba(0,255,95,0.2)]">
                   <div className="absolute top-0 left-0 w-full h-1 bg-[#00FF5F]/40 animate-pulse" />

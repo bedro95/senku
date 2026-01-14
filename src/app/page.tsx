@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Github, Shield, Radar, Search, Trophy, Zap, BarChart3, FlaskConical } from "lucide-react";
+import { Github, Shield, Radar, Search, Trophy, Zap, BarChart3, FlaskConical, LayoutGrid } from "lucide-react";
 
 // Components
 import RoadmapTab from "../../components/Tabs/RoadmapTab";
@@ -31,7 +31,7 @@ export default function SenkuUltraPage() {
       case "scan": return <ScanTab />;
       case "rug shield": return <RugShieldTab />;
       case "radar": return <RadarTab />;
-      case "roadmap": return <RoadmapTab />; // Successfully activated the feature
+      case "roadmap": return <RoadmapTab />; 
       case "hall of fame": return <HallOfFameTab />;
       default: return <ScanTab />;
     }
@@ -49,7 +49,7 @@ export default function SenkuUltraPage() {
         
         <div className="w-full bg-black/40 border border-white/5 rounded-[45px] backdrop-blur-3xl overflow-hidden shadow-[0_0_80px_rgba(0,0,0,0.5)] flex flex-col">
           
-          {/* 🧪 THE NEW NEON HEADER */}
+          {/* 🧪 THE NEW NEON HEADER WITH BAGS INTEGRATION */}
           <div className="w-full px-10 py-8 flex justify-between items-center border-b border-white/5 bg-gradient-to-r from-white/[0.01] to-transparent">
             <div className="flex items-center gap-6">
               <div className="relative group">
@@ -73,7 +73,16 @@ export default function SenkuUltraPage() {
               </div>
             </div>
 
+            {/* 🆕 BAGS APP LIVE STATUS (PREVIEW) */}
             <div className="hidden lg:flex items-center gap-4">
+               <motion.div 
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                className="px-4 py-2 bg-[#00FF5F]/5 border border-[#00FF5F]/20 rounded-xl flex items-center gap-3 group"
+               >
+                  <div className="w-2 h-2 rounded-full bg-[#00FF5F] animate-pulse" />
+                  <span className="text-[9px] font-black text-[#00FF5F] tracking-widest uppercase group-hover:text-white transition-colors">Bags_Sync: Active</span>
+               </motion.div>
+               
                <div className="px-4 py-2 bg-white/5 border border-white/10 rounded-xl flex items-center gap-3">
                   <BarChart3 className="w-3 h-3 text-[#00FF5F]" />
                   <span className="text-[9px] font-black text-white/60 tracking-widest uppercase">Nodes Online</span>
@@ -111,6 +120,12 @@ export default function SenkuUltraPage() {
                   </button>
                 );
               })}
+              
+              {/* 🆕 BAGS INTEGRATION MINI-CARD (FOR THE VIDEO DEMO) */}
+              <div className="mt-auto hidden md:flex flex-col items-center gap-2 pt-6 border-t border-white/5 opacity-60 hover:opacity-100 transition-opacity">
+                 <LayoutGrid className="w-5 h-5 text-[#00E0FF]" />
+                 <span className="text-[7px] font-black text-center text-[#00E0FF] tracking-tighter uppercase">Bags<br/>Ecosystem</span>
+              </div>
             </nav>
 
             {/* MAIN CONTENT AREA */}
@@ -125,6 +140,15 @@ export default function SenkuUltraPage() {
                   className="w-full h-full"
                 >
                   {renderTabContent}
+
+                  {/* 🆕 AI AGENT INTEGRATION CARD (FLOATING OVER CONTENT) */}
+                  <div className="absolute bottom-4 left-4 p-4 rounded-2xl bg-black/60 border border-[#00FF5F]/10 backdrop-blur-xl max-w-[200px] hidden xl:block shadow-2xl">
+                     <div className="flex items-center gap-2 mb-2">
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#00FF5F] animate-ping" />
+                        <span className="text-[8px] font-bold text-[#00FF5F] uppercase tracking-widest">Senku AI x Bags</span>
+                     </div>
+                     <p className="text-[9px] text-white/40 leading-tight">Analysing real-time social sentiment for BagsApp users...</p>
+                  </div>
                 </motion.div>
               </AnimatePresence>
             </main>
@@ -135,6 +159,8 @@ export default function SenkuUltraPage() {
             <div className="flex items-center gap-6">
               <span className="flex items-center gap-2 italic"><div className="w-1.5 h-1.5 rounded-full bg-[#00FF5F]" /> Session_Active</span>
               <span className="hidden md:inline">Integrity: 100% Secure</span>
+              {/* BAGS INDICATOR IN FOOTER */}
+              <span className="text-[#00E0FF] hidden lg:inline border-l border-white/10 pl-6">Bags_Module: Loaded</span>
             </div>
             <div className="flex items-center gap-2">
               <Zap className="w-3 h-3 text-[#00FF5F]" />

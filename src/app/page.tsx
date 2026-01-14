@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Github, Shield, Radar, Search, Trophy, Zap, BarChart3, FlaskConical, Map } from "lucide-react";
 
 // Components
+import Terminal from '/components/Terminal';
 import RoadmapTab from "../../components/Tabs/RoadmapTab";
 import SenkuAgent from "../../components/Agent/SenkuAgent";
 import ScanTab from "../../components/Tabs/Scan";

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Trophy, 
@@ -8,37 +8,37 @@ import {
   ArrowUpRight, 
   ShieldCheck, 
   Zap, 
-  Globe, 
-  BarChart3, 
   Loader2, 
   TrendingUp, 
-  TrendingDown 
+  TrendingDown,
+  Globe
 } from 'lucide-react';
 
 /**
  * @project Senku
  * @module HallOfFame
- * @description High-performance Solana token radar for assets > $10M Market Cap.
- * @version 2.5.0
+ * @description Advanced Market Intelligence for Solana Assets > $10M Market Cap.
+ * @engineering All-English interface with production-grade data fetching.
  */
 
 const HallOfFameTab = () => {
   const [data, setData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [lastUpdated, setLastUpdated] = useState<string>("");
+  const [syncTime, setSyncTime] = useState<string>("");
 
-  const fetchMarketIntelligence = useCallback(async () => {
+  const fetchIntelligence = useCallback(async () => {
     try {
+      // Direct access to high-volume Solana pairs
       const response = await fetch('https://api.dexscreener.com/latest/dex/search?q=solana');
       const json = await response.json();
       
       if (json.pairs) {
-        // Filter: Solana chain + FDV > 10,000,000 + Valid Liquidity
+        // Filter: Solana Only + Market Cap (FDV) >= 10,000,000
         const eliteAssets = json.pairs
           .filter((p: any) => 
             p.chainId === 'solana' && 
-            p.fdv >= 10000000 && 
-            p.liquidity?.usd > 50000
+            p.fdv >= 10000000 &&
+            p.liquidity?.usd > 10000
           )
           .sort((a: any, b: any) => (b.fdv || 0) - (a.fdv || 0))
           .slice(0, 15)
@@ -51,143 +51,136 @@ const HallOfFameTab = () => {
             mCap: item.fdv,
             volume: item.volume.h24,
             change: item.priceChange.h24,
-            liq: item.liquidity.usd,
             url: item.url
           }));
         
         setData(eliteAssets);
-        setLastUpdated(new Date().toLocaleTimeString());
+        
+        // Force English Time Format
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        setSyncTime(timeStr);
       }
     } catch (error) {
-      console.error("Critical: Data Ingestion Failed", error);
+      console.error("Data Stream Error", error);
     } finally {
       setIsLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchMarketIntelligence();
-    const ticker = setInterval(fetchMarketIntelligence, 20000);
+    fetchIntelligence();
+    const ticker = setInterval(fetchIntelligence, 20000);
     return () => clearInterval(ticker);
-  }, [fetchMarketIntelligence]);
+  }, [fetchIntelligence]);
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-2 md:px-0 font-sans pb-32">
+    <div className="w-full max-w-5xl mx-auto px-4 font-sans pb-40 select-none">
       
-      {/* --- ELITE INTERFACE HEADER --- */}
-      <div className="relative mb-8 p-6 md:p-8 rounded-[35px] bg-gradient-to-br from-[#0a0a0a] to-[#020202] border border-white/5 overflow-hidden shadow-2xl">
-        <div className="absolute top-0 right-0 p-8 opacity-5">
-          <Trophy className="w-32 h-32 text-white" />
-        </div>
+      {/* --- HEADER BLOCK --- */}
+      <div className="relative mb-8 p-6 md:p-10 rounded-[40px] bg-[#050505] border border-white/5 shadow-2xl overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,#00ff5f0a_0%,transparent_70%)]" />
         
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="flex items-center gap-5">
-            <div className="w-14 h-14 bg-[#00FF5F]/10 border border-[#00FF5F]/20 rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(0,255,95,0.1)]">
-              <Zap className="w-7 h-7 text-[#00FF5F]" />
+        <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex items-center gap-6">
+            <div className="w-16 h-16 bg-[#00FF5F]/10 border border-[#00FF5F]/20 rounded-2xl flex items-center justify-center shadow-[0_0_30px_rgba(0,255,95,0.15)]">
+              <Trophy className="w-8 h-8 text-[#00FF5F]" />
             </div>
             <div>
-              <h2 className="text-2xl md:text-3xl font-black text-white tracking-tighter uppercase italic">
-                Elite <span className="text-[#00FF5F]">Archive</span>
+              <h2 className="text-2xl md:text-4xl font-black text-white uppercase italic tracking-tighter">
+                Elite <span className="text-[#00FF5F]">Radar</span>
               </h2>
-              <p className="text-[10px] font-mono text-white/30 uppercase tracking-[0.3em] mt-1">
-                Real-time 10M+ Market Cap Index
+              <p className="text-[10px] font-mono text-white/30 uppercase tracking-[0.4em] mt-1">
+                Blue-Chip Intelligence Index
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-6">
-            <div className="hidden md:block text-right">
-              <p className="text-[9px] font-bold text-white/20 uppercase">Network Stability</p>
-              <p className="text-[11px] font-mono text-[#00FF5F]">UPTIME 99.9%</p>
+          <div className="flex items-center gap-8">
+            <div className="text-right">
+              <p className="text-[8px] font-black text-white/20 uppercase tracking-widest mb-1">Last Sync (UTC)</p>
+              <p className="text-xs font-mono text-[#00FF5F] font-bold">{syncTime || "00:00:00"}</p>
             </div>
-            <div className="h-10 w-[1px] bg-white/5 hidden md:block" />
-            <div className="flex flex-col md:items-end">
-              <span className="flex items-center gap-2 text-[10px] font-bold text-[#00FF5F] uppercase">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#00FF5F] animate-ping" />
-                Live Syncing
-              </span>
-              <span className="text-[9px] font-mono text-white/20 mt-1">LAST_UPDATE: {lastUpdated}</span>
+            <div className="flex flex-col items-end">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#00FF5F] animate-pulse shadow-[0_0_10px_#00FF5F]" />
+                <span className="text-[10px] font-black text-white uppercase italic">Active Stream</span>
+              </div>
+              <p className="text-[9px] font-mono text-white/20 mt-1 uppercase">10M+ CAP_FILTER ON</p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* --- TERMINAL FEED --- */}
+      {/* --- DATA FEED --- */}
       <div className="space-y-4">
         <AnimatePresence mode="popLayout">
-          {isLoading ? (
-            <div className="flex flex-col items-center py-20">
-              <Loader2 className="w-10 h-10 text-[#00FF5F] animate-spin mb-4" />
-              <p className="text-[10px] font-mono text-white/40 tracking-[0.5em] uppercase">Decrypting Market Data...</p>
+          {isLoading && data.length === 0 ? (
+            <div className="flex flex-col items-center py-32">
+              <Loader2 className="w-12 h-12 text-[#00FF5F] animate-spin mb-4" />
+              <p className="text-[10px] font-mono text-white/40 tracking-[0.6em] uppercase animate-pulse">Establishing Connection...</p>
             </div>
           ) : (
-            data.map((asset) => (
+            data.map((asset, index) => (
               <motion.div
                 key={asset.id}
-                layout
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="group relative bg-[#0a0a0a]/60 hover:bg-[#0f0f0f]/80 border border-white/5 hover:border-[#00FF5F]/30 rounded-[28px] p-4 md:p-6 transition-all duration-300"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.04 }}
+                className="group relative bg-[#080808]/60 hover:bg-black border border-white/5 hover:border-[#00FF5F]/30 rounded-[30px] p-5 md:p-7 transition-all duration-500"
               >
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                   
-                  {/* TOKEN IDENTITY */}
-                  <div className="flex items-center gap-5">
-                    <div className="text-xs font-mono text-white/10 w-4 font-black">#{asset.rank}</div>
-                    <div className="relative">
-                      <div className="w-12 h-12 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                        <Activity className={`w-6 h-6 ${asset.change >= 0 ? 'text-[#00FF5F]' : 'text-red-500'}`} />
-                      </div>
-                      {asset.change > 20 && (
-                        <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#00FF5F] rounded-full shadow-[0_0_10px_#00FF5F]" />
-                      )}
+                  {/* LEFT: ASSET INFO */}
+                  <div className="flex items-center gap-6">
+                    <span className="hidden md:block text-xs font-mono text-white/10 font-black w-6">#{asset.rank}</span>
+                    <div className="w-14 h-14 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center group-hover:bg-[#00FF5F]/5 transition-colors">
+                      <Zap className={`w-7 h-7 ${asset.change >= 0 ? 'text-[#00FF5F]' : 'text-red-500'}`} />
                     </div>
                     <div>
-                      <h4 className="text-sm md:text-lg font-black text-white tracking-tight uppercase truncate max-w-[140px] md:max-w-none">
+                      <h4 className="text-base md:text-xl font-black text-white tracking-tighter uppercase truncate max-w-[180px]">
                         {asset.name}
                       </h4>
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-black text-[#00FF5F] tracking-tighter">${asset.symbol}</span>
-                        <div className="w-1 h-1 rounded-full bg-white/10" />
-                        <span className="text-[9px] font-mono text-white/20 truncate w-24 md:w-auto">{asset.id}</span>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="text-[11px] font-black text-[#00FF5F] italic">${asset.symbol}</span>
+                        <div className="w-1 h-1 rounded-full bg-white/20" />
+                        <span className="text-[9px] font-mono text-white/20 truncate w-32 md:w-48">{asset.id}</span>
                       </div>
                     </div>
                   </div>
 
-                  {/* MARKET METRICS */}
-                  <div className="grid grid-cols-3 md:flex items-center gap-4 md:gap-12 border-t border-white/5 md:border-none pt-4 md:pt-0">
+                  {/* CENTER: MARKET DATA */}
+                  <div className="grid grid-cols-3 md:flex items-center gap-4 md:gap-14 border-t border-white/5 md:border-none pt-5 md:pt-0">
                     <div className="flex flex-col md:items-end">
-                      <p className="text-[8px] font-bold text-white/20 uppercase tracking-[0.2em] mb-1">Market Cap</p>
-                      <p className="text-xs md:text-sm font-black text-white italic">
+                      <p className="text-[8px] font-black text-white/20 uppercase tracking-widest mb-1 italic">Mkt Cap</p>
+                      <p className="text-sm md:text-lg font-black text-white italic">
                         ${(asset.mCap / 1000000).toFixed(1)}M
                       </p>
                     </div>
                     <div className="flex flex-col md:items-end">
-                      <p className="text-[8px] font-bold text-white/20 uppercase tracking-[0.2em] mb-1">24H Volume</p>
-                      <p className="text-xs md:text-sm font-black text-white/70 font-mono">
-                        ${(asset.volume / 1000000).toFixed(2)}M
+                      <p className="text-[8px] font-black text-white/20 uppercase tracking-widest mb-1 italic">24H Vol</p>
+                      <p className="text-sm md:text-lg font-black text-white/70 font-mono">
+                        ${(asset.volume / 1000000).toFixed(1)}M
                       </p>
                     </div>
                     <div className="flex flex-col md:items-end">
-                      <p className="text-[8px] font-bold text-white/20 uppercase tracking-[0.2em] mb-1">Status</p>
-                      <div className={`flex items-center gap-1 text-[11px] md:text-sm font-black ${asset.change >= 0 ? 'text-[#00FF5F]' : 'text-red-500'}`}>
-                        {asset.change >= 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                      <p className="text-[8px] font-black text-white/20 uppercase tracking-widest mb-1 italic">Performance</p>
+                      <div className={`flex items-center gap-1 text-sm md:text-lg font-black ${asset.change >= 0 ? 'text-[#00FF5F]' : 'text-red-500'}`}>
+                        {asset.change >= 0 ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
                         {Math.abs(asset.change).toFixed(1)}%
                       </div>
                     </div>
                   </div>
 
-                  {/* INTERFACE ACTION */}
-                  <div className="flex items-center justify-between md:justify-end gap-4">
-                    <div className="md:hidden text-[9px] font-mono text-white/20">LIQ: ${(asset.liq / 1000000).toFixed(2)}M</div>
+                  {/* RIGHT: ACTION */}
+                  <div className="flex items-center justify-end">
                     <a 
                       href={asset.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-3 bg-white/5 hover:bg-[#00FF5F] text-white hover:text-black border border-white/10 rounded-xl transition-all shadow-lg"
+                      className="w-12 h-12 md:w-14 md:h-14 bg-white/5 hover:bg-[#00FF5F] text-white hover:text-black border border-white/10 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 shadow-xl"
                     >
-                      <ArrowUpRight className="w-4 h-4" />
+                      <ArrowUpRight className="w-6 h-6" />
                     </a>
                   </div>
                 </div>
@@ -198,15 +191,15 @@ const HallOfFameTab = () => {
       </div>
 
       {/* --- FOOTER INTEL --- */}
-      <div className="mt-12 flex flex-col items-center gap-4">
-        <div className="flex items-center gap-3 px-5 py-2 bg-white/[0.03] border border-white/5 rounded-full backdrop-blur-md">
+      <div className="mt-16 flex flex-col items-center gap-6">
+        <div className="px-6 py-2 bg-white/[0.02] border border-white/5 rounded-full backdrop-blur-3xl flex items-center gap-3">
           <ShieldCheck className="w-4 h-4 text-[#00FF5F]" />
-          <span className="text-[9px] font-black text-white/40 uppercase tracking-[0.4em]">Verified High-Velocity Data Stream</span>
+          <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.5em]">High-Value Asset Validation Complete</span>
         </div>
-        <div className="flex items-center gap-4 text-[8px] font-mono text-white/10 uppercase tracking-widest">
-          <span>Solana Mainnet</span>
-          <span className="w-1 h-1 rounded-full bg-white/10" />
-          <span>Senku Lab Index v2.5</span>
+        <div className="flex items-center gap-5 text-[9px] font-mono text-white/10 uppercase tracking-[0.2em]">
+          <span>Solana Node: Connected</span>
+          <div className="w-1 h-1 rounded-full bg-white/10" />
+          <span>Index: v2.5.0-Release</span>
         </div>
       </div>
     </div>

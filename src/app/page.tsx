@@ -53,7 +53,6 @@ export default function SenkuUltraPage() {
           <div className="w-full px-5 md:px-10 py-6 md:py-8 flex justify-between items-center border-b border-white/5 bg-gradient-to-r from-white/[0.01] to-transparent">
             <div className="flex items-center gap-4 md:gap-6">
               <div className="relative group">
-                {/* Logo Pulse Effect */}
                 <div className="absolute -inset-1 bg-gradient-to-r from-[#00FF5F] to-[#00E0FF] rounded-xl md:rounded-2xl blur-md opacity-40 animate-pulse group-hover:opacity-100 transition duration-1000"></div>
                 <div className="relative w-11 h-11 md:w-14 md:h-14 bg-black border border-[#00FF5F]/30 rounded-xl md:rounded-2xl flex items-center justify-center overflow-hidden shadow-[inset_0_0_15px_rgba(0,255,95,0.4)] transition-all duration-500">
                   <div className="absolute top-0 left-0 w-full h-[2px] bg-[#00FF5F] shadow-[0_0_10px_#00FF5F] animate-[shimmer_2s_infinite]" />
@@ -63,7 +62,7 @@ export default function SenkuUltraPage() {
               </div>
 
               <div className="flex flex-col">
-                <h1 className="text-xl md:text-2xl font-black tracking-tighter text-white">
+                <h1 className="text-xl md:text-2xl font-black tracking-tighter text-white uppercase italic">
                   SENKU<span className="text-[#00FF5F] animate-pulse">.FUN</span>
                 </h1>
                 <div className="flex items-center gap-2">
@@ -90,7 +89,7 @@ export default function SenkuUltraPage() {
 
           <div className="flex flex-col md:flex-row min-h-[60vh] md:min-h-[75vh]">
             
-            {/* NAVIGATION (Mobile & Desktop Optimized) */}
+            {/* NAVIGATION (Mobile Floating Nav Optimized) */}
             <nav className="fixed bottom-6 left-6 right-6 md:relative md:bottom-auto md:left-auto md:right-auto md:w-32 border md:border-r border-white/10 md:border-white/5 flex md:flex-col items-center justify-around md:justify-center gap-1 md:gap-5 p-3 md:p-6 bg-black/95 md:bg-black/40 backdrop-blur-3xl rounded-[28px] md:rounded-none z-[200] shadow-2xl">
               {TABS.map((tab) => {
                 const Icon = tab.icon;
@@ -113,8 +112,8 @@ export default function SenkuUltraPage() {
               })}
             </nav>
 
-            {/* MAIN CONTENT AREA */}
-            <main className="flex-1 relative p-4 md:p-12 pb-44 md:pb-12 overflow-y-auto overflow-x-hidden">
+            {/* MAIN CONTENT AREA - Padding bottom adjusted for mobile agent safety */}
+            <main className="flex-1 relative p-4 md:p-12 pb-56 md:pb-12 overflow-y-auto overflow-x-hidden scroll-smooth">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeTab}
@@ -144,10 +143,19 @@ export default function SenkuUltraPage() {
         </div>
       </div>
 
-      {/* 🚀 SENKU AGENT - OPTIMIZED POSITION */}
-      <div className="fixed bottom-36 right-6 md:bottom-10 md:right-10 z-[150] scale-[0.8] md:scale-100 origin-bottom-right transition-all duration-500">
-        <SenkuAgent activeTab={activeTab} />
-      </div>
+      {/* 🚀 SENKU AGENT - NON-INVASIVE SMART POSITIONING */}
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={{ opacity: 0.8, scale: 0.7 }}
+        whileHover={{ opacity: 1, scale: 0.9 }}
+        className="fixed bottom-28 right-2 md:bottom-10 md:right-10 z-[50] pointer-events-auto origin-bottom-right transition-all duration-700 ease-in-out"
+      >
+        <div className="relative group cursor-help">
+          {/* Subtle Glow behind Agent */}
+          <div className="absolute inset-0 bg-[#00FF5F]/10 blur-3xl rounded-full scale-150 group-hover:bg-[#00FF5F]/20 transition-all" />
+          <SenkuAgent activeTab={activeTab} />
+        </div>
+      </motion.div>
     </div>
   );
 }

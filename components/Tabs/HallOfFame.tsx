@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Trophy, Crown, Star, ExternalLink, Loader2, Sparkles, Gem } from 'lucide-react';
 
 /**
- * @project Senku (Wagmi)
+ * @project Senku
  * @feature Hall of Fame - The Golden Pantheon of Solana
  * @engineering Professional grade scrolling & live blockchain data integration
  */

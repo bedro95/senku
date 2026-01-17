@@ -17,6 +17,9 @@ import HallOfFameTab from "../../components/Tabs/HallOfFame";
 import { useAudioController } from "../../hooks/useAudio";
 import { useCryptoData } from "../../hooks/useCryptoData";
 
+import DNAHelixBackground from "../../components/Visuals/DNAHelix";
+import DigitalDust from "../../components/Visuals/DigitalDust";
+
 const TABS = [
   { id: "scan", label: "Scanner", icon: Search, color: "text-[#00FFCC]" },
   { id: "rug shield", label: "Security", icon: Shield, color: "text-[#00E0FF]" },
@@ -45,19 +48,25 @@ export default function SenkuUltraPage() {
   return (
     <div className="min-h-screen bg-[#020202] text-white flex flex-col items-center selection:bg-[#00FFCC]/30 overflow-x-hidden font-sans">
       
-      {/* 🌌 INTERSTELLAR BACKDROP */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 cyber-grid opacity-20" />
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] glow-mesh opacity-30 animate-pulse" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] glow-mesh opacity-30 animate-pulse" style={{ background: 'radial-gradient(circle, #00E0FF 0%, transparent 70%)' }} />
-      </div>
+      <DNAHelixBackground />
+      <DigitalDust />
+
+      {/* SVG Filters for Liquid Effect */}
+      <svg className="hidden">
+        <defs>
+          <filter id="liquid">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+            <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="liquid" />
+          </filter>
+        </defs>
+      </svg>
 
       <div className="relative z-10 w-full max-w-7xl min-h-screen flex flex-col pt-4 md:pt-6 pb-32 md:pb-20 px-4">
         
-        {/* 📊 REAL-TIME TRACKER BAR */}
-        <div className="w-full flex justify-between px-6 py-2 mb-4 glass-morphism rounded-full text-[10px] font-mono tracking-tighter uppercase text-white/60 overflow-x-auto whitespace-nowrap gap-6">
+        {/* 📊 TRACKER */}
+        <div className="w-full flex justify-between px-6 py-2 mb-4 glass-morphism rounded-full text-[10px] font-mono tracking-tighter uppercase text-white/60 overflow-x-auto whitespace-nowrap gap-6 border border-[#00FFCC]/20 shadow-[0_0_20px_rgba(0,255,204,0.1)]">
           <div className="flex items-center gap-2">
-            <div className="w-1 h-1 bg-[#00FFCC] rounded-full animate-ping" />
+            <div className="w-1.5 h-1.5 bg-[#00FFCC] rounded-full animate-pulse shadow-[0_0_10px_#00FFCC]" />
             BTC: <span className="text-white">${prices.btc.toLocaleString()}</span>
           </div>
           <div className="flex items-center gap-2">
@@ -72,43 +81,38 @@ export default function SenkuUltraPage() {
           </div>
         </div>
 
-        <div className="w-full bg-black/40 border border-white/10 rounded-[35px] md:rounded-[45px] backdrop-blur-3xl overflow-hidden shadow-[0_0_100px_rgba(0,255,204,0.1)] flex flex-col">
+        <div className="w-full bg-black/60 border border-white/10 rounded-[45px] backdrop-blur-3xl overflow-hidden shadow-[0_0_150px_rgba(0,255,204,0.05)] flex flex-col">
           
-          {/* 🧪 LEGENDARY HEADER */}
-          <div className="w-full px-5 md:px-10 py-6 md:py-8 flex justify-between items-center border-b border-white/5 bg-gradient-to-r from-[#00FFCC]/[0.05] to-transparent">
-            <div className="flex items-center gap-4 md:gap-6">
-              <motion.div 
-                whileHover={{ rotate: 360 }}
-                transition={{ duration: 0.8 }}
-                className="relative w-12 h-12 md:w-16 md:h-16 bg-black border border-[#00FFCC]/50 rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(0,255,204,0.3)]"
-              >
-                <Cpu className="w-8 h-8 text-[#00FFCC]" />
-              </motion.div>
+          {/* 🧪 LOGO ONLY "SENKU" */}
+          <div className="w-full px-5 md:px-10 py-8 flex justify-between items-center border-b border-white/5 bg-gradient-to-r from-[#00FFCC]/[0.05] to-transparent">
+            <div className="flex items-center gap-6">
               <div className="flex flex-col">
-                <h1 className="text-2xl md:text-4xl font-black tracking-tighter text-white uppercase italic">
-                  SENKU<span className="text-[#00FFCC] neon-text">.PRO</span>
+                <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-white uppercase italic leading-none">
+                  SENKU
                 </h1>
-                <div className="flex items-center gap-2">
-                   <Globe className="w-3 h-3 text-[#00FFCC] animate-spin-slow" />
-                   <span className="text-[8px] md:text-[10px] font-mono tracking-[0.5em] text-[#00FFCC]/80 uppercase">Decentralized Intelligence Network</span>
+                <div className="flex items-center gap-2 mt-2">
+                   <div className="w-1 h-1 bg-[#00FFCC] rounded-full" />
+                   <span className="text-[10px] font-mono tracking-[0.5em] text-[#00FFCC]/80 uppercase">Bioluminescent Terminal</span>
                 </div>
               </div>
             </div>
             
             <div className="hidden sm:flex items-center gap-4">
-               <motion.button 
-                whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(0,255,204,0.4)" }}
-                className="px-6 py-2 bg-[#00FFCC] text-black font-black text-xs uppercase tracking-widest rounded-xl transition-all"
+               <motion.a 
+                whileHover={{ scale: 1.1, rotate: 5 }}
+                href="https://github.com/bedro95"
+                className="relative p-4 bg-black border border-[#00FFCC]/30 rounded-full shadow-[0_0_20px_rgba(0,255,204,0.2)] group"
                >
-                Connect Terminal
-               </motion.button>
+                <Github className="w-6 h-6 text-[#00FFCC]" />
+                <div className="absolute inset-0 rounded-full bg-[#00FFCC] opacity-0 group-hover:opacity-10 blur-xl transition-opacity" />
+               </motion.a>
             </div>
           </div>
 
-          <div className="flex flex-col md:flex-row min-h-[60vh] md:min-h-[75vh]">
+          <div className="flex flex-col md:flex-row min-h-[75vh]">
             
-            {/* 🛡️ NAV WITH LIQUID ANIMATIONS */}
-            <nav className="fixed bottom-6 left-6 right-6 md:relative md:w-32 border md:border-r border-white/10 flex md:flex-col items-center justify-around md:justify-center gap-1 md:gap-8 p-4 md:p-6 bg-black/90 md:bg-transparent backdrop-blur-3xl rounded-[30px] md:rounded-none z-[200]">
+            {/* 🛡️ ZEN NAVIGATION */}
+            <nav className="fixed bottom-6 left-6 right-6 md:relative md:w-32 border md:border-r border-white/10 flex md:flex-col items-center justify-around md:justify-center gap-1 md:gap-10 p-4 md:p-8 bg-black/90 md:bg-transparent backdrop-blur-3xl rounded-[40px] md:rounded-none z-[200]">
               {TABS.map((tab) => {
                 const Icon = tab.icon;
                 const isActive = activeTab === tab.id;
@@ -116,14 +120,19 @@ export default function SenkuUltraPage() {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`relative p-4 md:p-6 rounded-[24px] transition-all duration-500 group ${isActive ? "bg-white/5 shadow-[inset_0_0_20px_rgba(255,255,255,0.05)]" : "opacity-30 hover:opacity-100"}`}
+                    className="relative group"
                   >
-                    <Icon className={`w-6 h-6 md:w-8 md:h-8 ${isActive ? "text-[#00FFCC]" : "text-white"}`} />
+                    <motion.div
+                      whileHover={{ scale: 1.2, filter: "url(#liquid)" }}
+                      className={`p-5 rounded-3xl transition-all duration-500 ${isActive ? "bg-[#00FFCC]/10 border border-[#00FFCC]/20" : "opacity-30 group-hover:opacity-100"}`}
+                    >
+                      <Icon className={`w-7 h-7 md:w-8 md:h-8 ${isActive ? "text-[#00FFCC]" : "text-white"}`} />
+                    </motion.div>
                     {isActive && (
                       <motion.div 
                         layoutId="navIndicator" 
-                        className="absolute -bottom-2 md:-right-[33px] md:top-1/2 md:-translate-y-1/2 w-8 h-[4px] md:w-1.5 md:h-16 bg-[#00FFCC] rounded-full shadow-[0_0_25px_#00FFCC]"
-                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                        className="absolute -bottom-3 md:-right-[40px] md:top-1/2 md:-translate-y-1/2 w-10 h-[5px] md:w-2 md:h-20 bg-[#00FFCC] rounded-full shadow-[0_0_40px_#00FFCC]"
+                        transition={{ type: "spring", stiffness: 400, damping: 25 }}
                       />
                     )}
                   </button>
@@ -131,15 +140,14 @@ export default function SenkuUltraPage() {
               })}
             </nav>
 
-            {/* ⚡ CONTENT */}
-            <main className="flex-1 relative p-4 md:p-12 pb-56 md:pb-12 overflow-y-auto custom-scrollbar">
+            <main className="flex-1 relative p-6 md:p-16 pb-64 md:pb-16 overflow-y-auto custom-scrollbar">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeTab}
-                  initial={{ opacity: 0, scale: 0.98, filter: "blur(10px)" }}
-                  animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, scale: 1.02, filter: "blur(10px)" }}
-                  transition={{ duration: 0.4, ease: "circOut" }}
+                  initial={{ opacity: 0, y: 20, filter: "blur(20px)" }}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, y: -20, filter: "blur(20px)" }}
+                  transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                   className="w-full h-full"
                 >
                   {renderTabContent}
@@ -147,6 +155,12 @@ export default function SenkuUltraPage() {
               </AnimatePresence>
             </main>
           </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 
           {/* 📡 FOOTER */}
           <footer className="hidden md:flex w-full px-10 py-5 justify-between items-center bg-black/80 border-t border-white/5 text-[10px] font-mono tracking-widest text-white/30 uppercase italic">

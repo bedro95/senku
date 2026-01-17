@@ -19,6 +19,26 @@ body {
   color: white;
   font-family: 'Inter', sans-serif;
   overflow-x: hidden;
+  cursor: crosshair;
+}
+
+/* Bioluminescent Assets */
+.glow-text-green {
+  text-shadow: 0 0 10px #00FFCC, 0 0 20px #00FFCC;
+}
+
+.glow-border-blue {
+  box-shadow: 0 0 15px rgba(0, 224, 255, 0.3);
+  border-color: rgba(0, 224, 255, 0.5);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(#00FFCC, #00E0FF);
+  border-radius: 20px;
 }
 
 /* Interstellar Cyber-Art Styles */

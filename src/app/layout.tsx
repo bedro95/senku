@@ -16,6 +16,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Senku Protocol | The Lab",
   description: "Decrypting Solana's future with AI-powered Whale Tracking. Welcome to the Lab.",
+  metadataBase: new URL("http://localhost:5000"),
   openGraph: {
     title: "Senku Protocol",
     description: "AI-Powered Whale Tracking on Solana. Decrypting the secrets of the Lab.",

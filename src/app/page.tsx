@@ -51,7 +51,6 @@ export default function SenkuUltraPage() {
       <DNAHelixBackground />
       <DigitalDust />
 
-      {/* SVG Filters for Liquid Effect */}
       <svg className="hidden">
         <defs>
           <filter id="liquid">
@@ -63,7 +62,6 @@ export default function SenkuUltraPage() {
 
       <div className="relative z-10 w-full max-w-7xl min-h-screen flex flex-col pt-4 md:pt-6 pb-32 md:pb-20 px-4">
         
-        {/* 📊 TRACKER */}
         <div className="w-full flex justify-between px-6 py-2 mb-4 glass-morphism rounded-full text-[10px] font-mono tracking-tighter uppercase text-white/60 overflow-x-auto whitespace-nowrap gap-6 border border-[#00FFCC]/20 shadow-[0_0_20px_rgba(0,255,204,0.1)]">
           <div className="flex items-center gap-2">
             <div className="w-1.5 h-1.5 bg-[#00FFCC] rounded-full animate-pulse shadow-[0_0_10px_#00FFCC]" />
@@ -83,7 +81,6 @@ export default function SenkuUltraPage() {
 
         <div className="w-full bg-black/60 border border-white/10 rounded-[45px] backdrop-blur-3xl overflow-hidden shadow-[0_0_150px_rgba(0,255,204,0.05)] flex flex-col">
           
-          {/* 🧪 LOGO ONLY "SENKU" */}
           <div className="w-full px-5 md:px-10 py-8 flex justify-between items-center border-b border-white/5 bg-gradient-to-r from-[#00FFCC]/[0.05] to-transparent">
             <div className="flex items-center gap-6">
               <div className="flex flex-col">
@@ -101,6 +98,8 @@ export default function SenkuUltraPage() {
                <motion.a 
                 whileHover={{ scale: 1.1, rotate: 5 }}
                 href="https://github.com/bedro95"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="relative p-4 bg-black border border-[#00FFCC]/30 rounded-full shadow-[0_0_20px_rgba(0,255,204,0.2)] group"
                >
                 <Github className="w-6 h-6 text-[#00FFCC]" />
@@ -111,7 +110,6 @@ export default function SenkuUltraPage() {
 
           <div className="flex flex-col md:flex-row min-h-[75vh]">
             
-            {/* 🛡️ ZEN NAVIGATION */}
             <nav className="fixed bottom-6 left-6 right-6 md:relative md:w-32 border md:border-r border-white/10 flex md:flex-col items-center justify-around md:justify-center gap-1 md:gap-10 p-4 md:p-8 bg-black/90 md:bg-transparent backdrop-blur-3xl rounded-[40px] md:rounded-none z-[200]">
               {TABS.map((tab) => {
                 const Icon = tab.icon;
@@ -155,14 +153,7 @@ export default function SenkuUltraPage() {
               </AnimatePresence>
             </main>
           </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
-
-          {/* 📡 FOOTER */}
           <footer className="hidden md:flex w-full px-10 py-5 justify-between items-center bg-black/80 border-t border-white/5 text-[10px] font-mono tracking-widest text-white/30 uppercase italic">
             <div className="flex items-center gap-8">
               <span className="flex items-center gap-3 text-[#00FFCC]">
@@ -180,7 +171,6 @@ export default function SenkuUltraPage() {
         </div>
       </div>
 
-      {/* 🚀 AGENT */}
       <div className="fixed bottom-28 right-4 md:bottom-10 md:right-10 z-[50]">
         <SenkuAgent activeTab={activeTab} />
       </div>

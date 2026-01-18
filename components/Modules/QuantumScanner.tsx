@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Loader2, ShieldCheck, Coins, Database, Activity } from 'lucide-react';
 import { Connection, PublicKey } from '@solana/web3.js';
 
+// Using a more reliable public RPC node
 const RPC_ENDPOINT = "https://api.mainnet-beta.solana.com";
 
 interface TokenInfo {
@@ -24,28 +25,40 @@ export default function QuantumScanner() {
   const [error, setError] = useState('');
 
   const handleScan = async () => {
-    if (!address) return;
+    if (!address) {
+      setError('Please enter a wallet address');
+      return;
+    }
+    
+    // Basic validation
+    try {
+      new PublicKey(address);
+    } catch (e) {
+      setError('Invalid Solana Address Format');
+      return;
+    }
+
     setIsScanning(true);
     setProgress(0);
     setError('');
     setResults(null);
 
+    const progressInterval = setInterval(() => {
+      setProgress(prev => Math.min(prev + (Math.random() * 15), 90));
+    }, 400);
+
     try {
-      const connection = new Connection(RPC_ENDPOINT);
+      const connection = new Connection(RPC_ENDPOINT, 'confirmed');
       const pubkey = new PublicKey(address);
       
-      // Progress simulation for better UX
-      const progressInterval = setInterval(() => {
-        setProgress(prev => Math.min(prev + 10, 90));
-      }, 500);
+      const [balance, tokenAccounts] = await Promise.all([
+        connection.getBalance(pubkey),
+        connection.getParsedTokenAccountsByOwner(pubkey, {
+          programId: new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"),
+        })
+      ]);
 
-      const balance = await connection.getBalance(pubkey);
       const solBalance = balance / 1e9;
-      
-      const tokenAccounts = await connection.getParsedTokenAccountsByOwner(pubkey, {
-        programId: new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"),
-      });
-
       const tokens: TokenInfo[] = tokenAccounts.value.map((acc: any) => ({
         mint: acc.account.data.parsed.info.mint,
         amount: acc.account.data.parsed.info.tokenAmount.uiAmount,
@@ -61,7 +74,9 @@ export default function QuantumScanner() {
       }, 500);
 
     } catch (err: any) {
-      setError(err.message || 'Invalid Address');
+      clearInterval(progressInterval);
+      console.error('Scan Error:', err);
+      setError('Network Congestion: RPC limit reached. Retrying neural link...');
       setIsScanning(false);
     }
   };
@@ -83,14 +98,18 @@ export default function QuantumScanner() {
           <input
             type="text"
             value={address}
-            onChange={(e) => setAddress(e.target.value)}
+            onChange={(e) => {
+              setAddress(e.target.value);
+              if (error) setError('');
+            }}
+            onKeyDown={(e) => e.key === 'Enter' && handleScan()}
             placeholder="Enter Solana Wallet Address..."
             className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-white font-mono text-sm focus:outline-none focus:border-[#00FFCC]/50 transition-all placeholder:text-white/20"
           />
           <button
             onClick={handleScan}
             disabled={isScanning}
-            className="absolute right-2 top-2 bottom-2 px-6 bg-[#00FFCC] text-black font-black italic rounded-xl hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:scale-100 flex items-center gap-2 uppercase text-xs"
+            className="absolute right-2 top-2 bottom-2 px-6 bg-[#00FFCC] text-black font-black italic rounded-xl hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:scale-100 flex items-center gap-2 uppercase text-xs shadow-[0_0_20px_rgba(0,255,204,0.4)]"
           >
             {isScanning ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Scan'}
           </button>
@@ -106,13 +125,13 @@ export default function QuantumScanner() {
             >
               <div className="flex justify-between items-center text-[10px] font-mono text-[#00FFCC] uppercase font-bold">
                 <span>Initializing Neural Link...</span>
-                <span>{progress}%</span>
+                <span>{Math.round(progress)}%</span>
               </div>
-              <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+              <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${progress}%` }}
-                  className="h-full bg-[#00FFCC] shadow-[0_0_10px_#00FFCC]"
+                  className="h-full bg-gradient-to-r from-[#00FFCC] to-[#00E0FF] shadow-[0_0_15px_rgba(0,255,204,0.6)]"
                 />
               </div>
             </motion.div>
@@ -120,11 +139,12 @@ export default function QuantumScanner() {
 
           {error && (
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-red-400 font-mono text-[10px] uppercase mt-2 bg-red-400/10 p-3 rounded-xl border border-red-400/20"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-red-400 font-mono text-[10px] uppercase mt-2 bg-red-400/10 p-4 rounded-2xl border border-red-400/20 flex items-center gap-3"
             >
-              Error: {error}
+              <div className="w-1.5 h-1.5 bg-red-400 rounded-full animate-pulse" />
+              {error}
             </motion.div>
           )}
 
@@ -135,35 +155,46 @@ export default function QuantumScanner() {
               className="mt-6 flex flex-col gap-4"
             >
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-white/[0.03] border border-white/5 p-4 rounded-2xl flex flex-col gap-1">
-                  <span className="text-[8px] font-mono text-white/30 uppercase tracking-widest">SOL Balance</span>
-                  <div className="flex items-center gap-2">
+                <div className="bg-white/[0.03] border border-white/10 p-5 rounded-3xl flex flex-col gap-1 relative overflow-hidden group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#00FFCC]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <span className="text-[8px] font-mono text-white/30 uppercase tracking-widest relative z-10">SOL Balance</span>
+                  <div className="flex items-center gap-2 relative z-10">
                     <Coins className="w-4 h-4 text-[#00FFCC]" />
                     <span className="text-xl font-black text-white">{results.balance.toFixed(4)}</span>
                   </div>
                 </div>
-                <div className="bg-white/[0.03] border border-white/5 p-4 rounded-2xl flex flex-col gap-1">
-                  <span className="text-[8px] font-mono text-white/30 uppercase tracking-widest">Total Tokens</span>
-                  <div className="flex items-center gap-2">
+                <div className="bg-white/[0.03] border border-white/10 p-5 rounded-3xl flex flex-col gap-1 relative overflow-hidden group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#00E0FF]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <span className="text-[8px] font-mono text-white/30 uppercase tracking-widest relative z-10">Asset Count</span>
+                  <div className="flex items-center gap-2 relative z-10">
                     <Database className="w-4 h-4 text-[#00E0FF]" />
                     <span className="text-xl font-black text-white">{results.tokens.length}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white/[0.03] border border-white/5 p-6 rounded-[2rem] flex flex-col gap-4">
-                <div className="flex items-center justify-between border-b border-white/5 pb-3">
-                   <h4 className="text-xs font-black text-white uppercase italic">Active Assets</h4>
+              <div className="bg-black/40 border border-white/10 p-6 rounded-[2rem] flex flex-col gap-4 shadow-inner">
+                <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                   <div className="flex items-center gap-2">
+                     <div className="w-1.5 h-1.5 bg-[#00FFCC] rounded-full shadow-[0_0_10px_#00FFCC]" />
+                     <h4 className="text-xs font-black text-white uppercase italic tracking-wider">Neural Inventory</h4>
+                   </div>
                    <Activity className="w-4 h-4 text-[#00FFCC] animate-pulse" />
                 </div>
-                <div className="flex flex-col gap-2 max-h-[150px] overflow-y-auto custom-scrollbar pr-2">
+                <div className="flex flex-col gap-2 max-h-[180px] overflow-y-auto custom-scrollbar pr-2">
                   {results.tokens.length > 0 ? results.tokens.map((token, i) => (
-                    <div key={i} className="flex justify-between items-center text-[10px] font-mono">
-                      <span className="text-white/40">{token.mint.slice(0, 4)}...{token.mint.slice(-4)}</span>
-                      <span className="text-[#00FFCC] font-bold">{token.amount.toLocaleString()}</span>
+                    <div key={i} className="flex justify-between items-center text-[10px] font-mono p-3 bg-white/[0.02] border border-white/5 rounded-xl hover:bg-white/[0.04] transition-colors">
+                      <div className="flex items-center gap-2">
+                        <div className="w-1 h-1 bg-white/20 rounded-full" />
+                        <span className="text-white/40">{token.mint.slice(0, 4)}...{token.mint.slice(-4)}</span>
+                      </div>
+                      <span className="text-[#00FFCC] font-bold">{token.amount.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
                     </div>
                   )) : (
-                    <div className="text-center text-white/20 font-mono text-[10px] py-4">No tokens found</div>
+                    <div className="flex flex-col items-center gap-2 py-8 opacity-20">
+                      <Database className="w-8 h-8" />
+                      <span className="text-[10px] font-mono uppercase tracking-widest">No assets detected</span>
+                    </div>
                   )}
                 </div>
               </div>

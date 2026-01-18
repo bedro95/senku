@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Github, Shield, Radar, Search, Trophy, 
-  Map, Activity, Flame, Menu, X
+  Map, Activity, Flame
 } from "lucide-react";
 
 import RoadmapTab from "../../components/Tabs/RoadmapTab";
@@ -13,12 +13,16 @@ import RugShieldTab from "../../components/Tabs/RugShield";
 import RadarTab from "../../components/Tabs/Radar";
 import HallOfFameTab from "../../components/Tabs/HallOfFame";
 import { useAudioController } from "../../hooks/useAudio";
-import { useCryptoData } from "../../hooks/useCryptoData";
+import { usePriceEngine } from "../../hooks/usePriceEngine";
 
 import DNAHelixBackground from "../../components/Visuals/DNAHelix";
 import DigitalDust from "../../components/Visuals/DigitalDust";
+import IntelligenceTerminal from "../../components/Visuals/IntelligenceTerminal";
+import HologramAvatar from "../../components/Visuals/HologramAvatar";
+import BlackHoleGateway from "../../components/Visuals/BlackHoleGateway";
+import QuantumScanner from "../../components/Modules/QuantumScanner";
 import WhaleRadar from "../../components/Modules/WhaleRadar";
-import { usePriceEngine } from "../../hooks/usePriceEngine";
+import { getSolanaMetrics } from "@/lib/solana-connection";
 
 const TABS = [
   { id: "scan", label: "Scanner", icon: Search, color: "text-[#00FFCC]" },
@@ -201,12 +205,6 @@ export default function SenkuUltraPage() {
               </div>
             </footer>
           </div>
-        </div>
-      </div>
-    </>
-  );
-}
-
         </div>
       </div>
     </>

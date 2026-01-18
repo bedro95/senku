@@ -5,11 +5,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Loader2, ShieldCheck, Coins, Database, Activity } from 'lucide-react';
 import { Connection, PublicKey } from '@solana/web3.js';
 
-// Using a more reliable public RPC node with better rate limits
+// Using a more reliable set of RPC nodes
 const RPC_ENDPOINTS = [
-  "https://api.mainnet-beta.solana.com",
+  "https://solana-mainnet.g.allnodes.com",
+  "https://rpc.ankr.com/solana",
   "https://solana-api.projectserum.com",
-  "https://rpc.ankr.com/solana"
+  "https://api.mainnet-beta.solana.com"
 ];
 
 interface TokenInfo {
@@ -30,15 +31,14 @@ export default function QuantumScanner() {
 
   const handleScan = async () => {
     if (!address) {
-      setError('Please enter a wallet address');
+      setError('Neural Link ID Required');
       return;
     }
     
-    // Basic validation
     try {
       new PublicKey(address);
     } catch (e) {
-      setError('Invalid Solana Address Format');
+      setError('Invalid Neural Signature (Address)');
       return;
     }
 
@@ -48,23 +48,29 @@ export default function QuantumScanner() {
     setResults(null);
 
     const progressInterval = setInterval(() => {
-      setProgress(prev => Math.min(prev + (Math.random() * 15), 90));
+      setProgress(prev => Math.min(prev + (Math.random() * 15), 95));
     }, 400);
 
-    let lastError = '';
-    
-    // Try multiple RPCs to handle 403/Rate limits
+    // Try multiple RPCs to handle congestion
     for (const endpoint of RPC_ENDPOINTS) {
       try {
-        const connection = new Connection(endpoint, 'confirmed');
+        const connection = new Connection(endpoint, {
+          commitment: 'confirmed',
+          confirmTransactionInitialTimeout: 30000
+        });
         const pubkey = new PublicKey(address);
         
-        const [balance, tokenAccounts] = await Promise.all([
-          connection.getBalance(pubkey),
-          connection.getParsedTokenAccountsByOwner(pubkey, {
-            programId: new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"),
-          })
-        ]);
+        // Use a timeout for the balance check to fail fast and move to next RPC
+        const balancePromise = connection.getBalance(pubkey);
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('RPC Timeout')), 8000)
+        );
+
+        const balance = await Promise.race([balancePromise, timeoutPromise]) as number;
+        
+        const tokenAccounts = await connection.getParsedTokenAccountsByOwner(pubkey, {
+          programId: new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"),
+        });
 
         const solBalance = balance / 1e9;
         const tokens: TokenInfo[] = tokenAccounts.value.map((acc: any) => ({
@@ -81,19 +87,20 @@ export default function QuantumScanner() {
           setIsScanning(false);
         }, 500);
         
-        return; // Success, exit the loop
+        return; 
 
       } catch (err: any) {
-        console.warn(`RPC Fail [${endpoint}]:`, err);
-        lastError = err.message || 'Connection Error';
-        continue; // Try next RPC
+        console.warn(`Node ${endpoint} rejected link:`, err);
+        continue; 
       }
     }
 
-    // If all RPCs fail
     clearInterval(progressInterval);
-    setError(`Access Forbidden: Global RPC congestion. Senku suggests retrying in 30s.`);
-    setIsScanning(false);
+    setError('Global Congestion: High frequency detected. Syncing with secondary nodes...');
+    // Implement a 5-second automatic retry
+    setTimeout(() => {
+       if (address) handleScan();
+    }, 5000);
   };
 
   return (

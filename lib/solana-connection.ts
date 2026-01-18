@@ -1,9 +1,10 @@
 import { Connection, PublicKey, LAMPORTS_PER_SOL } from '@solana/web3.js';
 
 const RPC_ENDPOINTS = [
-  'https://api.mainnet-beta.solana.com',
+  'https://solana-mainnet.g.allnodes.com',
+  'https://rpc.ankr.com/solana',
   'https://solana-api.projectserum.com',
-  'https://rpc.ankr.com/solana'
+  'https://api.mainnet-beta.solana.com'
 ];
 
 export async function getSolanaMetrics() {

@@ -1,96 +1,63 @@
 "use client";
 
-import React, { useRef, useMemo, useEffect, useState } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import * as THREE from 'three';
-
-function AvatarParticles({ mouseX, mouseY }: { mouseX: number; mouseY: number }) {
-  const points = useRef<THREE.Points>(null);
-  const { viewport } = useThree();
-
-  const count = 5000;
-  const positions = useMemo(() => {
-    const pos = new Float32Array(count * 3);
-    for (let i = 0; i < count; i++) {
-      // Create a humanoid silhouette
-      const t = Math.random() * Math.PI * 2;
-      const h = (Math.random() - 0.5) * 4; // Height
-      const r = (1 - Math.abs(h / 2)) * 0.8 + 0.2; // Taper for body
-      
-      pos[i * 3] = Math.cos(t) * r;
-      pos[i * 3 + 1] = h;
-      pos[i * 3 + 2] = Math.sin(t) * r;
-    }
-    return pos;
-  }, []);
-
-  useFrame((state) => {
-    if (points.current) {
-      const time = state.clock.elapsedTime;
-      points.current.rotation.y += 0.002;
-      
-      // Follow mouse/touch
-      const targetX = (mouseX * viewport.width) / 2;
-      const targetY = (mouseY * viewport.height) / 2;
-      points.current.position.x += (targetX - points.current.position.x) * 0.05;
-      points.current.position.y += (targetY - points.current.position.y) * 0.05;
-
-      // Breathing + Glitch
-      points.current.scale.setScalar(1 + Math.sin(time * 2) * 0.02);
-      if (Math.random() > 0.97) {
-        points.current.position.x += (Math.random() - 0.5) * 0.1;
-      }
-    }
-  });
-
-  return (
-    <points ref={points}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          count={count}
-          array={positions}
-          itemSize={3}
-        />
-      </bufferGeometry>
-      <pointsMaterial
-        size={0.04}
-        color="#00FFCC"
-        transparent
-        opacity={0.8}
-        blending={THREE.AdditiveBlending}
-        depthWrite={false}
-      />
-    </points>
-  );
-}
+import React from 'react';
+import { motion } from 'framer-motion';
 
 export default function HologramAvatar() {
-  const [mouse, setMouse] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const handleMove = (e: MouseEvent | TouchEvent) => {
-      const x = 'touches' in e ? e.touches[0].clientX : e.clientX;
-      const y = 'touches' in e ? e.touches[0].clientY : e.clientY;
-      setMouse({
-        x: (x / window.innerWidth) * 2 - 1,
-        y: -(y / window.innerHeight) * 2 + 1,
-      });
-    };
-    window.addEventListener('mousemove', handleMove);
-    window.addEventListener('touchmove', handleMove);
-    return () => {
-      window.removeEventListener('mousemove', handleMove);
-      window.removeEventListener('touchmove', handleMove);
-    };
-  }, []);
-
   return (
-    <div className="fixed inset-0 pointer-events-none z-[100] w-full h-full">
-      <Canvas camera={{ position: [0, 0, 10], fov: 50 }}>
-        <ambientLight intensity={0.5} />
-        <AvatarParticles mouseX={mouse.x} mouseY={mouse.y} />
-      </Canvas>
+    <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-[80]">
+      <motion.div
+        animate={{
+          y: [0, -20, 0],
+          rotate: [0, 2, -2, 0],
+          scale: [1, 1.02, 1],
+        }}
+        transition={{
+          duration: 6,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+        className="relative"
+      >
+        {/* Hologram Core Image */}
+        <div className="relative w-64 h-64 md:w-96 md:h-96">
+          <img 
+            src="/senku.png" 
+            alt="Senku Hologram"
+            className="w-full h-full object-contain opacity-80 filter drop-shadow-[0_0_20px_rgba(0,255,204,0.5)]"
+            style={{
+              maskImage: 'linear-gradient(to bottom, black 80%, transparent 100%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, black 80%, transparent 100%)'
+            }}
+          />
+          
+          {/* Glitch Overlay Effect */}
+          <motion.div 
+            animate={{ 
+              opacity: [0, 0.2, 0, 0.1, 0],
+              x: [0, 5, -5, 0]
+            }}
+            transition={{ duration: 0.2, repeat: Infinity, repeatDelay: 3 }}
+            className="absolute inset-0 bg-[#00FFCC]/20 mix-blend-overlay pointer-events-none"
+          />
+
+          {/* Scan Lines */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-full">
+            <div className="w-full h-[200%] bg-[linear-gradient(0deg,transparent_0%,rgba(0,255,204,0.1)_50%,transparent_100%)] bg-[length:100%_4px] animate-[scan_10s_linear_infinite]" />
+          </div>
+
+          {/* Neon Glow Rings */}
+          <div className="absolute inset-0 border-4 border-[#00FFCC]/10 rounded-full animate-pulse scale-110" />
+          <div className="absolute inset-0 border-2 border-[#00E0FF]/5 rounded-full animate-pulse delay-75 scale-125" />
+        </div>
+      </motion.div>
+
+      <style jsx>{`
+        @keyframes scan {
+          from { transform: translateY(-50%); }
+          to { transform: translateY(0%); }
+        }
+      `}</style>
     </div>
   );
 }

@@ -17,11 +17,8 @@ import { useCryptoData } from "../../hooks/useCryptoData";
 
 import DNAHelixBackground from "../../components/Visuals/DNAHelix";
 import DigitalDust from "../../components/Visuals/DigitalDust";
-import IntelligenceTerminal from "../../components/Visuals/IntelligenceTerminal";
-import HologramAvatar from "../../components/Visuals/HologramAvatar";
-import BlackHoleGateway from "../../components/Visuals/BlackHoleGateway";
-import QuantumScanner from "../../components/Modules/QuantumScanner";
-import { getSolanaMetrics } from "@/lib/solana-connection";
+import WhaleRadar from "../../components/Modules/WhaleRadar";
+import { usePriceEngine } from "../../hooks/usePriceEngine";
 
 const TABS = [
   { id: "scan", label: "Scanner", icon: Search, color: "text-[#00FFCC]" },
@@ -35,7 +32,7 @@ export default function SenkuUltraPage() {
   const [activeTab, setActiveTab] = useState<(typeof TABS)[number]["id"]>("scan");
   const [hasEntered, setHasEntered] = useState(false);
   const [solMetrics, setSolMetrics] = useState<any>(null);
-  const { prices, gas } = useCryptoData();
+  const prices = usePriceEngine();
   
   useAudioController();
 
@@ -75,7 +72,7 @@ export default function SenkuUltraPage() {
         {/* 🛸 MOBILE FLOATING DOCK */}
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[500] md:hidden">
           <div className="glass-morphism px-6 py-3 rounded-full border border-white/20 flex items-center gap-6 shadow-[0_0_50px_rgba(0,255,204,0.2)]">
-            <h2 className="text-xl font-black italic tracking-tighter text-white">SENKU</h2>
+            <h2 className="text-xl font-black italic tracking-tighter text-white">Senku</h2>
             <div className="w-px h-6 bg-white/20" />
             <a href="https://github.com/bedro95" target="_blank" rel="noopener noreferrer" className="p-2 bg-black rounded-full border border-[#00FFCC]/30">
               <Github className="w-5 h-5 text-[#00FFCC]" />
@@ -89,16 +86,19 @@ export default function SenkuUltraPage() {
           <div className="w-full flex justify-between px-6 py-3 mb-6 glass-morphism rounded-full text-[10px] font-mono tracking-tighter uppercase text-white gap-6 border border-[#00FFCC]/20 shadow-[0_0_30px_rgba(0,255,204,0.1)] overflow-x-auto whitespace-nowrap">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-[#00FFCC] rounded-full animate-pulse" />
-              SOL_TPS: <span className="text-[#00FFCC]">{solMetrics?.tps || '---'}</span>
+              SOL_TPS: <span className="text-[#00FFCC] font-bold">{solMetrics?.tps || '---'}</span>
             </div>
             <div className="flex items-center gap-2 border-l border-white/10 pl-6">
-              EPOCH: <span className="text-[#00E0FF]">{solMetrics?.epoch || '---'}</span>
+              EPOCH: <span className="text-[#00E0FF] font-bold">{solMetrics?.epoch || '---'}</span>
             </div>
             <div className="flex items-center gap-2 border-l border-white/10 pl-6">
-              SLOT: <span className="text-[#00FFCC]">{solMetrics?.slot || '---'}</span>
+              SOL: <span className="text-[#00FFCC] font-bold">${prices.sol.toFixed(2)}</span>
             </div>
             <div className="flex items-center gap-2 border-l border-white/10 pl-6">
-              SOL: <span className="text-white">${prices.sol.toLocaleString()}</span>
+              JUP: <span className="text-[#00E0FF] font-bold">${prices.jup.toFixed(4)}</span>
+            </div>
+            <div className="flex items-center gap-2 border-l border-white/10 pl-6">
+              RAY: <span className="text-[#00FFCC] font-bold">${prices.ray.toFixed(2)}</span>
             </div>
           </div>
 
@@ -106,12 +106,12 @@ export default function SenkuUltraPage() {
             
             <div className="w-full px-5 md:px-10 py-10 flex justify-between items-center border-b border-white/5 bg-gradient-to-r from-[#00FFCC]/[0.05] to-transparent">
               <div className="flex flex-col">
-                <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-white uppercase italic leading-none shadow-[0_0_30px_rgba(255,255,255,0.1)]">
-                  SENKU
+                <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-white uppercase italic leading-none drop-shadow-[0_0_15px_rgba(0,255,204,0.5)]">
+                  Senku
                 </h1>
                 <div className="flex items-center gap-3 mt-4">
                    <div className="w-2 h-2 bg-[#00FFCC] rounded-full shadow-[0_0_10px_#00FFCC]" />
-                   <span className="text-[12px] font-mono tracking-[0.6em] text-[#00FFCC] uppercase font-bold">Quantum Intelligence Platform</span>
+                   <span className="text-[12px] font-mono tracking-[0.6em] text-[#00FFCC] uppercase font-bold">Protocol Terminal</span>
                 </div>
               </div>
               
@@ -178,7 +178,8 @@ export default function SenkuUltraPage() {
                 </main>
 
                 {/* 🚀 SIDEBARS */}
-                <aside className="w-full lg:w-[400px] p-6 md:p-10 border-t lg:border-t-0 lg:border-l border-white/5 flex flex-col gap-10">
+                <aside className="w-full lg:w-[450px] p-6 md:p-10 border-t lg:border-t-0 lg:border-l border-white/5 flex flex-col gap-10 bg-black/[0.02]">
+                  <WhaleRadar />
                   <QuantumScanner />
                   <IntelligenceTerminal />
                 </aside>
@@ -189,17 +190,23 @@ export default function SenkuUltraPage() {
               <div className="flex items-center gap-10">
                 <span className="flex items-center gap-3 text-[#00FFCC] font-bold">
                   <div className="w-2 h-2 rounded-full bg-[#00FFCC] animate-ping" /> 
-                  Terminal_Sync: ACTIVE
+                  Sync_Status: Optimal
                 </span>
                 <span className="text-white/50 border-l border-white/10 pl-10">Network: Solana_Mainnet</span>
                 <span className="text-white/50 border-l border-white/10 pl-10">Uptime: 99.9997%</span>
               </div>
               <div className="flex items-center gap-3 text-[#00FFCC]/60">
                 <Activity className="w-4 h-4" />
-                SENKU_OS v4.2.1-ULTRA
+                Senku_OS v5.0.0
               </div>
             </footer>
           </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
         </div>
       </div>
     </>

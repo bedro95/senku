@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Loader2, ShieldCheck, Coins, Database, Activity } from 'lucide-react';
+import { Search, Loader2, ShieldCheck, Coins, Database, Activity, Fingerprint, Cpu, Globe } from 'lucide-react';
 import { Connection, PublicKey } from '@solana/web3.js';
 
 // Using a more reliable set of RPC nodes
@@ -26,6 +26,7 @@ export default function QuantumScanner() {
   const [results, setResults] = useState<{
     balance: number;
     tokens: TokenInfo[];
+    address: string;
   } | null>(null);
   const [error, setError] = useState('');
 
@@ -60,7 +61,6 @@ export default function QuantumScanner() {
         });
         const pubkey = new PublicKey(address);
         
-        // Use a timeout for the balance check to fail fast and move to next RPC
         const balancePromise = connection.getBalance(pubkey);
         const timeoutPromise = new Promise((_, reject) => 
           setTimeout(() => reject(new Error('RPC Timeout')), 8000)
@@ -83,7 +83,7 @@ export default function QuantumScanner() {
         setProgress(100);
         
         setTimeout(() => {
-          setResults({ balance: solBalance, tokens });
+          setResults({ balance: solBalance, tokens, address });
           setIsScanning(false);
         }, 500);
         
@@ -97,7 +97,6 @@ export default function QuantumScanner() {
 
     clearInterval(progressInterval);
     setError('Global Congestion: High frequency detected. Syncing with secondary nodes...');
-    // Implement a 5-second automatic retry
     setTimeout(() => {
        if (address) handleScan();
     }, 5000);
@@ -172,54 +171,104 @@ export default function QuantumScanner() {
 
           {results && !isScanning && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="mt-6 flex flex-col gap-4"
+              initial={{ opacity: 0, scale: 0.9, rotateX: 20 }}
+              animate={{ opacity: 1, scale: 1, rotateX: 0 }}
+              className="mt-8 flex flex-col items-center"
             >
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-white/[0.03] border border-white/10 p-5 rounded-3xl flex flex-col gap-1 relative overflow-hidden group">
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#00FFCC]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <span className="text-[8px] font-mono text-white/30 uppercase tracking-widest relative z-10">SOL Balance</span>
-                  <div className="flex items-center gap-2 relative z-10">
-                    <Coins className="w-4 h-4 text-[#00FFCC]" />
-                    <span className="text-xl font-black text-white">{results.balance.toFixed(4)}</span>
+              {/* DIGITAL ID CARD RESULT */}
+              <div className="relative aspect-[1.6/1] w-full bg-[#050505] rounded-[2rem] border border-[#00FFCC]/40 overflow-hidden shadow-[0_0_80px_rgba(0,255,204,0.2)] p-8 flex flex-col justify-between group">
+                
+                {/* Background Watermark - senku.GIF */}
+                <div className="absolute inset-0 opacity-20 pointer-events-none transition-opacity group-hover:opacity-30">
+                  <img src="/senku.GIF" alt="Watermark" className="w-full h-full object-cover grayscale mix-blend-screen" />
+                </div>
+
+                {/* Header */}
+                <div className="relative z-10 flex justify-between items-start">
+                  <div className="flex flex-col">
+                    <div className="flex items-center gap-2">
+                      <Fingerprint className="w-4 h-4 text-[#00FFCC]" />
+                      <h4 className="text-2xl font-black italic tracking-tighter text-white uppercase">Quantum ID</h4>
+                    </div>
+                    <span className="text-[8px] font-mono tracking-[0.4em] text-[#00FFCC] uppercase">Verified Neural Signature</span>
+                  </div>
+                  <div className="p-2 bg-[#00FFCC]/10 border border-[#00FFCC]/30 rounded-xl">
+                    <ShieldCheck className="w-6 h-6 text-[#00FFCC]" />
                   </div>
                 </div>
-                <div className="bg-white/[0.03] border border-white/10 p-5 rounded-3xl flex flex-col gap-1 relative overflow-hidden group">
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#00E0FF]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <span className="text-[8px] font-mono text-white/30 uppercase tracking-widest relative z-10">Asset Count</span>
-                  <div className="flex items-center gap-2 relative z-10">
-                    <Database className="w-4 h-4 text-[#00E0FF]" />
-                    <span className="text-xl font-black text-white">{results.tokens.length}</span>
+
+                {/* Main Data Section */}
+                <div className="relative z-10 flex flex-col gap-4">
+                  <div className="flex flex-col">
+                    <span className="text-[7px] font-mono text-white/30 uppercase tracking-[0.3em]">Neural Address</span>
+                    <div className="text-xs font-mono text-white bg-white/5 p-3 rounded-xl border border-white/5 backdrop-blur-md">
+                      {results.address.slice(0, 12)}...{results.address.slice(-12)}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex flex-col">
+                      <span className="text-[7px] font-mono text-white/30 uppercase tracking-[0.3em]">SOL Reserve</span>
+                      <div className="flex items-center gap-2">
+                        <Coins className="w-4 h-4 text-[#00FFCC]" />
+                        <span className="text-xl font-black text-white">{results.balance.toFixed(4)}</span>
+                      </div>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-[7px] font-mono text-white/30 uppercase tracking-[0.3em]">Active Assets</span>
+                      <div className="flex items-center gap-2">
+                        <Database className="w-4 h-4 text-[#00E0FF]" />
+                        <span className="text-xl font-black text-white">{results.tokens.length}</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
+
+                {/* Card Footer */}
+                <div className="relative z-10 flex justify-between items-end border-t border-white/10 pt-4">
+                  <div className="flex flex-col">
+                    <span className="text-[7px] font-mono text-white/30 uppercase tracking-widest">Access Level</span>
+                    <span className="text-xs font-bold text-[#00FFCC] uppercase tracking-tighter">Quantum Scientist v.1</span>
+                  </div>
+                  <div className="flex items-center gap-4 text-white/20">
+                    <Cpu className="w-4 h-4" />
+                    <Globe className="w-4 h-4" />
+                  </div>
+                </div>
+
+                {/* Decorative Elements */}
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#00FFCC]/20 to-transparent blur-3xl pointer-events-none" />
+                <div className="absolute inset-0 bg-[linear-gradient(rgba(0,255,204,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,204,0.05)_1px,transparent_1px)] bg-[size:15px_15px] pointer-events-none opacity-20" />
+                
+                {/* Scanning Light Effect */}
+                <motion.div 
+                  animate={{ left: ['-100%', '200%'] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                  className="absolute top-0 bottom-0 w-32 bg-gradient-to-r from-transparent via-[#00FFCC]/10 to-transparent skew-x-12 pointer-events-none"
+                />
               </div>
 
-              <div className="bg-black/40 border border-white/10 p-6 rounded-[2rem] flex flex-col gap-4 shadow-inner">
-                <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                   <div className="flex items-center gap-2">
-                     <div className="w-1.5 h-1.5 bg-[#00FFCC] rounded-full shadow-[0_0_10px_#00FFCC]" />
-                     <h4 className="text-xs font-black text-white uppercase italic tracking-wider">Neural Inventory</h4>
-                   </div>
-                   <Activity className="w-4 h-4 text-[#00FFCC] animate-pulse" />
-                </div>
-                <div className="flex flex-col gap-2 max-h-[180px] overflow-y-auto custom-scrollbar pr-2">
-                  {results.tokens.length > 0 ? results.tokens.map((token, i) => (
-                    <div key={i} className="flex justify-between items-center text-[10px] font-mono p-3 bg-white/[0.02] border border-white/5 rounded-xl hover:bg-white/[0.04] transition-colors">
-                      <div className="flex items-center gap-2">
-                        <div className="w-1 h-1 bg-white/20 rounded-full" />
-                        <span className="text-white/40">{token.mint.slice(0, 4)}...{token.mint.slice(-4)}</span>
+              {/* ADDITIONAL TOKEN LIST (SCROLLABLE) */}
+              {results.tokens.length > 0 && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="w-full mt-6 bg-black/40 border border-white/10 p-6 rounded-[2rem] flex flex-col gap-4"
+                >
+                  <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                     <h4 className="text-[10px] font-black text-white/40 uppercase tracking-widest">Neural Inventory List</h4>
+                     <Activity className="w-4 h-4 text-[#00FFCC] animate-pulse" />
+                  </div>
+                  <div className="flex flex-col gap-2 max-h-[120px] overflow-y-auto custom-scrollbar pr-2">
+                    {results.tokens.map((token, i) => (
+                      <div key={i} className="flex justify-between items-center text-[10px] font-mono p-3 bg-white/[0.02] border border-white/5 rounded-xl">
+                        <span className="text-white/40">{token.mint.slice(0, 6)}...</span>
+                        <span className="text-[#00FFCC] font-bold">{token.amount.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
                       </div>
-                      <span className="text-[#00FFCC] font-bold">{token.amount.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
-                    </div>
-                  )) : (
-                    <div className="flex flex-col items-center gap-2 py-8 opacity-20">
-                      <Database className="w-8 h-8" />
-                      <span className="text-[10px] font-mono uppercase tracking-widest">No assets detected</span>
-                    </div>
-                  )}
-                </div>
-              </div>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
